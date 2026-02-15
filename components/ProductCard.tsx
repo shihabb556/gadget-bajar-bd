@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                             e.stopPropagation(); // Prevent navigation
                             addToCart(product);
                         }}
-                        className="w-full relative z-20"
+                        className="w-full relative z-20 border border-indigo-600 text-indigo-600  cursor-pointer"
                         disabled={product.stock <= 0}
                     >
                         {product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}

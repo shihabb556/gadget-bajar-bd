@@ -18,7 +18,7 @@ export default function AddToCartButton({ product }: { product: any }) {
         <Button
             onClick={handleAdd}
             disabled={product.stock <= 0}
-            className="w-full md:max-w-xs flex justify-center py-3 px-8 text-base font-medium"
+            className="border border-gray-300  text-black w-full md:max-w-xs flex justify-center py-3 px-8 text-base font-medium"
         >
             {product.stock <= 0 ? 'Out of Stock' : (added ? 'Added to Cart!' : 'Add to Cart')}
         </Button>

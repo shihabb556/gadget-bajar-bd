@@ -22,10 +22,15 @@ export default function CheckoutPage() {
 
     useEffect(() => setMounted(true), []);
 
+    useEffect(() => {
+        if (mounted && items.length === 0) {
+            router.push('/cart');
+        }
+    }, [mounted, items, router]);
+
     if (!mounted) return null;
 
     if (items.length === 0) {
-        router.push('/cart');
         return null;
     }
 
