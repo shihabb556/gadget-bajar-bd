@@ -1,0 +1,111 @@
+'use client';
+
+import Navbar from '@/components/Navbar';
+import { useCartStore } from '@/lib/store';
+import { Button } from '@/components/ui/shared';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Trash2, Plus, Minus } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+export default function CartPage() {
+    const { items, removeFromCart, updateQuantity, total } = useCartStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => setMounted(true), []);
+
+    if (!mounted) return null;
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Navbar />
+
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+
+                {items.length === 0 ? (
+                    <div className="bg-white rounded-lg shadow p-6 text-center">
+                        <p className="text-gray-500 mb-4">Your cart is empty.</p>
+                        <Link href="/">
+                            <Button>Continue Shopping</Button>
+                        </Link>
+                    </div>
+                ) : (
+                    <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
+                        <div className="bg-white rounded-lg shadow lg:col-span-7">
+                            <ul className="divide-y divide-gray-200">
+                                {items.map((item) => (
+                                    <li key={item._id} className="flex py-6 px-4 sm:px-6">
+                                        <div className="flex-shrink-0 w-24 h-24 border border-gray-200 rounded-md overflow-hidden relative">
+                                            {item.image && (
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.name}
+                                                    fill
+                                                    className="w-full h-full object-center object-cover"
+                                                />
+                                            )}
+                                        </div>
+
+                                        <div className="ml-4 flex-1 flex flex-col">
+                                            <div>
+                                                <div className="flex justify-between text-base font-medium text-gray-900">
+                                                    <h3>
+                                                        <Link href={`/products/${item.slug}`}>{item.name}</Link>
+                                                    </h3>
+                                                    <p className="ml-4">৳{item.price * item.quantity}</p>
+                                                </div>
+                                                <p className="mt-1 text-sm text-gray-500">Unit Price: ৳{item.price}</p>
+                                            </div>
+                                            <div className="flex-1 flex items-end justify-between text-sm">
+                                                <div className="flex items-center border rounded">
+                                                    <button
+                                                        className="p-1 hover:bg-gray-100"
+                                                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                                    >
+                                                        <Minus className="w-4 h-4" />
+                                                    </button>
+                                                    <span className="px-3 py-1 font-medium">{item.quantity}</span>
+                                                    <button
+                                                        className="p-1 hover:bg-gray-100"
+                                                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                                    >
+                                                        <Plus className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeFromCart(item._id)}
+                                                    className="font-medium text-red-600 hover:text-red-500 flex items-center"
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-1" /> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="bg-white rounded-lg shadow mt-16 lg:mt-0 lg:col-span-5 p-6 space-y-4">
+                            <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+
+                            <div className="flex justify-between text-base font-medium text-gray-900 pt-4 border-t">
+                                <p>Subtotal</p>
+                                <p>৳{total()}</p>
+                            </div>
+                            <p className="text-sm text-gray-500 mt-1">Shipping and taxes calculated at checkout.</p>
+
+                            <div className="pt-4">
+                                <Link href="/checkout" className="w-full">
+                                    <Button className="w-full py-3">Proceed to Checkout</Button>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </main>
+        </div>
+    );
+}

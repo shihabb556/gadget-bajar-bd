@@ -1,0 +1,146 @@
+import mongoose from 'mongoose';
+
+const CategorySchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+    },
+    parent: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        default: null,
+    },
+    image: String,
+    isActive: {
+        type: Boolean,
+        default: true,
+    }
+}, { timestamps: true });
+
+export const Category = mongoose.models.Category || mongoose.model('Category', CategorySchema);
+
+const UserSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, 'Please provide a name'],
+        maxlength: [60, 'Name cannot be more than 60 characters'],
+    },
+    email: {
+        type: String,
+        required: [true, 'Please provide an email'],
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: [true, 'Please provide a password'],
+    },
+    role: {
+        type: String,
+        enum: ['ADMIN', 'CUSTOMER'],
+        default: 'CUSTOMER',
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+}, { timestamps: true });
+
+export const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
+const ProductSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    slug: {
+        type: String,
+        required: true,
+        unique: true,
+        index: true,
+    },
+    description: String,
+    price: {
+        type: Number,
+        required: true,
+    },
+    stock: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    category: {
+        type: String,
+        required: true,
+    },
+    subCategory: String,
+    images: [String],
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+}, { timestamps: true });
+
+export const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+
+const OrderSchema = new mongoose.Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    items: [{
+        product: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product',
+            required: true,
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min: 1,
+        },
+        price: { // Snapshot price at time of order
+            type: Number,
+            required: true,
+        },
+        name: String, // Snapshot name
+        image: String, // Snapshot image
+    }],
+    totalAmount: {
+        type: Number,
+        required: true,
+    },
+    status: {
+        type: String,
+        enum: ['PENDING', 'PROCESSING', 'DELIVERED', 'CANCELLED'],
+        default: 'PENDING',
+    },
+    shippingAddress: {
+        street: String,
+        city: String,
+        phone: String,
+    },
+    paymentStatus: {
+        advancePaid: {
+            type: Boolean,
+            default: false,
+        },
+        method: {
+            type: String,
+            default: 'COD', // Cash On Delivery
+        }
+    }
+}, { timestamps: true });
+
+// Index for getting user orders and admin filtering
+OrderSchema.index({ user: 1, createdAt: -1 });
+OrderSchema.index({ status: 1 });
+
+export const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);

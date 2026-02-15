@@ -1,0 +1,86 @@
+import { NextResponse } from 'next/server';
+import dbConnect from '@/lib/db';
+import { Order, Product } from '@/models/schema';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+
+export async function POST(req: Request) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { items, shippingAddress, totalAmount } = await req.json();
+
+        if (!items || items.length === 0) {
+            return NextResponse.json({ message: 'No items in order' }, { status: 400 });
+        }
+
+        await dbConnect();
+
+        // Verify stock and snapshot prices
+        const orderItems = [];
+        for (const item of items) {
+            const product = await Product.findById(item._id);
+            if (!product) {
+                return NextResponse.json({ message: `Product not found: ${item.name}` }, { status: 404 });
+            }
+            if (product.stock < item.quantity) {
+                return NextResponse.json({ message: `Insufficient stock for: ${item.name}` }, { status: 400 });
+            }
+
+            // Deduct stock
+            product.stock -= item.quantity;
+            await product.save();
+
+            orderItems.push({
+                product: product._id,
+                quantity: item.quantity,
+                price: product.price, // Use DB price for security
+                name: product.name,
+                image: product.images?.[0],
+            });
+        }
+
+        // Recalculate total for security
+        const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+        // Basic validation, though we might have added shipping costs etc on frontend
+        // For now assuming totalAmount matches or we trust frontend (not ideal but ok for MVP)
+        // best practice: use calculatedTotal. 
+
+        // Create Order
+        const order = await Order.create({
+            user: session.user.id,
+            items: orderItems,
+            totalAmount: calculatedTotal,
+            shippingAddress,
+            status: 'PENDING',
+            paymentStatus: {
+                advancePaid: false, // Admin confirms this manually
+                method: 'COD'
+            }
+        });
+
+        return NextResponse.json({ message: 'Order placed successfully', orderId: order._id }, { status: 201 });
+    } catch (error) {
+        console.error('Order placement error:', error);
+        return NextResponse.json({ message: 'Failed to place order' }, { status: 500 });
+    }
+}
+
+export async function GET(req: Request) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session) {
+            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+        }
+
+        await dbConnect();
+        const orders = await Order.find({ user: session.user.id }).sort({ createdAt: -1 });
+        return NextResponse.json(orders);
+    } catch (error) {
+        return NextResponse.json({ message: 'Failed to fetch orders' }, { status: 500 });
+    }
+}
