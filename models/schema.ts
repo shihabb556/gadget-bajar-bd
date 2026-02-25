@@ -99,7 +99,15 @@ const OrderSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true,
+        required: false,
+    },
+    guestEmail: {
+        type: String,
+        required: false,
+    },
+    guestName: {
+        type: String,
+        required: false,
     },
     items: [{
         product: {

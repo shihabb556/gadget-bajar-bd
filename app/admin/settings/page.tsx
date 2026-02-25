@@ -78,7 +78,7 @@ export default function AdminSettingsPage() {
                                     checked={advanceOption === 'Unpaid'}
                                     onChange={(e) => setAdvanceOption(e.target.value)}
                                 />
-                                <span className="ml-2">Unpaid (COD only)</span>
+                                <span className="ml-2 text-gray-700">Unpaid (COD only)</span>
                             </label>
                             <label className="inline-flex items-center">
                                 <input
@@ -89,7 +89,7 @@ export default function AdminSettingsPage() {
                                     checked={advanceOption === 'Paid'}
                                     onChange={(e) => setAdvanceOption(e.target.value)}
                                 />
-                                <span className="ml-2">Paid (100 TK Advance)</span>
+                                <span className="ml-2 text-gray-700">Paid (100 TK Advance)</span>
                             </label>
                         </div>
                     </div>

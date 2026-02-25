@@ -26,6 +26,8 @@ export default function CheckoutPage() {
         secondaryPhone: '',
     });
     const [trxId, setTrxId] = useState('');
+    const [guestEmail, setGuestEmail] = useState('');
+    const [guestName, setGuestName] = useState('');
 
     useEffect(() => setMounted(true), []);
 
@@ -34,8 +36,10 @@ export default function CheckoutPage() {
             router.push('/cart');
         }
         fetchSettings();
-        fetchProfile();
-    }, [mounted, items, router]);
+        if (session) {
+            fetchProfile();
+        }
+    }, [mounted, items, router, session]);
 
     const fetchSettings = async () => {
         try {
@@ -78,7 +82,7 @@ export default function CheckoutPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!trxId) {
+        if (settings.advanceOption === 'Paid' && !trxId) {
             toast.error('Please provide your Payment Transaction ID (TrxID) to proceed.');
             return;
         }
@@ -94,6 +98,8 @@ export default function CheckoutPage() {
                     shippingAddress,
                     totalAmount: total(),
                     trxId: trxId,
+                    guestEmail: !session ? guestEmail : undefined,
+                    guestName: !session ? guestName : undefined,
                 }),
             });
 
@@ -102,10 +108,10 @@ export default function CheckoutPage() {
                 throw new Error(data.message || 'Failed to place order');
             }
 
-            await res.json();
+            const data = await res.json();
             clearCart();
             toast.success('Order placed successfully!');
-            router.push('/profile?orderSuccess=true');
+            router.push(`/order-success?orderId=${data.orderId}`);
         } catch (error: any) {
             toast.error(error.message);
         } finally {
@@ -134,54 +140,81 @@ export default function CheckoutPage() {
                                 <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">1</span>
                                 Shipping Information
                             </h2>
-                            <div className="mb-8 overflow-hidden rounded-2xl border border-indigo-100 shadow-sm">
-                                <div className="bg-indigo-600 px-6 py-4">
-                                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                        📦 অর্ডার কনফার্মেশন নোটিস 📦
-                                    </h3>
-                                </div>
-                                <div className="bg-indigo-50/30 p-6 space-y-4">
-                                    <p className="text-sm font-medium text-gray-800 leading-relaxed">
-                                        প্রিয় কাস্টমার,<br />
-                                        আপনার অর্ডার কনফার্ম করার জন্য অনুগ্রহ করে সঠিক তথ্য দিন এবং ১০০ টাকা অ্যাডভান্স প্রদান করুন।
-                                    </p>
-                                    <div className="space-y-2">
-                                        <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
-                                            <span className="text-green-600">✅</span> অ্যাডভান্স পাওয়ার পরই আপনার অর্ডার প্রসেস শুরু হবে।
-                                        </div>
-                                        <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
-                                            <span className="text-green-600">✅</span> বিকাশ / নগদ / রকেট মাধ্যমে পেমেন্ট করতে পারবেন।
-                                        </div>
+                            {settings.advanceOption === 'Paid' && (
+                                <div className="mb-8 overflow-hidden rounded-2xl border border-indigo-100 shadow-sm">
+                                    <div className="bg-indigo-600 px-6 py-4">
+                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                            📦 অর্ডার কনফার্মেশন নোটিস 📦
+                                        </h3>
                                     </div>
-                                    <div className="pt-4 border-t border-indigo-100">
-                                        <p className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
-                                        <div className="flex items-center gap-3">
-                                            <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                                <span className="text-xl">📲</span>
+                                    <div className="bg-indigo-50/30 p-6 space-y-4">
+                                        <p className="text-sm font-medium text-gray-800 leading-relaxed">
+                                            প্রিয় কাস্টমার,<br />
+                                            আপনার অর্ডার কনফার্ম করার জন্য অনুগ্রহ করে সঠিক তথ্য দিন এবং ১০০ টাকা অ্যাডভান্স প্রদান করুন।
+                                        </p>
+                                        <div className="space-y-2">
+                                            <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
+                                                <span className="text-green-600">✅</span> অ্যাডভান্স পাওয়ার পরই আপনার অর্ডার প্রসেস শুরু হবে।
                                             </div>
-                                            <div>
-                                                <p className="text-xl font-black text-gray-900">01620-919681</p>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">বিকাশ / নগদ / রকেট (Send Money)</p>
+                                            <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
+                                                <span className="text-green-600">✅</span> বিকাশ / নগদ / রকেট মাধ্যমে পেমেন্ট করতে পারবেন।
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="pt-4 text-[11px] text-gray-500 font-medium bg-white/50 p-3 rounded-xl border border-indigo-50">
-                                        <p className="mb-2 font-bold text-gray-700">নিচের তথ্যগুলো দিয়ে অর্ডার কনফার্ম করুন:</p>
-                                        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                            <p>— নাম</p>
-                                            <p>— গ্রাম/ঠিকানা</p>
-                                            <p>— থানা</p>
-                                            <p>— জেলা</p>
-                                            <p className="col-span-2">— দুটি সচল ফোন নাম্বার</p>
+                                        <div className="pt-4 border-t border-indigo-100">
+                                            <p className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                                    <span className="text-xl">📲</span>
+                                                </div>
+                                                <div>
+                                                    <p className="text-xl font-black text-gray-900">01620-919681</p>
+                                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">বিকাশ / নগদ / রকেট (Send Money)</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="pt-4 text-[11px] text-gray-500 font-medium bg-white/50 p-3 rounded-xl border border-indigo-50">
+                                            <p className="mb-2 font-bold text-gray-700">নিচের তথ্যগুলো দিয়ে অর্ডার কনফার্ম করুন:</p>
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                                <p>— নাম</p>
+                                                <p>— গ্রাম/ঠিকানা</p>
+                                                <p>— থানা</p>
+                                                <p>— জেলা</p>
+                                                <p className="col-span-2">— দুটি সচল ফোন নাম্বার</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                             <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Recipient Name</label>
-                                        <Input readOnly value={session?.user?.name || ''} className="bg-gray-50 border-gray-100 rounded-xl font-medium" />
+                                        {session ? (
+                                            <Input readOnly value={session.user.name || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
+                                        ) : (
+                                            <Input
+                                                required
+                                                value={guestName}
+                                                onChange={(e) => setGuestName(e.target.value)}
+                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                                placeholder="Your Full Name"
+                                            />
+                                        )}
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
+                                        {session ? (
+                                            <Input readOnly value={session.user.email || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
+                                        ) : (
+                                            <Input
+                                                required
+                                                type="email"
+                                                value={guestEmail}
+                                                onChange={(e) => setGuestEmail(e.target.value)}
+                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                                placeholder="email@example.com"
+                                            />
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Village / Ward / Road</label>
@@ -236,46 +269,48 @@ export default function CheckoutPage() {
                             </form>
                         </div>
 
-                        <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
-                            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-                                <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
-                                Advance Payment (100 BDT)
-                            </h2>
-                            <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col md:flex-row gap-6 items-center">
-                                <div className="flex-1">
-                                    <p className="text-indigo-900 font-bold text-sm mb-2">📲 পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
-                                    <p className="text-3xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
-                                    <p className="text-xs text-gray-500 font-medium mt-2 uppercase tracking-wider">বিকাশ / নগদ / রকেট (Send Money)</p>
+                        {settings.advanceOption === 'Paid' && (
+                            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
+                                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                    <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
+                                    Advance Payment (100 BDT)
+                                </h2>
+                                <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col md:flex-row gap-6 items-center">
+                                    <div className="flex-1">
+                                        <p className="text-indigo-900 font-bold text-sm mb-2">📲 পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
+                                        <p className="text-3xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
+                                        <p className="text-xs text-gray-500 font-medium mt-2 uppercase tracking-wider">বিকাশ / নগদ / রকেট (Send Money)</p>
+                                    </div>
+                                    <div className="w-full md:w-64">
+                                        <label className="block text-xs font-black text-indigo-600 uppercase tracking-widest mb-1">Enter TrxID here</label>
+                                        <p className="text-[10px] text-indigo-400 font-bold mb-2 uppercase tracking-tight">মেসেজে আসা TrxID নাম্বারটি দিন</p>
+                                        <Input
+                                            required
+                                            value={trxId}
+                                            onChange={(e) => setTrxId(e.target.value)}
+                                            className="rounded-xl border-indigo-300 focus:border-indigo-600 focus:ring-0 font-mono text-center uppercase py-4 shadow-sm"
+                                            placeholder="Transaction ID"
+                                        />
+                                    </div>
                                 </div>
-                                <div className="w-full md:w-64">
-                                    <label className="block text-xs font-black text-indigo-600 uppercase tracking-widest mb-1">Enter TrxID here</label>
-                                    <p className="text-[10px] text-indigo-400 font-bold mb-2 uppercase tracking-tight">মেসেজে আসা TrxID নাম্বারটি দিন</p>
-                                    <Input
-                                        required
-                                        value={trxId}
-                                        onChange={(e) => setTrxId(e.target.value)}
-                                        className="rounded-xl border-indigo-300 focus:border-indigo-600 focus:ring-0 font-mono text-center uppercase py-4 shadow-sm"
-                                        placeholder="Transaction ID"
-                                    />
+                                <div className="mt-6 space-y-4">
+                                    <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
+                                        <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
+                                    </div>
+                                    <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
+                                        <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
+                                            <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
+                                        </p>
+                                        <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
+                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline">(+880 1832-087091)</span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="mt-6 space-y-4">
-                                <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
-                                    <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
-                                </div>
-                                <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
-                                    <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
-                                        <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
-                                    </p>
-                                    <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                                        অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline">(+880 1832-087091)</span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        )}
 
                         <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
                             <h3 className="text-sm font-bold text-gray-900 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
@@ -335,7 +370,7 @@ export default function CheckoutPage() {
                                         Processing Order...
                                     </div>
                                 ) : (
-                                    'Complete Order & Pay Advance'
+                                    settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order'
                                 )}
                             </Button>
                         </div>

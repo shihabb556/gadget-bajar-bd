@@ -42,15 +42,23 @@ export default function Navbar() {
         <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
-                        <div className="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
-                            <Flag className="h-6 w-6" fill="currentColor" />
+                    {/* Logo & Desktop Nav */}
+                    <div className="flex items-center gap-8">
+                        <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
+                            <div className="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
+                                <Flag className="h-6 w-6" fill="currentColor" />
+                            </div>
+                            <div className="hidden md:block">
+                                <span className="text-xl font-black text-gray-900 tracking-tighter uppercase italic">Gadget Bazar BD</span>
+                            </div>
+                        </Link>
+
+                        <div className="hidden md:flex items-center gap-6">
+                            <Link href="/track-order" className="text-sm font-black text-gray-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+                                Track Order
+                            </Link>
                         </div>
-                        <div className="hidden md:block">
-                            <span className="text-xl font-black text-gray-900 tracking-tighter uppercase italic">Gadget Bazar BD</span>
-                        </div>
-                    </Link>
+                    </div>
 
 
                     {/* Search Bar - Desktop */}
@@ -69,13 +77,13 @@ export default function Navbar() {
 
                     {/* Action Icons */}
                     <div className="flex items-center gap-2 sm:gap-4">
-                        <Button
+                        {/* <Button
                             variant="ghost"
                             size="icon"
                             className="text-gray-600 hover:bg-gray-50 rounded-full transition-colors hidden sm:flex"
                         >
                             <Heart className="h-6 w-6" />
-                        </Button>
+                        </Button> */}
 
                         <Link href="/cart" className="p-2.5 text-gray-600 hover:bg-gray-50 rounded-full transition-colors relative">
                             <ShoppingBag className="h-6 w-6" />
@@ -104,6 +112,9 @@ export default function Navbar() {
                                                 <p className="text-sm font-black text-gray-900 truncate">Hello, {session.user.name}</p>
                                                 <p className="text-xs text-gray-500 truncate">{session.user.email}</p>
                                             </div>
+                                            <Link href="/track-order" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+                                                <Search className="h-4 w-4" /> Track Order
+                                            </Link>
                                             <Link href="/profile" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                                 <User className="h-4 w-4" /> My Profile
                                             </Link>
@@ -181,6 +192,9 @@ export default function Navbar() {
                     <div className="px-4 pt-4 pb-6 space-y-1">
                         <Link href="/" className="block px-4 py-3 text-base font-black text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
                             Home
+                        </Link>
+                        <Link href="/track-order" className="block px-4 py-3 text-base font-black text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                            Track Order
                         </Link>
                     </div>
                 </div>

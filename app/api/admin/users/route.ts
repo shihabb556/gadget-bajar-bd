@@ -15,8 +15,29 @@ export async function GET() {
     }
 
     await dbConnect();
-    // Exclude password
-    const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+
+    const users = await User.aggregate([
+        {
+            $lookup: {
+                from: 'orders',
+                localField: '_id',
+                foreignField: 'user',
+                as: 'userOrders'
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                email: 1,
+                role: 1,
+                isActive: 1,
+                createdAt: 1,
+                orderCount: { $size: '$userOrders' }
+            }
+        },
+        { $sort: { createdAt: -1 } }
+    ]);
+
     return NextResponse.json(users);
 }
 

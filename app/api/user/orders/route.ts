@@ -7,11 +7,11 @@ import { authOptions } from '@/lib/auth';
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
-        if (!session) {
-            return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
-        }
+        const { items, shippingAddress, totalAmount, trxId, guestEmail, guestName } = await req.json();
 
-        const { items, shippingAddress, totalAmount, trxId } = await req.json();
+        if (!session && (!guestEmail || !guestName)) {
+            return NextResponse.json({ message: 'Email and Name are required for guest checkout' }, { status: 400 });
+        }
 
         if (!items || items.length === 0) {
             return NextResponse.json({ message: 'No items in order' }, { status: 400 });
@@ -48,7 +48,9 @@ export async function POST(req: Request) {
 
         // Create Order
         const order = await Order.create({
-            user: session.user.id,
+            user: session?.user?.id || undefined,
+            guestEmail: !session ? guestEmail : undefined,
+            guestName: !session ? guestName : undefined,
             items: orderItems,
             totalAmount: calculatedTotal,
             shippingAddress,

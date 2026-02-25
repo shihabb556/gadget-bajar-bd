@@ -5,7 +5,7 @@ import { useCartStore } from '@/lib/store';
 import { Button } from '@/components/ui/shared';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Trash2, Plus, Minus } from 'lucide-react';
+import { Trash2, Plus, Minus, Search, ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function CartPage() {
@@ -24,11 +24,22 @@ export default function CartPage() {
                 <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
 
                 {items.length === 0 ? (
-                    <div className="bg-white rounded-lg shadow p-6 text-center">
-                        <p className="text-gray-500 mb-4">Your cart is empty.</p>
-                        <Link href="/">
-                            <Button>Continue Shopping</Button>
-                        </Link>
+                    <div className="bg-white rounded-[2rem] shadow-xl shadow-blue-100/50 p-12 text-center border border-gray-100">
+                        <div className="h-24 w-24 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                            <ShoppingBag className="h-12 w-12" />
+                        </div>
+                        <h2 className="text-2xl font-black text-gray-900 uppercase italic mb-2">Your cart is empty</h2>
+                        <p className="text-gray-500 font-medium mb-8">Looks like you haven't added any tech to your list yet.</p>
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                            <Link href="/" className="w-full sm:w-auto">
+                                <Button className="w-full sm:px-8 py-6 h-auto rounded-2xl bg-blue-600 hover:bg-blue-700 font-black uppercase text-xs tracking-[0.2em]">Continue Shopping</Button>
+                            </Link>
+                            <Link href="/track-order" className="w-full sm:w-auto">
+                                <Button variant="outline" className="w-full sm:px-8 py-6 h-auto rounded-2xl border-2 font-black uppercase text-xs tracking-[0.2em] gap-2">
+                                    <Search className="h-4 w-4" /> Track Existing Order
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                 ) : (
                     <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">

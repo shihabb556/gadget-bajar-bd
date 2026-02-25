@@ -9,13 +9,40 @@ async function isAdmin() {
     return session?.user?.role === 'ADMIN';
 }
 
-export async function GET() {
+export async function GET(req: Request) {
     if (!await isAdmin()) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
+    const { searchParams } = new URL(req.url);
+    const orderId = searchParams.get('orderId');
+    const status = searchParams.get('status');
+    const userId = searchParams.get('userId');
+
     await dbConnect();
-    const orders = await Order.find({})
+
+    const query: any = {};
+    if (orderId) {
+        if (orderId.length === 24) {
+            query._id = orderId;
+        } else {
+            query.$expr = {
+                $regexMatch: {
+                    input: { $toString: "$_id" },
+                    regex: orderId + "$",
+                    options: "i"
+                }
+            };
+        }
+    }
+    if (status && status !== 'ALL') {
+        query.status = status;
+    }
+    if (userId) {
+        query.user = userId;
+    }
+
+    const orders = await Order.find(query)
         .populate('user', 'name email')
         .sort({ createdAt: -1 });
     return NextResponse.json(orders);
