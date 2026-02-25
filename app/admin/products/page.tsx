@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button, Input } from '@/components/ui/shared';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
+import Modal from '@/components/ui/Modal';
 
 interface Product {
     _id: string;
@@ -16,9 +17,13 @@ interface Product {
     images: string[];
 }
 
+const truncate = (str: string, max = 40) =>
+    str.length > max ? str.slice(0, max) + '…' : str;
+
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [deleteModal, setDeleteModal] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
 
     useEffect(() => {
         fetchProducts();
@@ -75,15 +80,20 @@ export default function ProductsPage() {
                             ) : (
                                 products.map((product) => (
                                     <tr key={product._id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-6 py-4">
                                             <div className="flex items-center">
                                                 <div className="h-10 w-10 flex-shrink-0 relative bg-gray-100 rounded">
                                                     {product.images?.[0] && (
                                                         <Image src={product.images[0]} alt={product.name} fill className="object-cover rounded" />
                                                     )}
                                                 </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                                                <div className="ml-4 max-w-[220px]">
+                                                    <div
+                                                        className="text-sm font-medium text-gray-900 truncate"
+                                                        title={product.name}
+                                                    >
+                                                        {truncate(product.name)}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </td>
@@ -111,12 +121,7 @@ export default function ProductsPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={async () => {
-                                                    if (confirm('Are you sure?')) {
-                                                        await fetch(`/api/admin/products/${product._id}`, { method: 'DELETE' });
-                                                        fetchProducts();
-                                                    }
-                                                }}
+                                                onClick={() => setDeleteModal({ open: true, id: product._id })}
                                                 className="text-red-600 hover:text-red-900 hover:bg-red-50"
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -129,6 +134,29 @@ export default function ProductsPage() {
                     </table>
                 </div>
             </div>
+
+            {/* Delete Confirm Modal */}
+            <Modal
+                isOpen={deleteModal.open}
+                onClose={() => setDeleteModal({ open: false, id: null })}
+                title="Delete Product"
+                variant="confirm"
+                message="Are you sure you want to delete this product? This action cannot be undone."
+                actions={[
+                    { label: 'Cancel', onClick: () => setDeleteModal({ open: false, id: null }), variant: 'ghost' },
+                    {
+                        label: 'Delete',
+                        variant: 'danger',
+                        onClick: async () => {
+                            if (deleteModal.id) {
+                                await fetch(`/api/admin/products/${deleteModal.id}`, { method: 'DELETE' });
+                                fetchProducts();
+                            }
+                            setDeleteModal({ open: false, id: null });
+                        },
+                    },
+                ]}
+            />
         </div>
     );
 }
