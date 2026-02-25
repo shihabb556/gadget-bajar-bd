@@ -8,13 +8,14 @@ import { Button } from '@/components/ui/shared';
 import * as htmlToImage from 'html-to-image';
 import { Download, Package } from 'lucide-react';
 import { jsPDF } from 'jspdf';
+import { profileSchema, ProfileInput } from '@/lib/validations';
 
 function ProfileContent() {
     const { data: session } = useSession();
     const searchParams = useSearchParams();
     const orderSuccess = searchParams.get('orderSuccess');
     const [orders, setOrders] = useState([]);
-    const [profile, setProfile] = useState({
+    const [profile, setProfile] = useState<ProfileInput & { email: string }>({
         name: '',
         lastName: '',
         email: '',
@@ -26,6 +27,7 @@ function ProfileContent() {
     });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [fieldErrors, setFieldErrors] = useState<Partial<Record<keyof ProfileInput, string>>>({});
     const [activeTab, setActiveTab] = useState('orders'); // 'orders' or 'profile'
     const [searchTerm, setSearchTerm] = useState('');
     const summaryRef = useRef<HTMLDivElement>(null);
@@ -137,6 +139,21 @@ function ProfileContent() {
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
+        setFieldErrors({});
+
+        // Frontend validation
+        const result = profileSchema.safeParse(profile);
+        if (!result.success) {
+            const errors: any = {};
+            result.error.issues.forEach((issue) => {
+                errors[issue.path[0]] = issue.message;
+            });
+            setFieldErrors(errors);
+            setSaving(false);
+            import('react-hot-toast').then(({ toast }) => toast.error('Please fix the errors in the form'));
+            return;
+        }
+
         try {
             const res = await fetch('/api/user/profile', {
                 method: 'PATCH',
@@ -146,7 +163,8 @@ function ProfileContent() {
             if (res.ok) {
                 import('react-hot-toast').then(({ toast }) => toast.success('Profile updated successfully'));
             } else {
-                import('react-hot-toast').then(({ toast }) => toast.error('Failed to update profile'));
+                const data = await res.json();
+                import('react-hot-toast').then(({ toast }) => toast.error(data.message || 'Failed to update profile'));
             }
         } catch (error) {
             import('react-hot-toast').then(({ toast }) => toast.error('Error updating profile'));
@@ -405,8 +423,11 @@ function ProfileContent() {
                                                     required
                                                     value={profile.name}
                                                     onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.name ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.name && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.name}</p>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Last Name</label>
@@ -414,8 +435,11 @@ function ProfileContent() {
                                                     type="text"
                                                     value={profile.lastName}
                                                     onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.lastName ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.lastName && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.lastName}</p>
+                                                )}
                                             </div>
                                             <div className="sm:col-span-2">
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
@@ -440,8 +464,11 @@ function ProfileContent() {
                                                     placeholder="017XXXXXXXX"
                                                     value={profile.primaryPhone}
                                                     onChange={(e) => setProfile({ ...profile, primaryPhone: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.primaryPhone ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.primaryPhone && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.primaryPhone}</p>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Secondary Phone (Optional)</label>
@@ -450,8 +477,11 @@ function ProfileContent() {
                                                     placeholder="018XXXXXXXX"
                                                     value={profile.secondaryPhone}
                                                     onChange={(e) => setProfile({ ...profile, secondaryPhone: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.secondaryPhone ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.secondaryPhone && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.secondaryPhone}</p>
+                                                )}
                                             </div>
                                             <div className="sm:col-span-2">
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Village / Ward / Road</label>
@@ -460,8 +490,11 @@ function ProfileContent() {
                                                     placeholder="House 12, Road 5, Block B"
                                                     value={profile.village}
                                                     onChange={(e) => setProfile({ ...profile, village: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.village ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.village && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.village}</p>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Thana / Sub-district</label>
@@ -469,8 +502,11 @@ function ProfileContent() {
                                                     type="text"
                                                     value={profile.thana}
                                                     onChange={(e) => setProfile({ ...profile, thana: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.thana ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.thana && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.thana}</p>
+                                                )}
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">District</label>
@@ -478,8 +514,11 @@ function ProfileContent() {
                                                     type="text"
                                                     value={profile.district}
                                                     onChange={(e) => setProfile({ ...profile, district: e.target.value })}
-                                                    className="block w-full rounded-xl border-gray-200 bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium"
+                                                    className={`block w-full rounded-xl border ${fieldErrors.district ? 'border-red-500' : 'border-gray-200'} bg-gray-50 px-4 py-3 text-sm focus:border-indigo-600 focus:bg-white focus:ring-0 transition-all font-medium`}
                                                 />
+                                                {fieldErrors.district && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.district}</p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>

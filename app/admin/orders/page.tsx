@@ -151,13 +151,13 @@ function AdminOrdersContent() {
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
+                        className="text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
                     >
-                        <option value="ALL">All Status</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="PROCESSING">Processing</option>
-                        <option value="DELIVERED">Delivered</option>
-                        <option value="CANCELLED">Cancelled</option>
+                        <option className="text-gray-700" value="ALL">All Status</option>
+                        <option className="text-gray-700" value="PENDING">Pending</option>
+                        <option className="text-gray-700" value="PROCESSING">Processing</option>
+                        <option className="text-gray-700" value="DELIVERED">Delivered</option>
+                        <option className="text-gray-700" value="CANCELLED">Cancelled</option>
                     </select>
                 </div>
             </div>
@@ -219,7 +219,7 @@ function AdminOrdersContent() {
                                         <select
                                             value={order.status}
                                             onChange={(e) => updateStatus(order._id, e.target.value)}
-                                            className="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            className="text-sm text-gray-700! border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                         >
                                             <option value="PENDING">Pending</option>
                                             <option value="PROCESSING">Processing</option>

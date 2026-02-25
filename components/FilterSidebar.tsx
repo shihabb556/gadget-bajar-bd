@@ -7,9 +7,10 @@ import { ChevronRight, Filter, ShoppingBag } from 'lucide-react';
 
 interface FilterSidebarProps {
     categories: any[];
+    onFilterApplied?: () => void;
 }
 
-export default function FilterSidebar({ categories }: FilterSidebarProps) {
+export default function FilterSidebar({ categories, onFilterApplied }: FilterSidebarProps) {
     const router = useRouter();
     const searchParams = useSearchParams();
 
@@ -41,6 +42,7 @@ export default function FilterSidebar({ categories }: FilterSidebarProps) {
 
         setSelectedCategories(newCategories);
         updateFilters({ category: newCategories.length > 0 ? newCategories.join(',') : null });
+        onFilterApplied?.();
     };
 
     const handlePriceChange = () => {
@@ -48,6 +50,7 @@ export default function FilterSidebar({ categories }: FilterSidebarProps) {
             minPrice: priceRange.min.toString(),
             maxPrice: priceRange.max.toString()
         });
+        onFilterApplied?.();
     };
 
     // Build recursive tree
@@ -175,6 +178,7 @@ export default function FilterSidebar({ categories }: FilterSidebarProps) {
                                         ? [...current, status]
                                         : current.filter(s => s !== status);
                                     updateFilters({ availability: next.length > 0 ? next.join(',') : null });
+                                    onFilterApplied?.();
                                 }}
                             />
                             <span className="text-sm font-bold text-gray-600 group-hover:text-gray-900">{status}</span>

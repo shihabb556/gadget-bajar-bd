@@ -91,7 +91,7 @@ export default function CategoriesPage() {
 
             {/* Create Form */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 className="text-lg font-medium mb-4">Add New Category</h3>
+                <h3 className="text-lg text-gray-700 font-medium mb-4">Add New Category</h3>
                 <form onSubmit={handleSubmit} className="flex gap-4 items-end">
                     <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -105,7 +105,7 @@ export default function CategoriesPage() {
                     <div className="flex-1">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Parent Category (Optional)</label>
                         <select
-                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            className="flex h-10 w-full rounded-md border border-input text-gray-700 px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                             value={formData.parent}
                             onChange={(e) => setFormData({ ...formData, parent: e.target.value })}
                         >

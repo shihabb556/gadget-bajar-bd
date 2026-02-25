@@ -1,6 +1,7 @@
 import Navbar from '@/components/Navbar';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
+import MobileFilterDrawer from '@/components/MobileFilterDrawer';
 import dbConnect from '@/lib/db';
 import { Product, Category } from '@/models/schema';
 import Link from 'next/link';
@@ -83,6 +84,7 @@ export default async function Home({ searchParams }: {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <MobileFilterDrawer categories={JSON.parse(JSON.stringify(categories))} />
         <div className="lg:flex gap-12 items-start">
           {/* Left Sidebar - Filters */}
           <div className="hidden lg:block w-72 shrink-0">

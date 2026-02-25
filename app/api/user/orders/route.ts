@@ -3,11 +3,23 @@ import dbConnect from '@/lib/db';
 import { Order, Product } from '@/models/schema';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { orderSchema } from '@/lib/validations';
 
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
-        const { items, shippingAddress, totalAmount, trxId, guestEmail, guestName } = await req.json();
+        const body = await req.json();
+
+        // Validate input
+        const result = orderSchema.safeParse(body);
+        if (!result.success) {
+            return NextResponse.json(
+                { message: result.error.issues[0].message },
+                { status: 400 }
+            );
+        }
+
+        const { items, shippingAddress, trxId, guestEmail, guestName } = result.data;
 
         if (!session && (!guestEmail || !guestName)) {
             return NextResponse.json({ message: 'Email and Name are required for guest checkout' }, { status: 400 });

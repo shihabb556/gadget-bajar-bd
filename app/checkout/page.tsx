@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { pixelInitiateCheckout, pixelPurchase } from '@/lib/pixel';
+import { orderSchema, ShippingAddressInput } from '@/lib/validations';
 
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCartStore();
@@ -17,7 +18,7 @@ export default function CheckoutPage() {
     const [mounted, setMounted] = useState(false);
     const [settings, setSettings] = useState({ advanceOption: 'Unpaid' });
 
-    const [shippingAddress, setShippingAddress] = useState({
+    const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>({
         street: '',
         city: '',
         phone: '',
@@ -29,6 +30,7 @@ export default function CheckoutPage() {
     const [trxId, setTrxId] = useState('');
     const [guestEmail, setGuestEmail] = useState('');
     const [guestName, setGuestName] = useState('');
+    const [fieldErrors, setFieldErrors] = useState<any>({});
 
     useEffect(() => setMounted(true), []);
 
@@ -89,6 +91,28 @@ export default function CheckoutPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFieldErrors({});
+
+        const orderData = {
+            items,
+            shippingAddress,
+            trxId: trxId,
+            guestEmail: !session ? guestEmail : undefined,
+            guestName: !session ? guestName : undefined,
+        };
+
+        // Frontend validation
+        const result = orderSchema.safeParse(orderData);
+        if (!result.success) {
+            const errors: any = {};
+            result.error.issues.forEach((issue) => {
+                const path = issue.path.join('.');
+                errors[path] = issue.message;
+            });
+            setFieldErrors(errors);
+            toast.error('Please fix the errors in the form');
+            return;
+        }
 
         if (settings.advanceOption === 'Paid' && !trxId) {
             toast.error('Please provide your Payment Transaction ID (TrxID) to proceed.');
@@ -207,13 +231,18 @@ export default function CheckoutPage() {
                                         {session ? (
                                             <Input readOnly value={session.user.name || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
                                         ) : (
-                                            <Input
-                                                required
-                                                value={guestName}
-                                                onChange={(e) => setGuestName(e.target.value)}
-                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
-                                                placeholder="Your Full Name"
-                                            />
+                                            <>
+                                                <Input
+                                                    required
+                                                    value={guestName}
+                                                    onChange={(e) => setGuestName(e.target.value)}
+                                                    className={`rounded-xl border ${fieldErrors.guestName ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                                    placeholder="Your Full Name"
+                                                />
+                                                {fieldErrors.guestName && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.guestName}</p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div>
@@ -221,14 +250,19 @@ export default function CheckoutPage() {
                                         {session ? (
                                             <Input readOnly value={session.user.email || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
                                         ) : (
-                                            <Input
-                                                required
-                                                type="email"
-                                                value={guestEmail}
-                                                onChange={(e) => setGuestEmail(e.target.value)}
-                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
-                                                placeholder="email@example.com"
-                                            />
+                                            <>
+                                                <Input
+                                                    required
+                                                    type="email"
+                                                    value={guestEmail}
+                                                    onChange={(e) => setGuestEmail(e.target.value)}
+                                                    className={`rounded-xl border ${fieldErrors.guestEmail ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                                    placeholder="email@example.com"
+                                                />
+                                                {fieldErrors.guestEmail && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.guestEmail}</p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div>
@@ -237,9 +271,12 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.village}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, village: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.village'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="House 12, Road 5"
                                         />
+                                        {fieldErrors['shippingAddress.village'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.village']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Thana / Sub-district</label>
@@ -247,8 +284,12 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.thana}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, thana: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.thana'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                            placeholder="Your Thana"
                                         />
+                                        {fieldErrors['shippingAddress.thana'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.thana']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">District</label>
@@ -256,8 +297,12 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.district}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, district: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.district'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                            placeholder="Your District"
                                         />
+                                        {fieldErrors['shippingAddress.district'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.district']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Primary Phone</label>
@@ -266,9 +311,12 @@ export default function CheckoutPage() {
                                             type="tel"
                                             value={shippingAddress.phone}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.phone'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="017XXXXXXXX"
                                         />
+                                        {fieldErrors['shippingAddress.phone'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.phone']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Secondary Phone</label>
@@ -276,9 +324,12 @@ export default function CheckoutPage() {
                                             type="tel"
                                             value={shippingAddress.secondaryPhone}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, secondaryPhone: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.secondaryPhone'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="018XXXXXXXX"
                                         />
+                                        {fieldErrors['shippingAddress.secondaryPhone'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.secondaryPhone']}</p>
+                                        )}
                                     </div>
                                 </div>
                             </form>
