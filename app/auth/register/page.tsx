@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button, Input } from '@/components/ui/shared';
+import { pixelCompleteRegistration } from '@/lib/pixel';
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -32,6 +33,7 @@ export default function RegisterPage() {
                 throw new Error(data.message || 'Something went wrong');
             }
 
+            pixelCompleteRegistration();
             router.push('/auth/login?registered=true');
         } catch (err: any) {
             setError(err.message);

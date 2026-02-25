@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { pixelInitiateCheckout, pixelPurchase } from '@/lib/pixel';
 
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCartStore();
@@ -38,6 +39,13 @@ export default function CheckoutPage() {
         fetchSettings();
         if (session) {
             fetchProfile();
+        }
+        // Fire InitiateCheckout when user arrives at checkout with items
+        if (mounted && items.length > 0) {
+            pixelInitiateCheckout({
+                value: total(),
+                num_items: items.reduce((sum: number, i: any) => sum + i.quantity, 0),
+            });
         }
     }, [mounted, items, router, session]);
 
@@ -109,7 +117,14 @@ export default function CheckoutPage() {
             }
 
             const data = await res.json();
+            // Fire Purchase event before clearing cart
+            pixelPurchase({
+                value: total(),
+                num_items: items.reduce((sum: number, i: any) => sum + i.quantity, 0),
+                order_id: data.orderId,
+            });
             clearCart();
+            console.log('Order placed successfully!', data.orderId, data);
             toast.success('Order placed successfully!');
             router.push(`/order-success?orderId=${data.orderId}`);
         } catch (error: any) {

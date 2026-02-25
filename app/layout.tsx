@@ -5,11 +5,12 @@ import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 import { Toaster } from 'react-hot-toast';
 
 import Footer from "@/components/Footer";
+import MetaPixel from "@/components/MetaPixel";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Gadget Bazar BD",
+  title: "ElectroMart",
   description: "Premium E-commerce Experience",
 };
 
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <MetaPixel />
         <NextAuthProvider>
           <div className="flex flex-col min-h-screen">
             <main className="flex-grow">
@@ -34,4 +36,3 @@ export default function RootLayout({
     </html>
   );
 }
-
