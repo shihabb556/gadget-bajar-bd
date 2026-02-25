@@ -105,7 +105,7 @@ export default function Navbar() {
                             </Button>
 
                             {isProfileOpen && (
-                                <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-200">
+                                <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 ring-1 ring-black/5 animate-in fade-in slide-in-from-top-2 duration-200 z-[9999]">
                                     {session ? (
                                         <>
                                             <div className="px-4 py-3 border-b border-gray-50 mb-2">
