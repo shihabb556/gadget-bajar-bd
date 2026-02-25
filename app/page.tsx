@@ -16,14 +16,14 @@ export async function generateMetadata({ searchParams }: {
   searchParams: Promise<{ category?: string; search?: string }>
 }): Promise<Metadata> {
   const params = await searchParams;
-  let title = "Gadget Bazar BD - Premium Gadgets & Electronics Shop";
-  let description = "Explore the best collection of gadgets and electronics at Gadget Bazar BD. Quality tech at unbeatable prices.";
+  let title = "HealthPortall - Your Trusted Online Medicine Store";
+  let description = "Explore the best collection of medicines and health products at HealthPortall. Genuine products at the best prices.";
 
   if (params.search) {
-    title = `Search results for "${params.search}" | Gadget Bazar BD`;
+    title = `Search results for "${params.search}" | HealthPortall`;
   } else if (params.category) {
-    title = `${params.category} Collection | Gadget Bazar BD`;
-    description = `Shop the latest ${params.category} gadgets and electronics at Gadget Bazar BD. High-quality products with official warranty.`;
+    title = `${params.category} | HealthPortall`;
+    description = `Browse ${params.category} medicines and health products at HealthPortall. Genuine, quality-assured products.`;
   }
 
   return {
@@ -122,10 +122,10 @@ export default async function Home({ searchParams }: {
                   <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Our Selection</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase italic">
-                  {params.search ? `Results for "${params.search}"` : params.category ? 'Category Items' : 'Explore Gadgets'}
+                  {params.search ? `Results for "${params.search}"` : params.category ? 'Category Products' : 'Explore Products'}
                 </h1>
                 <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
-                  Found {products.length} high-quality gadgets
+                  Found {products.length} products
                 </p>
               </div>
 
@@ -145,7 +145,7 @@ export default async function Home({ searchParams }: {
                 <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <FilterSidebar categories={[]} /> {/* Just for the icon/look */}
                 </div>
-                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching gadgets found</h2>
+                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching products found</h2>
                 <p className="text-gray-400 font-bold uppercase text-xs tracking-widest max-w-xs mx-auto">
                   Try adjusting your filters or search query to find what you're looking for.
                 </p>

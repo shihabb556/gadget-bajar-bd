@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
         const result = await new Promise<any>((resolve, reject) => {
             cloudinary.uploader.upload_stream(
-                { folder: 'gadget-bazar-bd' },
+                { folder: 'healthportall' },
                 (error, result) => {
                     if (error) reject(error);
                     else resolve(result);

@@ -244,7 +244,7 @@ function OrderSuccessContent() {
                             Thank you for your business!
                         </p>
                         <p className="text-[9px] text-gray-300 font-bold italic">
-                            For support or inquiries, email help@electromart.com or WhatsApp +880 1620-919681
+                            For support or inquiries, email support@healthportall.com or WhatsApp +880 1620-919681
 
                         </p>
                     </div>
