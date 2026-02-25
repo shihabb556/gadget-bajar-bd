@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     if (!product) {
         return {
-            title: 'Product Not Found | Gadget Bazar BD',
+            title: 'Product Not Found | HealthPortall',
         };
     }
 
@@ -72,7 +72,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         sku: `GB-${product._id.slice(-8).toUpperCase()}`,
         brand: {
             '@type': 'Brand',
-            name: 'Gadget Bazar BD',
+            name: 'HealthPortall',
         },
         offers: {
             '@type': 'Offer',
