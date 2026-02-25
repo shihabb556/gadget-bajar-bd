@@ -1,22 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/store';
 import { Button } from '@/components/ui/shared';
 import { Minus, Plus, ShoppingCart, Zap } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { pixelViewContent, pixelAddToCart } from '@/lib/pixel';
 
 export default function ProductActions({ product }: { product: any }) {
     const { addToCart } = useCartStore();
     const [quantity, setQuantity] = useState(1);
     const router = useRouter();
 
+    // ViewContent: fired when the user lands on the product page
+    useEffect(() => {
+        const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
+        pixelViewContent({
+            content_ids: [product._id],
+            content_name: product.name,
+            value: effectivePrice,
+        });
+    }, [product._id]);
+
     const handleAddToCart = () => {
         if (product.stock > 0) {
             for (let i = 0; i < quantity; i++) {
                 addToCart(product);
             }
+            const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
+            // AddToCart pixel event
+            pixelAddToCart({
+                content_ids: [product._id],
+                content_name: product.name,
+                value: effectivePrice * quantity,
+            });
             toast.success(`${quantity} ${product.name} added to cart!`);
         }
     };
@@ -24,6 +42,13 @@ export default function ProductActions({ product }: { product: any }) {
     const handleBuyNow = () => {
         if (product.stock > 0) {
             addToCart(product);
+            const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
+            // AddToCart pixel event (also fires on Buy Now)
+            pixelAddToCart({
+                content_ids: [product._id],
+                content_name: product.name,
+                value: effectivePrice,
+            });
             router.push('/checkout');
         }
     };

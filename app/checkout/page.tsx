@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import { pixelInitiateCheckout, pixelPurchase } from '@/lib/pixel';
+import { orderSchema, ShippingAddressInput } from '@/lib/validations';
 
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCartStore();
@@ -16,7 +18,7 @@ export default function CheckoutPage() {
     const [mounted, setMounted] = useState(false);
     const [settings, setSettings] = useState({ advanceOption: 'Unpaid' });
 
-    const [shippingAddress, setShippingAddress] = useState({
+    const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>({
         street: '',
         city: '',
         phone: '',
@@ -28,6 +30,9 @@ export default function CheckoutPage() {
     const [trxId, setTrxId] = useState('');
     const [guestEmail, setGuestEmail] = useState('');
     const [guestName, setGuestName] = useState('');
+    const [fieldErrors, setFieldErrors] = useState<any>({});
+    const [deliveryArea, setDeliveryArea] = useState<'Inside Dhaka' | 'Outside Dhaka' | ''>('');
+    const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : deliveryArea === 'Outside Dhaka' ? 170 : 0;
 
     useEffect(() => setMounted(true), []);
 
@@ -38,6 +43,13 @@ export default function CheckoutPage() {
         fetchSettings();
         if (session) {
             fetchProfile();
+        }
+        // Fire InitiateCheckout when user arrives at checkout with items
+        if (mounted && items.length > 0) {
+            pixelInitiateCheckout({
+                value: total(),
+                num_items: items.reduce((sum: number, i: any) => sum + i.quantity, 0),
+            });
         }
     }, [mounted, items, router, session]);
 
@@ -81,6 +93,29 @@ export default function CheckoutPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFieldErrors({});
+
+        const orderData = {
+            items,
+            shippingAddress,
+            trxId: trxId,
+            deliveryArea,
+            guestEmail: !session ? guestEmail : undefined,
+            guestName: !session ? guestName : undefined,
+        };
+
+        // Frontend validation
+        const result = orderSchema.safeParse(orderData);
+        if (!result.success) {
+            const errors: any = {};
+            result.error.issues.forEach((issue) => {
+                const path = issue.path.join('.');
+                errors[path] = issue.message;
+            });
+            setFieldErrors(errors);
+            toast.error('Please fix the errors in the form');
+            return;
+        }
 
         if (settings.advanceOption === 'Paid' && !trxId) {
             toast.error('Please provide your Payment Transaction ID (TrxID) to proceed.');
@@ -96,8 +131,9 @@ export default function CheckoutPage() {
                 body: JSON.stringify({
                     items,
                     shippingAddress,
-                    totalAmount: total(),
+                    totalAmount: total() + deliveryCharge,
                     trxId: trxId,
+                    deliveryArea,
                     guestEmail: !session ? guestEmail : undefined,
                     guestName: !session ? guestName : undefined,
                 }),
@@ -109,7 +145,14 @@ export default function CheckoutPage() {
             }
 
             const data = await res.json();
+            // Fire Purchase event before clearing cart
+            pixelPurchase({
+                value: total(),
+                num_items: items.reduce((sum: number, i: any) => sum + i.quantity, 0),
+                order_id: data.orderId,
+            });
             clearCart();
+            console.log('Order placed successfully!', data.orderId, data);
             toast.success('Order placed successfully!');
             router.push(`/order-success?orderId=${data.orderId}`);
         } catch (error: any) {
@@ -192,13 +235,18 @@ export default function CheckoutPage() {
                                         {session ? (
                                             <Input readOnly value={session.user.name || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
                                         ) : (
-                                            <Input
-                                                required
-                                                value={guestName}
-                                                onChange={(e) => setGuestName(e.target.value)}
-                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
-                                                placeholder="Your Full Name"
-                                            />
+                                            <>
+                                                <Input
+                                                    required
+                                                    value={guestName}
+                                                    onChange={(e) => setGuestName(e.target.value)}
+                                                    className={`rounded-xl border ${fieldErrors.guestName ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                                    placeholder="Your Full Name"
+                                                />
+                                                {fieldErrors.guestName && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.guestName}</p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div>
@@ -206,14 +254,19 @@ export default function CheckoutPage() {
                                         {session ? (
                                             <Input readOnly value={session.user.email || ''} className="bg-gray-100 border-gray-100 rounded-xl font-medium cursor-not-allowed" />
                                         ) : (
-                                            <Input
-                                                required
-                                                type="email"
-                                                value={guestEmail}
-                                                onChange={(e) => setGuestEmail(e.target.value)}
-                                                className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
-                                                placeholder="email@example.com"
-                                            />
+                                            <>
+                                                <Input
+                                                    required
+                                                    type="email"
+                                                    value={guestEmail}
+                                                    onChange={(e) => setGuestEmail(e.target.value)}
+                                                    className={`rounded-xl border ${fieldErrors.guestEmail ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                                    placeholder="email@example.com"
+                                                />
+                                                {fieldErrors.guestEmail && (
+                                                    <p className="mt-1 text-xs text-red-500">{fieldErrors.guestEmail}</p>
+                                                )}
+                                            </>
                                         )}
                                     </div>
                                     <div>
@@ -222,9 +275,12 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.village}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, village: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.village'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="House 12, Road 5"
                                         />
+                                        {fieldErrors['shippingAddress.village'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.village']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Thana / Sub-district</label>
@@ -232,8 +288,12 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.thana}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, thana: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.thana'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                            placeholder="Your Thana"
                                         />
+                                        {fieldErrors['shippingAddress.thana'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.thana']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">District</label>
@@ -241,8 +301,52 @@ export default function CheckoutPage() {
                                             required
                                             value={shippingAddress.district}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, district: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.district'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
+                                            placeholder="Your District"
                                         />
+                                        {fieldErrors['shippingAddress.district'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.district']}</p>
+                                        )}
+                                    </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Delivery Area (ডেলিভারি এলাকা নির্বাচন করুন) *</label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => setDeliveryArea('Inside Dhaka')}
+                                                className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Inside Dhaka'
+                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Inside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                        Inside Dhaka
+                                                    </span>
+                                                    {deliveryArea === 'Inside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
+                                                </div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Charge: ৳80 (ঢাকা সিটির ভেতরে)</p>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setDeliveryArea('Outside Dhaka')}
+                                                className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Outside Dhaka'
+                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Outside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                        Outside Dhaka
+                                                    </span>
+                                                    {deliveryArea === 'Outside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
+                                                </div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Charge: ৳170 (ঢাকার বাইরে)</p>
+                                            </button>
+                                        </div>
+                                        {fieldErrors.deliveryArea && (
+                                            <p className="mt-2 text-xs text-red-500 font-bold">{fieldErrors.deliveryArea}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Primary Phone</label>
@@ -251,9 +355,12 @@ export default function CheckoutPage() {
                                             type="tel"
                                             value={shippingAddress.phone}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.phone'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="017XXXXXXXX"
                                         />
+                                        {fieldErrors['shippingAddress.phone'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.phone']}</p>
+                                        )}
                                     </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Secondary Phone</label>
@@ -261,9 +368,12 @@ export default function CheckoutPage() {
                                             type="tel"
                                             value={shippingAddress.secondaryPhone}
                                             onChange={(e) => setShippingAddress({ ...shippingAddress, secondaryPhone: e.target.value })}
-                                            className="rounded-xl border-gray-200 focus:border-indigo-600 focus:ring-0"
+                                            className={`rounded-xl border ${fieldErrors['shippingAddress.secondaryPhone'] ? 'border-red-500' : 'border-gray-200'} focus:border-indigo-600 focus:ring-0`}
                                             placeholder="018XXXXXXXX"
                                         />
+                                        {fieldErrors['shippingAddress.secondaryPhone'] && (
+                                            <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.secondaryPhone']}</p>
+                                        )}
                                     </div>
                                 </div>
                             </form>
@@ -350,19 +460,22 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-500 font-medium uppercase tracking-tighter">
                                     <p>Delivery Fee</p>
-                                    <p>FREE</p>
+                                    <p className="text-gray-900 font-bold">{deliveryArea ? `৳${deliveryCharge}` : 'Select Area'}</p>
                                 </div>
                                 <div className="flex justify-between pt-4 border-t border-gray-100">
                                     <p className="text-lg font-black text-gray-900 uppercase">Total Payable</p>
-                                    <p className="text-2xl font-black text-indigo-600">৳{total()}</p>
+                                    <p className="text-2xl font-black text-indigo-600">৳{total() + deliveryCharge}</p>
                                 </div>
                             </div>
 
                             <Button
                                 form="checkout-form"
                                 type="submit"
-                                disabled={loading}
-                                className="w-full mt-8 py-7 rounded-2xl bg-indigo-600 text-white font-black uppercase tracking-widest hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-indigo-100"
+                                disabled={loading || !deliveryArea}
+                                className={`w-full mt-8 py-7 rounded-2xl text-white font-black uppercase tracking-widest transition-all shadow-lg ${!deliveryArea
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-indigo-100'
+                                    }`}
                             >
                                 {loading ? (
                                     <div className="flex items-center gap-2">
@@ -370,7 +483,7 @@ export default function CheckoutPage() {
                                         Processing Order...
                                     </div>
                                 ) : (
-                                    settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order'
+                                    !deliveryArea ? 'Select Delivery Area' : (settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order')
                                 )}
                             </Button>
                         </div>

@@ -2,13 +2,7 @@ import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import dbConnect from '@/lib/db';
 import { User } from '@/models/schema';
-import { z } from 'zod';
-
-const registerSchema = z.object({
-    name: z.string().min(2, 'Name must be at least 2 characters').max(60, 'Name too long').trim(),
-    email: z.string().email('Invalid email address').toLowerCase().trim(),
-    password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+import { registerSchema } from '@/lib/validations';
 
 export async function POST(req: Request) {
     try {

@@ -151,13 +151,13 @@ function AdminOrdersContent() {
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
+                        className="text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
                     >
-                        <option value="ALL">All Status</option>
-                        <option value="PENDING">Pending</option>
-                        <option value="PROCESSING">Processing</option>
-                        <option value="DELIVERED">Delivered</option>
-                        <option value="CANCELLED">Cancelled</option>
+                        <option className="text-gray-700" value="ALL">All Status</option>
+                        <option className="text-gray-700" value="PENDING">Pending</option>
+                        <option className="text-gray-700" value="PROCESSING">Processing</option>
+                        <option className="text-gray-700" value="DELIVERED">Delivered</option>
+                        <option className="text-gray-700" value="CANCELLED">Cancelled</option>
                     </select>
                 </div>
             </div>
@@ -219,7 +219,7 @@ function AdminOrdersContent() {
                                         <select
                                             value={order.status}
                                             onChange={(e) => updateStatus(order._id, e.target.value)}
-                                            className="text-sm border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            className="text-sm text-gray-700! border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                                         >
                                             <option value="PENDING">Pending</option>
                                             <option value="PROCESSING">Processing</option>
@@ -239,7 +239,7 @@ Phone: ${addr?.phone}
 Alt Phone: ${addr?.secondaryPhone || 'N/A'}
 Address: ${addr?.village}, ${addr?.thana || ''}, ${addr?.district || addr?.city}
 TrxID: ${order.paymentStatus.trxId || 'N/A'}
-Total: ৳${order.totalAmount}
+Total: ৳${order.totalAmount} (Inc. ৳${order.deliveryCharge || 0} delivery)
                                             `.trim());
                                         }}>
                                             View
@@ -314,6 +314,13 @@ Total: ৳${order.totalAmount}
                                 ))}
                             </div>
                         </div>
+
+                        {selectedOrder.deliveryCharge > 0 && (
+                            <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
+                                <p className="text-sm font-black text-gray-900">৳{selectedOrder.deliveryCharge}</p>
+                            </div>
+                        )}
 
                         <div className="bg-indigo-600 p-8 rounded-3xl text-white flex justify-between items-center">
                             <div>

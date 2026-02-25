@@ -1,13 +1,36 @@
 import Navbar from '@/components/Navbar';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
+import MobileFilterDrawer from '@/components/MobileFilterDrawer';
 import dbConnect from '@/lib/db';
 import { Product, Category } from '@/models/schema';
 import Link from 'next/link';
 import { Button } from '@/components/ui/shared';
 
+import { Metadata } from 'next';
+
 // Force dynamic because we want refreshed products
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ searchParams }: {
+  searchParams: Promise<{ category?: string; search?: string }>
+}): Promise<Metadata> {
+  const params = await searchParams;
+  let title = "Gadget Bazar BD - Premium Gadgets & Electronics Shop";
+  let description = "Explore the best collection of gadgets and electronics at Gadget Bazar BD. Quality tech at unbeatable prices.";
+
+  if (params.search) {
+    title = `Search results for "${params.search}" | Gadget Bazar BD`;
+  } else if (params.category) {
+    title = `${params.category} Collection | Gadget Bazar BD`;
+    description = `Shop the latest ${params.category} gadgets and electronics at Gadget Bazar BD. High-quality products with official warranty.`;
+  }
+
+  return {
+    title,
+    description,
+  };
+}
 
 async function getProducts(params: {
   category?: string;
@@ -83,6 +106,7 @@ export default async function Home({ searchParams }: {
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <MobileFilterDrawer categories={JSON.parse(JSON.stringify(categories))} />
         <div className="lg:flex gap-12 items-start">
           {/* Left Sidebar - Filters */}
           <div className="hidden lg:block w-72 shrink-0">

@@ -7,6 +7,35 @@ import ProductActions from '@/components/ProductActions';
 import ProductCard from '@/components/ProductCard';
 import { CheckCircle2, ShieldCheck, Truck, RefreshCcw, ChevronRight, Star } from 'lucide-react';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const product = await getProduct(slug);
+
+    if (!product) {
+        return {
+            title: 'Product Not Found | Gadget Bazar BD',
+        };
+    }
+
+    return {
+        title: product.name,
+        description: product.description.slice(0, 160),
+        openGraph: {
+            title: product.name,
+            description: product.description.slice(0, 160),
+            images: product.images?.[0] ? [{ url: product.images[0] }] : [],
+            type: 'article',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.name,
+            description: product.description.slice(0, 160),
+            images: product.images?.[0] ? [product.images[0]] : [],
+        }
+    };
+}
 
 async function getProduct(slug: string) {
     await dbConnect();
@@ -34,11 +63,36 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     const relatedProducts = await getRelatedProducts(product.category, product._id);
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image: product.images,
+        description: product.description,
+        sku: `GB-${product._id.slice(-8).toUpperCase()}`,
+        brand: {
+            '@type': 'Brand',
+            name: 'Gadget Bazar BD',
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://gadgetbazarbd.com/products/${product.slug}`,
+            priceCurrency: 'BDT',
+            price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price,
+            availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            itemCondition: 'https://schema.org/NewCondition',
+        },
+    };
+
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-gray-100">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Navbar />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-gray-50">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 ">
                 {/* Breadcrumbs */}
                 <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
@@ -89,11 +143,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             {/* Price Section */}
                             <div className="space-y-1">
                                 <div className="flex items-baseline gap-3">
-                                    <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
-                                    <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
+                                    {(() => {
+                                        const dp = Number(product.discountPrice) || 0;
+                                        const hasDiscount = dp > 0 && dp < product.price;
+                                        return hasDiscount ? (
+                                            <>
+                                                <p className="text-4xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
+                                                <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
+                                                    SAVE {Math.round(((product.price - dp) / product.price) * 100)}%
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                                 <p className="text-xs font-bold text-blue-600 bg-blue-50 w-fit px-3 py-1 rounded-lg">
-                                    Or ৳{(Math.round(product.price / 12)).toLocaleString()}/month with 0% EMI
+                                    Or ৳{(Math.round((Number(product.discountPrice) > 0 && Number(product.discountPrice) < product.price ? Number(product.discountPrice) : product.price) / 12)).toLocaleString()}/month with 0% EMI
                                 </p>
                             </div>
 
@@ -108,8 +178,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <Truck className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-0.5">Free Delivery</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Inside & Outside Dhaka</p>
+                                        <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-0.5">Delivery Charge</p>
+                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                                            Inside Dhaka: ৳80 (ঢাকাঃ ৮০ টাকা) <br />
+                                            Outside Dhaka: ৳170 (ঢাকার বাইরেঃ ১৭০ টাকা)
+                                        </p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-100 transition-colors group">
@@ -134,10 +207,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                                 Description
                             </h2>
-                            <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
-                                <div className="text-base text-gray-600 leading-relaxed whitespace-pre-wrap font-medium">
-                                    {product.description}
-                                </div>
+                            <div className="text-gray-700 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
+                                <div
+                                    className="text-base text-gray-600 leading-relaxed font-medium prose prose-sm max-w-none ql-editor 
+                                        prose-headings:text-gray-900 prose-headings:font-black prose-headings:uppercase 
+                                        prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900"
+                                    dangerouslySetInnerHTML={{ __html: product.description }}
+                                />
                             </div>
                         </div>
                     </div>
@@ -176,7 +252,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 View All <ChevronRight className="h-4 w-4" />
                             </Link>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 ">
                             {relatedProducts.map((p: any) => (
                                 <ProductCard key={p._id} product={p} />
                             ))}

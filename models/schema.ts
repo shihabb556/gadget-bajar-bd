@@ -83,6 +83,10 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    discountPrice: {
+        type: Number,
+        default: 0,
+    },
     stock: {
         type: Number,
         required: true,
@@ -137,6 +141,15 @@ const OrderSchema = new mongoose.Schema({
     totalAmount: {
         type: Number,
         required: true,
+    },
+    deliveryCharge: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    deliveryArea: {
+        type: String,
+        enum: ['Inside Dhaka', 'Outside Dhaka'],
     },
     status: {
         type: String,

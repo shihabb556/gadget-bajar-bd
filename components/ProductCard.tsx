@@ -26,24 +26,33 @@ export default function ProductCard({ product }: ProductCardProps) {
         }
     };
 
+    const discountPrice = Number(product.discountPrice) || 0;
+    const hasDiscount = discountPrice > 0 && discountPrice < product.price;
+    const discountPercentage = hasDiscount
+        ? Math.round(((product.price - discountPrice) / product.price) * 100)
+        : 0;
+
     return (
-        <div className="group relative bg-white border border-gray-100 rounded-[2rem] flex flex-col overflow-hidden hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-500 hover:-translate-y-1">
+        <div className="group relative bg-white border-2 border border-gray-100 rounded-[2rem] flex flex-col overflow-hidden hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-500 hover:-translate-y-1">
             {/* Image Container */}
             <div className="aspect-square bg-gray-50 relative overflow-hidden">
-                {isNew && (
-                    <div className="absolute top-4 left-4 z-20">
-                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-blue-200">New</span>
-                    </div>
-                )}
+                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                    {isNew && (
+                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-blue-200 w-fit">New</span>
+                    )}
+                    {hasDiscount && (
+                        <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-200 w-fit">-{discountPercentage}% Off</span>
+                    )}
+                </div>
                 {product.images?.[0] ? (
                     <Image
                         src={product.images[0]}
                         alt={product.name}
                         fill
-                        className="h-full w-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700"
+                        className="h-full w-full object-contain p-6 transform group-hover:scale-110 transition-transform duration-700 "
                     />
                 ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-gray-100 text-gray-400">
+                    <div className="flex h-full w-full items-center justify-center bg-white text-gray-400">
                         No Image
                     </div>
                 )}
@@ -81,7 +90,17 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <div className="flex items-end justify-between mt-auto">
                     <div className="space-y-0.5">
                         <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pricing</p>
-                        <p className="text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                        {hasDiscount ? (
+                            <div className="flex flex-col">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString()}</span>
+                                    <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString()}</span>
+                                </div>
+                                <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
+                            </div>
+                        ) : (
+                            <p className="text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                        )}
                     </div>
 
                     <Button
@@ -89,12 +108,12 @@ export default function ProductCard({ product }: ProductCardProps) {
                         size="icon"
                         onClick={handleAddToCart}
                         disabled={product.stock <= 0}
-                        className={`h-12 w-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${product.stock > 0
-                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100'
+                        className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${product.stock > 0
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 hover:scale-105 active:scale-95'
                             : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
                             }`}
                     >
-                        <ShoppingCart className="h-5 w-5" />
+                        <ShoppingCart className="h-4 w-4" />
                     </Button>
                 </div>
             </div>

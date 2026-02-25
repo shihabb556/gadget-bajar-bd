@@ -3,11 +3,23 @@ import dbConnect from '@/lib/db';
 import { Order, Product } from '@/models/schema';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { orderSchema } from '@/lib/validations';
 
 export async function POST(req: Request) {
     try {
         const session = await getServerSession(authOptions);
-        const { items, shippingAddress, totalAmount, trxId, guestEmail, guestName } = await req.json();
+        const body = await req.json();
+
+        // Validate input
+        const result = orderSchema.safeParse(body);
+        if (!result.success) {
+            return NextResponse.json(
+                { message: result.error.issues[0].message },
+                { status: 400 }
+            );
+        }
+
+        const { items, shippingAddress, trxId, deliveryArea, guestEmail, guestName } = result.data;
 
         if (!session && (!guestEmail || !guestName)) {
             return NextResponse.json({ message: 'Email and Name are required for guest checkout' }, { status: 400 });
@@ -37,14 +49,17 @@ export async function POST(req: Request) {
             orderItems.push({
                 product: product._id,
                 quantity: item.quantity,
-                price: product.price, // Use DB price for security
+                price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price, // Use discount price if available
                 name: product.name,
                 image: product.images?.[0],
             });
         }
 
+        // Calculate delivery charge
+        const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : 170;
+
         // Recalculate total for security
-        const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0) + deliveryCharge;
 
         // Create Order
         const order = await Order.create({
@@ -53,6 +68,8 @@ export async function POST(req: Request) {
             guestName: !session ? guestName : undefined,
             items: orderItems,
             totalAmount: calculatedTotal,
+            deliveryCharge,
+            deliveryArea,
             shippingAddress,
             status: 'PENDING',
             paymentStatus: {

@@ -3,17 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { User } from '@/models/schema';
 import dbConnect from '@/lib/db';
-import { z } from 'zod';
-
-const profileSchema = z.object({
-    name: z.string().min(2, 'First name is too short').max(60).trim(),
-    lastName: z.string().max(60).trim().optional(),
-    primaryPhone: z.string().regex(/^01[3-9]\d{8}$/, 'Invalid phone number format').optional(),
-    secondaryPhone: z.string().regex(/^01[3-9]\d{8}$/, 'Invalid secondary phone number format').optional().or(z.literal('')),
-    village: z.string().max(200).trim().optional(),
-    thana: z.string().max(100).trim().optional(),
-    district: z.string().max(100).trim().optional(),
-});
+import { profileSchema } from '@/lib/validations';
 
 export async function GET() {
     try {
