@@ -143,23 +143,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             {/* Price Section */}
                             <div className="space-y-1">
                                 <div className="flex items-baseline gap-3">
-                                    {product.discountPrice && product.discountPrice > 0 ? (
-                                        <>
-                                            <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.discountPrice.toLocaleString()}</p>
-                                            <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
-                                            <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
-                                                SAVE {Math.round(((product.price - product.discountPrice) / product.price) * 100)}%
-                                            </span>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
-                                            <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
-                                        </>
-                                    )}
+                                    {(() => {
+                                        const dp = Number(product.discountPrice) || 0;
+                                        const hasDiscount = dp > 0 && dp < product.price;
+                                        return hasDiscount ? (
+                                            <>
+                                                <p className="text-4xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
+                                                <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
+                                                    SAVE {Math.round(((product.price - dp) / product.price) * 100)}%
+                                                </span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
+                                            </>
+                                        );
+                                    })()}
                                 </div>
                                 <p className="text-xs font-bold text-blue-600 bg-blue-50 w-fit px-3 py-1 rounded-lg">
-                                    Or ৳{(Math.round((product.discountPrice && product.discountPrice > 0 ? product.discountPrice : product.price) / 12)).toLocaleString()}/month with 0% EMI
+                                    Or ৳{(Math.round((Number(product.discountPrice) > 0 && Number(product.discountPrice) < product.price ? Number(product.discountPrice) : product.price) / 12)).toLocaleString()}/month with 0% EMI
                                 </p>
                             </div>
 
