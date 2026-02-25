@@ -112,7 +112,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                         required
                         value={formData.name}
                         onChange={handleNameChange}
-                        className="mt-1"
+                        className="mt-1 text-gray-700"
                     />
                 </div>
 
@@ -131,7 +131,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                         required
                         value={formData.category}
                         onChange={(e) => setFormData({ ...formData, category: e.target.value, subCategory: '' })}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 text-gray-700 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     >
                         <option value="">Select Category</option>
                         {topLevelCategories.map(cat => (
@@ -145,7 +145,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                     <select
                         value={formData.subCategory}
                         onChange={(e) => setFormData({ ...formData, subCategory: e.target.value })}
-                        className="mt-1 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                        className="mt-1 text-gray-700 block w-full rounded-md border border-gray-300 bg-white py-2 px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         disabled={!formData.category || availableSubCategories.length === 0}
                     >
                         <option value="">Select Sub Category</option>
@@ -181,7 +181,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
             <div>
                 <label className="block text-sm font-medium text-gray-700">Description</label>
                 <textarea
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
+                    className="mt-1 text-gray-700 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
                     rows={3}
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}

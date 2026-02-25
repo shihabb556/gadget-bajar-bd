@@ -7,8 +7,30 @@ import { Product, Category } from '@/models/schema';
 import Link from 'next/link';
 import { Button } from '@/components/ui/shared';
 
+import { Metadata } from 'next';
+
 // Force dynamic because we want refreshed products
 export const dynamic = 'force-dynamic';
+
+export async function generateMetadata({ searchParams }: {
+  searchParams: Promise<{ category?: string; search?: string }>
+}): Promise<Metadata> {
+  const params = await searchParams;
+  let title = "Gadget Bazar BD - Premium Gadgets & Electronics Shop";
+  let description = "Explore the best collection of gadgets and electronics at Gadget Bazar BD. Quality tech at unbeatable prices.";
+
+  if (params.search) {
+    title = `Search results for "${params.search}" | Gadget Bazar BD`;
+  } else if (params.category) {
+    title = `${params.category} Collection | Gadget Bazar BD`;
+    description = `Shop the latest ${params.category} gadgets and electronics at Gadget Bazar BD. High-quality products with official warranty.`;
+  }
+
+  return {
+    title,
+    description,
+  };
+}
 
 async function getProducts(params: {
   category?: string;

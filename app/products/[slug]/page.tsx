@@ -7,6 +7,35 @@ import ProductActions from '@/components/ProductActions';
 import ProductCard from '@/components/ProductCard';
 import { CheckCircle2, ShieldCheck, Truck, RefreshCcw, ChevronRight, Star } from 'lucide-react';
 import Link from 'next/link';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const product = await getProduct(slug);
+
+    if (!product) {
+        return {
+            title: 'Product Not Found | Gadget Bazar BD',
+        };
+    }
+
+    return {
+        title: product.name,
+        description: product.description.slice(0, 160),
+        openGraph: {
+            title: product.name,
+            description: product.description.slice(0, 160),
+            images: product.images?.[0] ? [{ url: product.images[0] }] : [],
+            type: 'article',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: product.name,
+            description: product.description.slice(0, 160),
+            images: product.images?.[0] ? [product.images[0]] : [],
+        }
+    };
+}
 
 async function getProduct(slug: string) {
     await dbConnect();
@@ -34,8 +63,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     const relatedProducts = await getRelatedProducts(product.category, product._id);
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Product',
+        name: product.name,
+        image: product.images,
+        description: product.description,
+        sku: `GB-${product._id.slice(-8).toUpperCase()}`,
+        brand: {
+            '@type': 'Brand',
+            name: 'Gadget Bazar BD',
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://gadgetbazarbd.com/products/${product.slug}`,
+            priceCurrency: 'BDT',
+            price: product.price,
+            availability: product.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+            itemCondition: 'https://schema.org/NewCondition',
+        },
+    };
+
     return (
         <div className="min-h-screen bg-gray-50">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 bg-gray-50">
