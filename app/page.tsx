@@ -6,6 +6,7 @@ import dbConnect from '@/lib/db';
 import { Product, Category } from '@/models/schema';
 import Link from 'next/link';
 import { Button } from '@/components/ui/shared';
+import { Search } from 'lucide-react';
 
 import { Metadata } from 'next';
 
@@ -143,9 +144,9 @@ export default async function Home({ searchParams }: {
             ) : (
               <div className="py-24 text-center bg-white rounded-[3rem] border border-gray-100 shadow-sm px-8">
                 <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <FilterSidebar categories={[]} /> {/* Just for the icon/look */}
+                  <Search className="w-8 h-8 text-gray-300" />
                 </div>
-                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching gadgets found</h2>
+                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching products found</h2>
                 <p className="text-gray-400 font-bold uppercase text-xs tracking-widest max-w-xs mx-auto">
                   Try adjusting your filters or search query to find what you're looking for.
                 </p>
