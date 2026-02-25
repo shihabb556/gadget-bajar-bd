@@ -180,6 +180,69 @@ function ProfileContent() {
                         </div>
                     )}
 
+                    {/* New Profile Header Section */}
+                    <div className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-xl shadow-blue-100/20 border border-gray-100 mb-10 overflow-hidden relative group">
+                        <div className="absolute top-0 right-0 -mr-8 -mt-8 h-48 w-48 bg-blue-50/50 rounded-full blur-3xl group-hover:bg-blue-100/50 transition-colors duration-700"></div>
+
+                        <div className="relative flex flex-col md:flex-row items-center gap-8 md:gap-12">
+                            {/* Avatar Section */}
+                            <div className="relative">
+                                <div className="h-32 w-32 md:h-40 md:w-40 bg-gray-50 rounded-full flex items-center justify-center border-4 border-white shadow-2xl relative overflow-hidden group/avatar">
+                                    <div className="h-full w-full flex items-center justify-center text-gray-200">
+                                        <svg className="h-20 w-20 md:h-24 md:w-24" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                                        </svg>
+                                    </div>
+                                    <button
+                                        onClick={() => setActiveTab('profile')}
+                                        className="absolute bottom-2 right-2 h-10 w-10 bg-white rounded-full shadow-xl border border-gray-100 flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group-hover/avatar:translate-y-0 translate-y-2 opacity-0 group-hover/avatar:opacity-100 duration-300"
+                                    >
+                                        <svg className="h-5 w-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                                {/* Fixed Camera Icon Always Visible like mockup */}
+                                <button
+                                    onClick={() => setActiveTab('profile')}
+                                    className="absolute bottom-0 right-0 h-9 w-9 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center hover:scale-110 transition-all active:scale-95 z-10"
+                                >
+                                    <svg className="h-4 w-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    </svg>
+                                </button>
+                            </div>
+
+                            {/* Info Section */}
+                            <div className="flex-1 text-center md:text-left space-y-2">
+                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tighter uppercase italic">
+                                    {profile.name} {profile.lastName}
+                                </h1>
+                                <div className="space-y-1">
+                                    <p className="text-lg font-bold text-gray-400 tracking-tight">{profile.primaryPhone || 'No Phone Added'}</p>
+                                    <p className="text-base font-medium text-gray-400 opacity-80">{profile.email}</p>
+                                </div>
+                                <div className="flex flex-wrap items-center justify-center md:justify-start gap-6 pt-4">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => setActiveTab('profile')}
+                                        className="h-10 px-6 rounded-full bg-gray-50 border-gray-100 text-xs font-black uppercase tracking-widest hover:bg-white hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm"
+                                    >
+                                        Edit Profile
+                                    </Button>
+                                    <button
+                                        className="text-xs font-black uppercase tracking-widest text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-1.5"
+                                    >
+                                        My Voucher
+                                        <div className="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Account Center</h1>
                         <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 mt-4 md:mt-0 gap-1">

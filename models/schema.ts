@@ -56,6 +56,13 @@ const UserSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    loginAttempts: {
+        type: Number,
+        default: 0,
+    },
+    lockUntil: {
+        type: Date,
+    },
 }, { timestamps: true });
 
 export const User = mongoose.models.User || mongoose.model('User', UserSchema);
@@ -173,3 +180,12 @@ const SettingsSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
+
+const LoginAttemptSchema = new mongoose.Schema({
+    ip: { type: String, required: true, index: true },
+    userAgent: String,
+    attempts: { type: Number, default: 0 },
+    lockUntil: Date,
+}, { timestamps: true });
+
+export const LoginAttempt = mongoose.models.LoginAttempt || mongoose.model('LoginAttempt', LoginAttemptSchema);
