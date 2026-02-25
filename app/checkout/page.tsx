@@ -31,6 +31,8 @@ export default function CheckoutPage() {
     const [guestEmail, setGuestEmail] = useState('');
     const [guestName, setGuestName] = useState('');
     const [fieldErrors, setFieldErrors] = useState<any>({});
+    const [deliveryArea, setDeliveryArea] = useState<'Inside Dhaka' | 'Outside Dhaka' | ''>('');
+    const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : deliveryArea === 'Outside Dhaka' ? 170 : 0;
 
     useEffect(() => setMounted(true), []);
 
@@ -97,6 +99,7 @@ export default function CheckoutPage() {
             items,
             shippingAddress,
             trxId: trxId,
+            deliveryArea,
             guestEmail: !session ? guestEmail : undefined,
             guestName: !session ? guestName : undefined,
         };
@@ -128,8 +131,9 @@ export default function CheckoutPage() {
                 body: JSON.stringify({
                     items,
                     shippingAddress,
-                    totalAmount: total(),
+                    totalAmount: total() + deliveryCharge,
                     trxId: trxId,
+                    deliveryArea,
                     guestEmail: !session ? guestEmail : undefined,
                     guestName: !session ? guestName : undefined,
                 }),
@@ -304,6 +308,46 @@ export default function CheckoutPage() {
                                             <p className="mt-1 text-xs text-red-500">{fieldErrors['shippingAddress.district']}</p>
                                         )}
                                     </div>
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Delivery Area (ডেলিভারি এলাকা নির্বাচন করুন) *</label>
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <button
+                                                type="button"
+                                                onClick={() => setDeliveryArea('Inside Dhaka')}
+                                                className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Inside Dhaka'
+                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Inside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                        Inside Dhaka
+                                                    </span>
+                                                    {deliveryArea === 'Inside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
+                                                </div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Charge: ৳80 (ঢাকা সিটির ভেতরে)</p>
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => setDeliveryArea('Outside Dhaka')}
+                                                className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Outside Dhaka'
+                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    }`}
+                                            >
+                                                <div className="flex items-center justify-between mb-1">
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Outside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                        Outside Dhaka
+                                                    </span>
+                                                    {deliveryArea === 'Outside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
+                                                </div>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Charge: ৳170 (ঢাকার বাইরে)</p>
+                                            </button>
+                                        </div>
+                                        {fieldErrors.deliveryArea && (
+                                            <p className="mt-2 text-xs text-red-500 font-bold">{fieldErrors.deliveryArea}</p>
+                                        )}
+                                    </div>
                                     <div>
                                         <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Primary Phone</label>
                                         <Input
@@ -416,19 +460,22 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-500 font-medium uppercase tracking-tighter">
                                     <p>Delivery Fee</p>
-                                    <p>FREE</p>
+                                    <p className="text-gray-900 font-bold">{deliveryArea ? `৳${deliveryCharge}` : 'Select Area'}</p>
                                 </div>
                                 <div className="flex justify-between pt-4 border-t border-gray-100">
                                     <p className="text-lg font-black text-gray-900 uppercase">Total Payable</p>
-                                    <p className="text-2xl font-black text-indigo-600">৳{total()}</p>
+                                    <p className="text-2xl font-black text-indigo-600">৳{total() + deliveryCharge}</p>
                                 </div>
                             </div>
 
                             <Button
                                 form="checkout-form"
                                 type="submit"
-                                disabled={loading}
-                                className="w-full mt-8 py-7 rounded-2xl bg-indigo-600 text-white font-black uppercase tracking-widest hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-indigo-100"
+                                disabled={loading || !deliveryArea}
+                                className={`w-full mt-8 py-7 rounded-2xl text-white font-black uppercase tracking-widest transition-all shadow-lg ${!deliveryArea
+                                        ? 'bg-gray-400 cursor-not-allowed'
+                                        : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-indigo-100'
+                                    }`}
                             >
                                 {loading ? (
                                     <div className="flex items-center gap-2">
@@ -436,7 +483,7 @@ export default function CheckoutPage() {
                                         Processing Order...
                                     </div>
                                 ) : (
-                                    settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order'
+                                    !deliveryArea ? 'Select Delivery Area' : (settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order')
                                 )}
                             </Button>
                         </div>

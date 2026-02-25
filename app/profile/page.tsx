@@ -352,7 +352,7 @@ function ProfileContent() {
                                             <div className="flex items-center gap-4">
                                                 <div className="text-right mr-4">
                                                     <p className="text-2xl font-black text-indigo-600">৳{order.totalAmount}</p>
-                                                    <p className="text-xs text-gray-500 font-bold uppercase tracking-tighter mt-1">Total Amount</p>
+                                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter mt-1">Total (Inc. ৳{order.deliveryCharge || 0} Delivery)</p>
                                                 </div>
                                                 <Button
                                                     variant="ghost"
@@ -597,6 +597,13 @@ function ProfileContent() {
                                 ))}
                             </div>
                         </div>
+
+                        {selectedOrder.deliveryCharge > 0 && (
+                            <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
+                                <p className="text-sm font-black text-gray-900">৳{selectedOrder.deliveryCharge}</p>
+                            </div>
+                        )}
 
                         <div className="bg-indigo-600 p-8 rounded-3xl text-white flex justify-between items-center">
                             <div>

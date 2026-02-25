@@ -19,7 +19,7 @@ export async function POST(req: Request) {
             );
         }
 
-        const { items, shippingAddress, trxId, guestEmail, guestName } = result.data;
+        const { items, shippingAddress, trxId, deliveryArea, guestEmail, guestName } = result.data;
 
         if (!session && (!guestEmail || !guestName)) {
             return NextResponse.json({ message: 'Email and Name are required for guest checkout' }, { status: 400 });
@@ -49,14 +49,17 @@ export async function POST(req: Request) {
             orderItems.push({
                 product: product._id,
                 quantity: item.quantity,
-                price: product.price, // Use DB price for security
+                price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price, // Use discount price if available
                 name: product.name,
                 image: product.images?.[0],
             });
         }
 
+        // Calculate delivery charge
+        const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : 170;
+
         // Recalculate total for security
-        const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+        const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0) + deliveryCharge;
 
         // Create Order
         const order = await Order.create({
@@ -65,6 +68,8 @@ export async function POST(req: Request) {
             guestName: !session ? guestName : undefined,
             items: orderItems,
             totalAmount: calculatedTotal,
+            deliveryCharge,
+            deliveryArea,
             shippingAddress,
             status: 'PENDING',
             paymentStatus: {

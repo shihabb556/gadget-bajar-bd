@@ -40,7 +40,7 @@ export const useCartStore = create<CartStore>()(
                         items: [...items, {
                             _id: product._id,
                             name: product.name,
-                            price: product.price,
+                            price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price,
                             image: product.images?.[0] || '',
                             slug: product.slug,
                             quantity: 1

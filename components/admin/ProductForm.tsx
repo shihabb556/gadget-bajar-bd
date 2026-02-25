@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Input } from '@/components/ui/shared';
 import ImageUpload from '@/components/ui/ImageUpload';
+import RichTextEditor from '@/components/ui/RichTextEditor';
 
 interface ProductFormProps {
     initialData?: any;
@@ -22,6 +23,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         slug: initialData?.slug || '',
         description: initialData?.description || '',
         price: initialData?.price || '',
+        discountPrice: initialData?.discountPrice || '',
         stock: initialData?.stock || '',
         category: initialData?.category || '',
         subCategory: initialData?.subCategory || '',
@@ -85,10 +87,17 @@ export default function ProductForm({ initialData }: ProductFormProps) {
 
             const method = initialData ? 'PUT' : 'POST';
 
+            const submissionData = {
+                ...formData,
+                price: Number(formData.price),
+                discountPrice: formData.discountPrice ? Number(formData.discountPrice) : 0,
+                stock: Number(formData.stock)
+            };
+
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData), // items are already in correct format
+                body: JSON.stringify(submissionData),
             });
 
             if (!res.ok) throw new Error('Failed to save product');
@@ -167,6 +176,17 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                 </div>
 
                 <div>
+                    <label className="block text-sm font-medium text-gray-700">Discount Price (BDT) - Optional</label>
+                    <Input
+                        type="number"
+                        value={formData.discountPrice}
+                        onChange={(e) => setFormData({ ...formData, discountPrice: e.target.value })}
+                        className="mt-1"
+                        placeholder="Leave empty for no discount"
+                    />
+                </div>
+
+                <div>
                     <label className="block text-sm font-medium text-gray-700">Stock</label>
                     <Input
                         type="number"
@@ -179,12 +199,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
             </div>
 
             <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <textarea
-                    className="mt-1 text-gray-700 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm border p-2"
-                    rows={3}
+                <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                <RichTextEditor
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(val) => setFormData({ ...formData, description: val })}
+                    placeholder="Enter product description..."
                 />
             </div>
 

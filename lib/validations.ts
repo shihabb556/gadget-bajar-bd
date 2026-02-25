@@ -44,6 +44,7 @@ export const orderSchema = z.object({
     items: z.array(z.any()).min(1, 'No items in order'),
     shippingAddress: shippingAddressSchema,
     trxId: z.string().optional(),
+    deliveryArea: z.enum(['Inside Dhaka', 'Outside Dhaka']),
     guestEmail: z.string().email('Invalid email address').optional(),
     guestName: z.string().min(2, 'Name must be at least 2 characters').optional(),
 });

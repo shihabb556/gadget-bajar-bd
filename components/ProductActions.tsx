@@ -15,10 +15,11 @@ export default function ProductActions({ product }: { product: any }) {
 
     // ViewContent: fired when the user lands on the product page
     useEffect(() => {
+        const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
         pixelViewContent({
             content_ids: [product._id],
             content_name: product.name,
-            value: product.price,
+            value: effectivePrice,
         });
     }, [product._id]);
 
@@ -27,11 +28,12 @@ export default function ProductActions({ product }: { product: any }) {
             for (let i = 0; i < quantity; i++) {
                 addToCart(product);
             }
+            const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event
             pixelAddToCart({
                 content_ids: [product._id],
                 content_name: product.name,
-                value: product.price * quantity,
+                value: effectivePrice * quantity,
             });
             toast.success(`${quantity} ${product.name} added to cart!`);
         }
@@ -40,11 +42,12 @@ export default function ProductActions({ product }: { product: any }) {
     const handleBuyNow = () => {
         if (product.stock > 0) {
             addToCart(product);
+            const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event (also fires on Buy Now)
             pixelAddToCart({
                 content_ids: [product._id],
                 content_name: product.name,
-                value: product.price,
+                value: effectivePrice,
             });
             router.push('/checkout');
         }

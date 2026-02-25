@@ -239,7 +239,7 @@ Phone: ${addr?.phone}
 Alt Phone: ${addr?.secondaryPhone || 'N/A'}
 Address: ${addr?.village}, ${addr?.thana || ''}, ${addr?.district || addr?.city}
 TrxID: ${order.paymentStatus.trxId || 'N/A'}
-Total: ৳${order.totalAmount}
+Total: ৳${order.totalAmount} (Inc. ৳${order.deliveryCharge || 0} delivery)
                                             `.trim());
                                         }}>
                                             View
@@ -314,6 +314,13 @@ Total: ৳${order.totalAmount}
                                 ))}
                             </div>
                         </div>
+
+                        {selectedOrder.deliveryCharge > 0 && (
+                            <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
+                                <p className="text-sm font-black text-gray-900">৳{selectedOrder.deliveryCharge}</p>
+                            </div>
+                        )}
 
                         <div className="bg-indigo-600 p-8 rounded-3xl text-white flex justify-between items-center">
                             <div>
