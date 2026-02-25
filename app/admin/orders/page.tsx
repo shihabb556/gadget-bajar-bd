@@ -4,8 +4,9 @@ import { useState, useEffect, Suspense, useRef } from 'react';
 import { Button } from '@/components/ui/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import * as htmlToImage from 'html-to-image';
-import { Download, Package } from 'lucide-react';
+import { Download, Package, MapPin, Phone, CreditCard, ShoppingBag, User } from 'lucide-react';
 import { jsPDF } from 'jspdf';
+import Modal from '@/components/ui/Modal';
 
 function AdminOrdersContent() {
     const searchParams = useSearchParams();
@@ -16,6 +17,7 @@ function AdminOrdersContent() {
     const router = useRouter();
     const summaryRef = useRef<HTMLDivElement>(null);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
+    const [viewOrder, setViewOrder] = useState<any>(null);
 
     const downloadSummary = async (order: any) => {
         setSelectedOrder(order);
@@ -231,17 +233,7 @@ function AdminOrdersContent() {
                                         {new Date(order.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <Button variant="outline" size="sm" onClick={() => {
-                                            const addr = order.shippingAddress;
-                                            alert(`
-Customer: ${order.user?.name || order.guestName}
-Phone: ${addr?.phone}
-Alt Phone: ${addr?.secondaryPhone || 'N/A'}
-Address: ${addr?.village}, ${addr?.thana || ''}, ${addr?.district || addr?.city}
-TrxID: ${order.paymentStatus.trxId || 'N/A'}
-Total: ৳${order.totalAmount} (Inc. ৳${order.deliveryCharge || 0} delivery)
-                                            `.trim());
-                                        }}>
+                                        <Button variant="outline" size="sm" onClick={() => setViewOrder(order)}>
                                             View
                                         </Button>
                                         <Button
@@ -260,6 +252,102 @@ Total: ৳${order.totalAmount} (Inc. ৳${order.deliveryCharge || 0} delivery)
                     </tbody>
                 </table>
             </div>
+
+            {/* Order Details Modal */}
+            <Modal
+                isOpen={!!viewOrder}
+                onClose={() => setViewOrder(null)}
+                title={`Order Details — #${viewOrder?._id?.slice(-6).toUpperCase() || ''}`}
+                variant="info"
+                maxWidth="lg"
+                actions={[{ label: 'Close', onClick: () => setViewOrder(null), variant: 'ghost' }]}
+            >
+                {viewOrder && (
+                    <div className="space-y-5">
+                        {/* Customer */}
+                        <div className="flex items-start gap-3 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                                <User className="w-4 h-4 text-indigo-600" />
+                            </div>
+                            <div>
+                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Customer</p>
+                                <p className="text-sm font-bold text-gray-900">{viewOrder.user?.name || viewOrder.guestName || 'Unknown'}</p>
+                                {viewOrder.user?.email && <p className="text-xs text-gray-500">{viewOrder.user.email}</p>}
+                            </div>
+                        </div>
+
+                        {/* Contact */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                                    <Phone className="w-4 h-4 text-gray-600" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone</p>
+                                    <p className="text-sm font-semibold text-gray-800">{viewOrder.shippingAddress?.phone || 'N/A'}</p>
+                                    {viewOrder.shippingAddress?.secondaryPhone && (
+                                        <p className="text-xs text-gray-500">Alt: {viewOrder.shippingAddress.secondaryPhone}</p>
+                                    )}
+                                </div>
+                            </div>
+                            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+                                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                                    <MapPin className="w-4 h-4 text-gray-600" />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Address</p>
+                                    <p className="text-xs font-semibold text-gray-800 leading-relaxed">
+                                        {viewOrder.shippingAddress?.village}, {viewOrder.shippingAddress?.thana || ''}<br />
+                                        {viewOrder.shippingAddress?.district || viewOrder.shippingAddress?.city}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Payment */}
+                        <div className="flex items-start gap-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                            <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                                <CreditCard className="w-4 h-4 text-emerald-600" />
+                            </div>
+                            <div className="flex-1">
+                                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">Payment</p>
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs text-gray-500">TrxID: <span className="font-mono font-bold text-gray-800">{viewOrder.paymentStatus?.trxId || 'N/A'}</span></p>
+                                        <p className="text-xs text-gray-500 mt-0.5">Advance: <span className={`font-semibold ${viewOrder.paymentStatus?.advancePaid ? 'text-emerald-600' : 'text-red-500'}`}>{viewOrder.paymentStatus?.advancePaid ? 'Paid ✓' : 'Unpaid'}</span></p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] font-black text-gray-400 uppercase">Total</p>
+                                        <p className="text-xl font-black text-indigo-600">৳{viewOrder.totalAmount}</p>
+                                        {viewOrder.deliveryCharge > 0 && <p className="text-xs text-gray-400">Inc. ৳{viewOrder.deliveryCharge} delivery</p>}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Items */}
+                        <div>
+                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                <ShoppingBag className="w-3 h-3" /> Items Ordered
+                            </p>
+                            <div className="space-y-2">
+                                {viewOrder.items?.map((item: any, i: number) => (
+                                    <div key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg border border-gray-100">
+                                        {item.image && (
+                                            <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded-lg border border-gray-200" />
+                                        )}
+                                        <div className="flex-1">
+                                            <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                                            <p className="text-xs text-gray-500">Qty: {item.quantity} × ৳{item.price}</p>
+                                        </div>
+                                        <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </Modal>
 
             {/* Hidden Summary Template for Download */}
             <div className="fixed left-[-9999px] top-0">

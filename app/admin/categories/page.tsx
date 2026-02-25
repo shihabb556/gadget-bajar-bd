@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { Button, Input } from '@/components/ui/shared';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
+import Modal from '@/components/ui/Modal';
 
 interface Category {
     _id: string;
@@ -17,6 +18,10 @@ export default function CategoriesPage() {
     const [loading, setLoading] = useState(true);
     const [formData, setFormData] = useState({ name: '', parent: '' });
     const [submitting, setSubmitting] = useState(false);
+
+    // Modal state
+    const [errorModal, setErrorModal] = useState<{ open: boolean; message: string }>({ open: false, message: '' });
+    const [confirmModal, setConfirmModal] = useState<{ open: boolean; categoryId: string | null }>({ open: false, categoryId: null });
 
     useEffect(() => {
         fetchCategories();
@@ -51,7 +56,7 @@ export default function CategoriesPage() {
 
             if (!res.ok) {
                 const data = await res.json();
-                alert(data.message || 'Failed to create category');
+                setErrorModal({ open: true, message: data.message || 'Failed to create category' });
                 return;
             }
 
@@ -64,15 +69,21 @@ export default function CategoriesPage() {
         }
     };
 
-    const handleDelete = async (id: string) => {
-        if (!confirm('Are you sure?')) return;
+    const confirmDelete = (id: string) => {
+        setConfirmModal({ open: true, categoryId: id });
+    };
+
+    const handleDelete = async () => {
+        const id = confirmModal.categoryId;
+        if (!id) return;
+        setConfirmModal({ open: false, categoryId: null });
         try {
             const res = await fetch(`/api/admin/categories/${id}`, {
                 method: 'DELETE'
             });
             if (!res.ok) {
                 const data = await res.json();
-                alert(data.message || 'Failed to delete');
+                setErrorModal({ open: true, message: data.message || 'Failed to delete' });
                 return;
             }
             fetchCategories();
@@ -81,13 +92,34 @@ export default function CategoriesPage() {
         }
     };
 
-    // Filter only top-level categories for parent selection to prevent deep nesting loops (simple version)
-    // Or just allow any category as parent except itself (backend should handle circle checks in real app)
     const potentialParents = categories;
 
     return (
         <div className="space-y-6">
             <h2 className="text-2xl font-bold text-gray-800">Manage Categories</h2>
+
+            {/* Error Modal */}
+            <Modal
+                isOpen={errorModal.open}
+                onClose={() => setErrorModal({ open: false, message: '' })}
+                title="Error"
+                variant="error"
+                message={errorModal.message}
+                actions={[{ label: 'OK', onClick: () => setErrorModal({ open: false, message: '' }), variant: 'ghost' }]}
+            />
+
+            {/* Confirm Delete Modal */}
+            <Modal
+                isOpen={confirmModal.open}
+                onClose={() => setConfirmModal({ open: false, categoryId: null })}
+                title="Delete Category"
+                variant="confirm"
+                message="Are you sure you want to delete this category? This action cannot be undone."
+                actions={[
+                    { label: 'Cancel', onClick: () => setConfirmModal({ open: false, categoryId: null }), variant: 'ghost' },
+                    { label: 'Delete', onClick: handleDelete, variant: 'danger' },
+                ]}
+            />
 
             {/* Create Form */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
@@ -150,7 +182,7 @@ export default function CategoriesPage() {
                                             <Button
                                                 variant="ghost"
                                                 size="icon"
-                                                onClick={() => handleDelete(cat._id)}
+                                                onClick={() => confirmDelete(cat._id)}
                                                 className="text-red-600 hover:text-red-900 hover:bg-red-50"
                                             >
                                                 <Trash2 className="w-4 h-4" />
