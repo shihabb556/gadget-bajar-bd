@@ -49,7 +49,7 @@ export default function Navbar() {
                                 <Flag className="h-6 w-6" fill="currentColor" />
                             </div>
                             <div className="hidden md:block">
-                                <span className="text-xl font-black text-gray-900 tracking-tighter uppercase italic">ElectroMart</span>
+                                <span className="text-xl font-black text-gray-900 tracking-tighter uppercase italic">Gadget Bazar BD</span>
                             </div>
                         </Link>
 

@@ -10,12 +10,12 @@ import MetaPixel from "@/components/MetaPixel";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://electro-mart-01.vercel.app'), // Replace with actual production URL if known
+  metadataBase: new URL('https://gadget-bazar-bd.vercel.app'), // Replace with actual production URL if known
   title: {
-    default: "Electro Mart - Premium E-commerce Experience",
-    template: "%s | Electro Mart"
+    default: "Gadget Bazar BD - Premium E-commerce Experience",
+    template: "%s | Gadget Bazar BD"
   },
-  description: "Electro Mart is your one-stop shop for premium gadgets, electronics, and accessories in Bangladesh. Discover top brands at the best prices.",
+  description: "Gadget Bazar BD is your one-stop shop for premium gadgets, electronics, and accessories in Bangladesh. Discover top brands at the best prices.",
   keywords: ["Gadget Bazar BD", "Gadgets Bangladesh", "Online Shopping BD", "Electronics Dhaka", "Premium Gadgets"],
   authors: [{ name: "Gadget Bazar BD Team" }],
   creator: "Gadget Bazar BD",
@@ -27,10 +27,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_BD",
-    url: "https://electro-mart-01.vercel.app",
-    siteName: "Electro Mart",
-    title: "Electro Mart - Premium Gadgets & Electronics",
-    description: "Premium gadgets and electronics at your doorstep. Shop the latest tech with Electro Mart.",
+    url: "https://gadget-bazar-bd.vercel.app",
+    siteName: "Gadget Bazar BD",
+    title: "Gadget Bazar BD - Premium Gadgets & Electronics",
+    description: "Premium gadgets and electronics at your doorstep. Shop the latest tech with Gadget Bazar BD.",
     images: [
       {
         url: "/og-image.jpg", // Ensure this exists or use a generic logo
@@ -42,10 +42,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Electro Mart - Premium Gadgets & Electronics",
+    title: "Gadget Bazar BD - Premium Gadgets & Electronics",
     description: "Premium gadgets and electronics at your doorstep.",
     images: ["/og-image.jpg"],
-    creator: "@electro-mart-01",
+    creator: "@gadget-bazar-bd",
   },
 };
 
