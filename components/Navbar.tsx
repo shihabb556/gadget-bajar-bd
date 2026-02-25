@@ -75,7 +75,7 @@ export default function Navbar() {
                         />
                     </form>
 
-                    {/* Action Icons */}
+                    {/* Action Icons s*/}
                     <div className="flex items-center gap-2 sm:gap-4">
                         {/* <Button
                             variant="ghost"
