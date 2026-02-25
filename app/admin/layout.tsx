@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { LayoutDashboard, Package, Users, ShoppingCart, LogOut, ListTree, Menu } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { cn } from '@/components/ui/shared';
+import { cn, Button } from '@/components/ui/shared';
 
 const sidebarItems = [
     {
@@ -32,6 +32,11 @@ const sidebarItems = [
         title: 'Users',
         href: '/admin/users',
         icon: Users,
+    },
+    {
+        title: 'Settings',
+        href: '/admin/settings',
+        icon: ListTree,
     },
 ];
 
@@ -75,13 +80,14 @@ export default function AdminLayout({
                     );
                 })}
 
-                <button
+                <Button
+                    variant="ghost"
                     onClick={() => signOut({ callbackUrl: '/' })}
-                    className="flex w-full items-center space-x-3 px-4 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-8"
+                    className="flex w-full items-center justify-start space-x-3 px-4 py-2.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors mt-8 font-medium"
                 >
                     <LogOut className="w-5 h-5" />
-                    <span className="font-medium">Logout</span>
-                </button>
+                    <span>Logout</span>
+                </Button>
             </nav>
         </>
     );
@@ -115,12 +121,14 @@ export default function AdminLayout({
             <main className="flex-1 overflow-auto">
                 <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6 md:px-8">
                     <div className="flex items-center md:hidden">
-                        <button
+                        <Button
+                            variant="ghost"
+                            size="icon"
                             onClick={() => setIsSidebarOpen(true)}
                             className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-md"
                         >
                             <Menu className="w-6 h-6" />
-                        </button>
+                        </Button>
                         <span className="ml-2 font-bold text-indigo-600">Admin</span>
                     </div>
                     <div className="flex items-center space-x-4 ml-auto">

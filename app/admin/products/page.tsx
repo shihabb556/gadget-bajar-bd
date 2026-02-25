@@ -101,21 +101,25 @@ export default function ProductsPage() {
                                             {product.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link href={`/admin/products/${product._id}`} className="text-indigo-600 hover:text-indigo-900 mr-4 inline-block">
-                                            <Edit className="w-4 h-4" />
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end gap-2">
+                                        <Link href={`/admin/products/${product._id}`}>
+                                            <Button variant="ghost" size="icon" className="text-indigo-600 hover:text-indigo-900 hover:bg-indigo-50">
+                                                <Edit className="w-4 h-4" />
+                                            </Button>
                                         </Link>
-                                        <button
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
                                             onClick={async () => {
                                                 if (confirm('Are you sure?')) {
                                                     await fetch(`/api/admin/products/${product._id}`, { method: 'DELETE' });
                                                     fetchProducts();
                                                 }
                                             }}
-                                            className="text-red-600 hover:text-red-900"
+                                            className="text-red-600 hover:text-red-900 hover:bg-red-50"
                                         >
                                             <Trash2 className="w-4 h-4" />
-                                        </button>
+                                        </Button>
                                     </td>
                                 </tr>
                             ))

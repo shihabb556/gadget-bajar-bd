@@ -11,7 +11,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
-        const { items, shippingAddress, totalAmount } = await req.json();
+        const { items, shippingAddress, totalAmount, trxId } = await req.json();
 
         if (!items || items.length === 0) {
             return NextResponse.json({ message: 'No items in order' }, { status: 400 });
@@ -46,10 +46,6 @@ export async function POST(req: Request) {
         // Recalculate total for security
         const calculatedTotal = orderItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
 
-        // Basic validation, though we might have added shipping costs etc on frontend
-        // For now assuming totalAmount matches or we trust frontend (not ideal but ok for MVP)
-        // best practice: use calculatedTotal. 
-
         // Create Order
         const order = await Order.create({
             user: session.user.id,
@@ -59,7 +55,8 @@ export async function POST(req: Request) {
             status: 'PENDING',
             paymentStatus: {
                 advancePaid: false, // Admin confirms this manually
-                method: 'COD'
+                trxId: trxId || undefined,
+                method: trxId ? 'ADVANCE' : 'COD'
             }
         });
 

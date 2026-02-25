@@ -58,6 +58,22 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         ? categories.filter(c => c.parent && c.parent._id === selectedCategoryObj._id)
         : [];
 
+    const slugify = (text: string) => {
+        return text
+            .toString()
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, '-')     // Replace spaces with -
+            .replace(/[^\w-]+/g, '')  // Remove all non-word chars
+            .replace(/--+/g, '-');    // Replace multiple - with single -
+    };
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const name = e.target.value;
+        const slug = slugify(name);
+        setFormData({ ...formData, name, slug });
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -95,18 +111,17 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                     <Input
                         required
                         value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onChange={handleNameChange}
                         className="mt-1"
                     />
                 </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Slug</label>
+                <div className="opacity-50 pointer-events-none">
+                    <label className="block text-sm font-medium text-gray-700">Slug (Auto-generated)</label>
                     <Input
-                        required
+                        disabled
                         value={formData.slug}
-                        onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                        className="mt-1"
+                        className="mt-1 bg-gray-50"
                     />
                 </div>
 

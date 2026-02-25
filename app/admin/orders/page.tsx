@@ -93,13 +93,22 @@ export default function AdminOrdersPage() {
                                         ৳{order.totalAmount}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <button
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
                                             onClick={() => toggleAdvancePayment(order._id, order.paymentStatus.advancePaid)}
-                                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer ${order.paymentStatus.advancePaid ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                            className={`h-7 px-3 text-[10px] uppercase tracking-wider font-black rounded-full transition-all ${order.paymentStatus.advancePaid
+                                                ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
+                                                : 'bg-white text-red-600 border-red-100 hover:bg-red-50'
                                                 }`}
                                         >
                                             {order.paymentStatus.advancePaid ? 'Paid' : 'Unpaid'}
-                                        </button>
+                                        </Button>
+                                        {order.paymentStatus.trxId && (
+                                            <div className="text-[10px] mt-1 font-mono text-gray-500">
+                                                ID: {order.paymentStatus.trxId}
+                                            </div>
+                                        )}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <select
@@ -117,7 +126,17 @@ export default function AdminOrdersPage() {
                                         {new Date(order.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Button variant="outline" size="sm" onClick={() => alert(JSON.stringify(order.shippingAddress, null, 2))}>
+                                        <Button variant="outline" size="sm" onClick={() => {
+                                            const addr = order.shippingAddress;
+                                            alert(`
+Customer: ${order.user?.name}
+Phone: ${addr?.phone}
+Alt Phone: ${addr?.secondaryPhone || 'N/A'}
+Address: ${addr?.village}, ${addr?.thana || ''}, ${addr?.district || addr?.city}
+TrxID: ${order.paymentStatus.trxId || 'N/A'}
+Total: ৳${order.totalAmount}
+                                            `.trim());
+                                        }}>
                                             View Details
                                         </Button>
                                     </td>

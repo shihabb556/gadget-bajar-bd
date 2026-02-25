@@ -58,29 +58,34 @@ export default function CartPage() {
                                                 <p className="mt-1 text-sm text-gray-500">Unit Price: ৳{item.price}</p>
                                             </div>
                                             <div className="flex-1 flex items-end justify-between text-sm">
-                                                <div className="flex items-center border rounded">
-                                                    <button
-                                                        className="p-1 hover:bg-gray-100"
+                                                <div className="flex items-center gap-1">
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-8 w-8 rounded-md"
                                                         onClick={() => updateQuantity(item._id, item.quantity - 1)}
                                                     >
                                                         <Minus className="w-4 h-4" />
-                                                    </button>
-                                                    <span className="px-3 py-1 font-medium">{item.quantity}</span>
-                                                    <button
-                                                        className="p-1 hover:bg-gray-100"
+                                                    </Button>
+                                                    <span className="px-3 py-1 font-bold text-gray-900 border-y h-8 flex items-center bg-gray-50 border-gray-100">{item.quantity}</span>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-8 w-8 rounded-md"
                                                         onClick={() => updateQuantity(item._id, item.quantity + 1)}
                                                     >
                                                         <Plus className="w-4 h-4" />
-                                                    </button>
+                                                    </Button>
                                                 </div>
 
-                                                <button
-                                                    type="button"
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
                                                     onClick={() => removeFromCart(item._id)}
-                                                    className="font-medium text-red-600 hover:text-red-500 flex items-center"
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50 font-bold"
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-1" /> Remove
-                                                </button>
+                                                </Button>
                                             </div>
                                         </div>
                                     </li>

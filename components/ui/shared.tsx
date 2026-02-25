@@ -14,10 +14,10 @@ export interface ButtonProps
 }
 
 const buttonVariants = {
-    default: "bg-primary text-primary-foreground hover:bg-primary/90",
-    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
-    ghost: "hover:bg-accent hover:text-accent-foreground",
+    default: "bg-[#3949AB] text-white hover:bg-[#3949AB]/90 shadow-md",
+    destructive: "bg-red-600 text-white hover:bg-red-700",
+    outline: "border-2 border-[#3949AB] bg-transparent text-[#3949AB] hover:bg-gray-50 font-bold",
+    ghost: "hover:bg-gray-100 text-gray-600",
 }
 
 const buttonSizes = {

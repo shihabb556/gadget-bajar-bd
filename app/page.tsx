@@ -1,115 +1,137 @@
 import Navbar from '@/components/Navbar';
 import ProductCard from '@/components/ProductCard';
+import FilterSidebar from '@/components/FilterSidebar';
 import dbConnect from '@/lib/db';
 import { Product, Category } from '@/models/schema';
 import Link from 'next/link';
+import { Button } from '@/components/ui/shared';
 
 // Force dynamic because we want refreshed products
 export const dynamic = 'force-dynamic';
 
-async function getProducts(categorySlug?: string) {
+async function getProducts(params: {
+  category?: string;
+  search?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  availability?: string;
+}) {
   await dbConnect();
   const query: any = { isActive: true };
 
-  if (categorySlug) {
-    // If we filtered by category, we need to find products with that category
-    // Since we store category NAME in product, and we have SLUG in url,
-    // we should ideally look up the category name from slug first.
-    // Or just store slug in product? Currently Product has 'category' name.
+  // Category filter
+  if (params.category) {
+    const categorySlugs = params.category.split(',');
+    const categories = await Category.find({ slug: { $in: categorySlugs } });
+    const categoryNames = categories.map(c => c.name);
+    query.$or = [
+      { category: { $in: categoryNames } },
+      { subCategory: { $in: categoryNames } }
+    ];
+  }
 
-    // Let's find the category document first to get its name
-    const categoryDoc = await Category.findOne({ slug: categorySlug });
-    if (categoryDoc) {
-      // Find products specific to this category OR its subcategories?
-      // For now, exact match on category name or subCategory name could be tricky 
-      // if we don't store slugs in product.
-      // Let's assume strict match on 'category' field for now, assuming it matches the category name.
-      // But wait, slug is URL safe, name might have spaces. 
-      // If Product.category = "Mobile Accessories", and slug is "mobile-accessories".
-      // We found the category doc, so we match Product.category = categoryDoc.name
+  // Search filter
+  if (params.search) {
+    query.$or = [
+      ...(query.$or || []),
+      { name: { $regex: params.search, $options: 'i' } },
+      { description: { $regex: params.search, $options: 'i' } }
+    ];
+  }
 
-      // Also match if it is a subcategory? 
-      // Product.category stores the "Category Name" (top level) usually? 
-      // Or if it matches subCategory?
+  // Price filter
+  if (params.minPrice || params.maxPrice) {
+    query.price = {};
+    if (params.minPrice) query.price.$gte = Number(params.minPrice);
+    if (params.maxPrice) query.price.$lte = Number(params.maxPrice);
+  }
 
-      query.$or = [
-        { category: categoryDoc.name },
-        { subCategory: categoryDoc.name }
-      ];
+  // Availability filter
+  if (params.availability) {
+    const statuses = params.availability.split(',');
+    if (statuses.includes('In Stock') && !statuses.includes('Pre-order')) {
+      query.stock = { $gt: 0 };
+    } else if (statuses.includes('Pre-order') && !statuses.includes('In Stock')) {
+      query.stock = { $eq: 0 };
     }
   }
 
-  return Product.find(query).sort({ createdAt: -1 }).limit(20);
+  return Product.find(query).sort({ createdAt: -1 }).limit(40);
 }
 
 async function getCategories() {
   await dbConnect();
-  return Category.find({ parent: null, isActive: true }).sort({ name: 1 });
+  // Fetch all active categories to support hierarchical display
+  return Category.find({ isActive: true }).sort({ name: 1 });
 }
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ category?: string }> }) {
-  const { category } = await searchParams;
-  const products = await getProducts(category);
+export default async function Home({ searchParams }: {
+  searchParams: Promise<{
+    category?: string;
+    search?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    availability?: string;
+  }>
+}) {
+  const params = await searchParams;
+  const products = await getProducts(params);
   const categories = await getCategories();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-[#fafafa]">
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-            <span className="block xl:inline">Premium Electronics</span>{' '}
-            <span className="block text-indigo-600 xl:inline">For Your Lifestyle</span>
-          </h1>
-          <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-            Discover the latest mobile accessories, headphones, and smart watches.
-          </p>
-        </div>
+        <div className="lg:flex gap-12 items-start">
+          {/* Left Sidebar - Filters */}
+          <div className="hidden lg:block w-72 shrink-0">
+            <FilterSidebar categories={JSON.parse(JSON.stringify(categories))} />
+          </div>
 
-        {/* Categories Bar */}
-        <div className="mb-8 overflow-x-auto pb-4">
-          <div className="flex space-x-4 min-w-max justify-center">
-            <Link
-              href="/"
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${!category
-                  ? 'bg-indigo-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                }`}
-            >
-              All
-            </Link>
-            {categories.map((cat) => (
-              <Link
-                key={cat._id}
-                href={`/?category=${cat.slug}`}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${category === cat.slug
-                    ? 'bg-indigo-600 text-white'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                  }`}
-              >
-                {cat.name}
-              </Link>
-            ))}
+          {/* Right Main Content */}
+          <div className="flex-1">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-1 w-8 bg-blue-600 rounded-full"></div>
+                  <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Our Selection</span>
+                </div>
+                <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase italic">
+                  {params.search ? `Results for "${params.search}"` : params.category ? 'Category Items' : 'Explore Gadgets'}
+                </h1>
+                <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
+                  Found {products.length} high-quality gadgets
+                </p>
+              </div>
+
+              {/* Mobile Filter Trigger could go here in a real app, 
+                  but we'll stick to the Stitch desktop-first layout for now */}
+            </div>
+
+            {/* Product Grid */}
+            {products.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+                {products.map((product) => (
+                  <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
+                ))}
+              </div>
+            ) : (
+              <div className="py-24 text-center bg-white rounded-[3rem] border border-gray-100 shadow-sm px-8">
+                <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <FilterSidebar categories={[]} /> {/* Just for the icon/look */}
+                </div>
+                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching gadgets found</h2>
+                <p className="text-gray-400 font-bold uppercase text-xs tracking-widest max-w-xs mx-auto">
+                  Try adjusting your filters or search query to find what you're looking for.
+                </p>
+                <Link href="/" className="inline-block mt-8">
+                  <Button variant="outline" className="rounded-2xl px-8 border-gray-200 text-gray-600 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-gray-100">Clear All Filters</Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
-
-        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-          {category ? `Products in ${category}` : 'Featured Products'}
-        </h2>
-
-        {products.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product) => (
-              <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-12 text-center text-gray-500">
-            <p className="text-xl">No products found in this category.</p>
-            <p>Try selecting another category or check back later.</p>
-          </div>
-        )}
       </main>
     </div>
   );

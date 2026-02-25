@@ -32,6 +32,7 @@ const UserSchema = new mongoose.Schema({
         required: [true, 'Please provide a name'],
         maxlength: [60, 'Name cannot be more than 60 characters'],
     },
+    lastName: String,
     email: {
         type: String,
         required: [true, 'Please provide an email'],
@@ -46,6 +47,11 @@ const UserSchema = new mongoose.Schema({
         enum: ['ADMIN', 'CUSTOMER'],
         default: 'CUSTOMER',
     },
+    primaryPhone: String,
+    secondaryPhone: String,
+    village: String,
+    thana: String,
+    district: String,
     isActive: {
         type: Boolean,
         default: true,
@@ -126,12 +132,17 @@ const OrderSchema = new mongoose.Schema({
         street: String,
         city: String,
         phone: String,
+        village: String,
+        thana: String,
+        district: String,
+        secondaryPhone: String,
     },
     paymentStatus: {
         advancePaid: {
             type: Boolean,
             default: false,
         },
+        trxId: String,
         method: {
             type: String,
             default: 'COD', // Cash On Delivery
@@ -144,3 +155,13 @@ OrderSchema.index({ user: 1, createdAt: -1 });
 OrderSchema.index({ status: 1 });
 
 export const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema);
+
+const SettingsSchema = new mongoose.Schema({
+    advanceOption: {
+        type: String,
+        enum: ['Paid', 'Unpaid'],
+        default: 'Unpaid',
+    }
+}, { timestamps: true });
+
+export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
