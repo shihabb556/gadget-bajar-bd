@@ -81,7 +81,7 @@ export default function Footer() {
                     <div>
                         <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Payment Methods</h3>
                         <div className="grid grid-cols-3 gap-4">
-                            <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
+                            <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center   overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
                                 <span className="text-[10px] font-black text-[#ED1C24] uppercase italic group-hover:scale-110 transition-transform">Nagad</span>
                             </div>
                             <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
