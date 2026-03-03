@@ -71,7 +71,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                     <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">{product.category || 'GADGET'}</span>
                 </div>
 
-                <h3 className="text-base font-bold text-gray-900 mb-2 leading-tight min-h-[2.5rem] line-clamp-2 uppercase italic tracking-tighter">
+                <h3 className="text-base font-bold text-gray-700 mb-2 leading-tight min-h-[2.5rem] line-clamp-2  tracking-tighter">
                     <Link href={`/products/${product.slug}`}>
                         {product.name}
                     </Link>

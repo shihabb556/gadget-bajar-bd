@@ -119,7 +119,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 </span>
                             </div>
 
-                            <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight uppercase italic tracking-tighter">
+                            <h1 className="text-xl font-black text-gray-700 leading-tight utracking-tighter">
                                 {product.name}
                             </h1>
 
@@ -131,7 +131,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                             <Star key={i} className={`h-3 w-3 ${i < 4 ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
                                         ))}
                                     </div>
-                                    <span className="text-xs font-bold text-gray-500">4.8 (124 reviews)</span>
+                                    {/* <span className="text-xs font-bold text-gray-500">4.8 (124 reviews)</span> */}
                                 </div>
                                 <div className="h-4 w-[1px] bg-gray-200"></div>
                                 <div className="flex items-center gap-1.5">
@@ -162,9 +162,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         );
                                     })()}
                                 </div>
-                                <p className="text-xs font-bold text-blue-600 bg-blue-50 w-fit px-3 py-1 rounded-lg">
+                                {/* <p className="text-xs font-bold text-blue-600 bg-blue-50 w-fit px-3 py-1 rounded-lg">
                                     Or ৳{(Math.round((Number(product.discountPrice) > 0 && Number(product.discountPrice) < product.price ? Number(product.discountPrice) : product.price) / 12)).toLocaleString()}/month with 0% EMI
-                                </p>
+                                </p> */}
                             </div>
 
                             <div className="h-[1px] bg-gray-100 w-full" />
@@ -179,7 +179,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                     </div>
                                     <div>
                                         <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-0.5">Delivery Charge</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                                        <p className="text-[14px] text-gray-500 font-bold uppercase tracking-widest">
                                             Inside Dhaka: ৳80 (ঢাকাঃ ৮০ টাকা) <br />
                                             Outside Dhaka: ৳170 (ঢাকার বাইরেঃ ১৭০ টাকা)
                                         </p>
@@ -200,52 +200,31 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 </div>
 
                 {/* Description & Specs Section */}
-                <div className="mt-16 grid grid-cols-1 lg:grid-cols-3 gap-12">
-                    <div className="lg:col-span-2 space-y-8">
-                        <div>
-                            <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
-                                <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
-                                Description
-                            </h2>
-                            <div className="text-gray-700 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
-                                <div
-                                    className="text-base text-gray-600 leading-relaxed font-medium prose prose-sm max-w-none ql-editor 
+                <div className="mt-16 mx-auto">
+                    <div>
+                        <h2 className="text-xl font-black text-gray-900 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
+                            <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
+                            Description
+                        </h2>
+                        <div className="text-gray-700 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
+                            <div
+                                className="text-base break-words text-gray-600 leading-relaxed font-medium prose prose-sm max-w-none ql-editor overflow-hidden
                                         prose-headings:text-gray-900 prose-headings:font-black prose-headings:uppercase 
                                         prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900"
-                                    dangerouslySetInnerHTML={{ __html: product.description }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="space-y-8">
-                        <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
-                            <div className="h-8 w-1.5 bg-gray-900 rounded-full" />
-                            Technical Specs
-                        </h2>
-                        <div className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-xl shadow-blue-100/10 hover:shadow-blue-100/20 transition-all">
-                            {[
-                                { label: 'Category', value: product.category },
-                                { label: 'Sub Category', value: product.subCategory || 'N/A' },
-                                { label: 'Stock Status', value: product.stock > 0 ? 'In Stock' : 'Out of Stock' },
-                                { label: 'SKU', value: `GB-${product._id.slice(-8).toUpperCase()}` },
-                                { label: 'Warranty', value: '1 Year Official' }
-                            ].map((spec, i) => (
-                                <div key={i} className={`flex justify-between p-5 text-sm ${i % 2 === 0 ? 'bg-gray-50/50' : 'bg-white'}`}>
-                                    <span className="font-black text-gray-400 uppercase tracking-widest text-[10px]">{spec.label}</span>
-                                    <span className="font-bold text-gray-900 text-xs">{spec.value}</span>
-                                </div>
-                            ))}
+                                dangerouslySetInnerHTML={{ __html: product.description }}
+                            />
                         </div>
                     </div>
                 </div>
+
+
 
                 {/* Related Products */}
                 {relatedProducts.length > 0 && (
                     <div className="mt-24">
                         <div className="flex items-center justify-between mb-12">
-                            <h2 className="text-3xl font-black text-gray-900 uppercase italic tracking-tighter flex items-center gap-3">
-                                <div className="h-10 w-2 bg-blue-600 rounded-full" />
+                            <h2 className="text-xl font-black text-gray-900 uppercase italic tracking-tighter flex items-center gap-3">
+                                <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                                 Related Products
                             </h2>
                             <Link href={`/?category=${product.category}`} className="text-xs font-black text-blue-600 uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
