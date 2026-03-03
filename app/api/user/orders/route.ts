@@ -79,6 +79,8 @@ export async function POST(req: Request) {
             }
         });
 
+        await sendTelegramNotification(order)
+
         return NextResponse.json({ message: 'Order placed successfully', orderId: order._id }, { status: 201 });
     } catch (error) {
         console.error('Order placement error:', error);
