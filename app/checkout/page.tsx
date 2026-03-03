@@ -183,51 +183,51 @@ export default function CheckoutPage() {
                                 <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">1</span>
                                 Shipping Information
                             </h2>
-                            {settings.advanceOption === 'Paid' && (
-                                <div className="mb-8 overflow-hidden rounded-2xl border border-indigo-100 shadow-sm">
-                                    <div className="bg-indigo-600 px-6 py-4">
-                                        <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                                            📦 অর্ডার কনফার্মেশন নোটিস 📦
-                                        </h3>
+                            {/* {settings.advanceOption === 'Paid' && ( */}
+                            <div className="mb-8 overflow-hidden rounded-2xl border border-indigo-100 shadow-sm">
+                                <div className="bg-indigo-600 px-6 py-4">
+                                    <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                                        📦 অর্ডার কনফার্মেশন নোটিস 📦
+                                    </h3>
+                                </div>
+                                <div className="bg-indigo-50/30 p-6 space-y-4">
+                                    <p className="text-sm font-medium text-gray-800 leading-relaxed">
+                                        প্রিয় কাস্টমার,<br />
+                                        আপনার অর্ডার কনফার্ম করার জন্য অনুগ্রহ করে সঠিক তথ্য দিন এবং ১০০ টাকা অ্যাডভান্স প্রদান করুন।
+                                    </p>
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
+                                            <span className="text-green-600">✅</span> অ্যাডভান্স পাওয়ার পরই আপনার অর্ডার প্রসেস শুরু হবে।
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
+                                            <span className="text-green-600">✅</span> বিকাশ / নগদ / রকেট মাধ্যমে পেমেন্ট করতে পারবেন।
+                                        </div>
                                     </div>
-                                    <div className="bg-indigo-50/30 p-6 space-y-4">
-                                        <p className="text-sm font-medium text-gray-800 leading-relaxed">
-                                            প্রিয় কাস্টমার,<br />
-                                            আপনার অর্ডার কনফার্ম করার জন্য অনুগ্রহ করে সঠিক তথ্য দিন এবং ১০০ টাকা অ্যাডভান্স প্রদান করুন।
-                                        </p>
-                                        <div className="space-y-2">
-                                            <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
-                                                <span className="text-green-600">✅</span> অ্যাডভান্স পাওয়ার পরই আপনার অর্ডার প্রসেস শুরু হবে।
+                                    <div className="pt-4 border-t border-indigo-100">
+                                        <p className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
+                                        <div className="flex items-center gap-3">
+                                            <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm">
+                                                <span className="text-xl">📲</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-sm text-gray-700 font-bold">
-                                                <span className="text-green-600">✅</span> বিকাশ / নগদ / রকেট মাধ্যমে পেমেন্ট করতে পারবেন।
+                                            <div>
+                                                <p className="text-xl font-black text-gray-900">01620-919681</p>
+                                                <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">বিকাশ / নগদ / রকেট (Send Money)</p>
                                             </div>
                                         </div>
-                                        <div className="pt-4 border-t border-indigo-100">
-                                            <p className="text-xs font-black text-indigo-600 uppercase tracking-widest mb-2">পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
-                                            <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm">
-                                                    <span className="text-xl">📲</span>
-                                                </div>
-                                                <div>
-                                                    <p className="text-xl font-black text-gray-900">01620-919681</p>
-                                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">বিকাশ / নগদ / রকেট (Send Money)</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="pt-4 text-[11px] text-gray-500 font-medium bg-white/50 p-3 rounded-xl border border-indigo-50">
-                                            <p className="mb-2 font-bold text-gray-700">নিচের তথ্যগুলো দিয়ে অর্ডার কনফার্ম করুন:</p>
-                                            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-                                                <p>— নাম</p>
-                                                <p>— গ্রাম/ঠিকানা</p>
-                                                <p>— থানা</p>
-                                                <p>— জেলা</p>
-                                                <p className="col-span-2">— দুটি সচল ফোন নাম্বার</p>
-                                            </div>
+                                    </div>
+                                    <div className="pt-4 text-[11px] text-gray-500 font-medium bg-white/50 p-3 rounded-xl border border-indigo-50">
+                                        <p className="mb-2 font-bold text-gray-700">নিচের তথ্যগুলো দিয়ে অর্ডার কনফার্ম করুন:</p>
+                                        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                            <p>— নাম</p>
+                                            <p>— গ্রাম/ঠিকানা</p>
+                                            <p>— থানা</p>
+                                            <p>— জেলা</p>
+                                            <p className="col-span-2">— দুটি সচল ফোন নাম্বার</p>
                                         </div>
                                     </div>
                                 </div>
-                            )}
+                            </div>
+                            {/* )} */}
                             <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
@@ -315,8 +315,8 @@ export default function CheckoutPage() {
                                                 type="button"
                                                 onClick={() => setDeliveryArea('Inside Dhaka')}
                                                 className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Inside Dhaka'
-                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
-                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                    : 'border-gray-100 hover:border-gray-200 bg-gray-50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
@@ -331,8 +331,8 @@ export default function CheckoutPage() {
                                                 type="button"
                                                 onClick={() => setDeliveryArea('Outside Dhaka')}
                                                 className={`p-4 rounded-xl border-2 text-left transition-all ${deliveryArea === 'Outside Dhaka'
-                                                        ? 'border-indigo-600 bg-indigo-50 shadow-sm'
-                                                        : 'border-gray-100 hover:border-gray-200 bg-gray-50'
+                                                    ? 'border-indigo-600 bg-indigo-50 shadow-sm'
+                                                    : 'border-gray-100 hover:border-gray-200 bg-gray-50'
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
@@ -473,8 +473,8 @@ export default function CheckoutPage() {
                                 type="submit"
                                 disabled={loading || !deliveryArea}
                                 className={`w-full mt-8 py-7 rounded-2xl text-white font-black uppercase tracking-widest transition-all shadow-lg ${!deliveryArea
-                                        ? 'bg-gray-400 cursor-not-allowed'
-                                        : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-indigo-100'
+                                    ? 'bg-gray-400 cursor-not-allowed'
+                                    : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-[1.02] active:scale-[0.98] shadow-indigo-100'
                                     }`}
                             >
                                 {loading ? (

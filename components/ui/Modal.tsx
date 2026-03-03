@@ -130,7 +130,7 @@ export default function Modal({
             `}</style>
 
             <div
-                className={`relative bg-white rounded-2xl shadow-2xl w-full ${maxWidthMap[maxWidth]} overflow-hidden border border-gray-100`}
+                className={`relative bg-white max-h-[calc(100vh-8rem)] overflow-y-auto rounded-2xl shadow-2xl w-full ${maxWidthMap[maxWidth]} overflow-hidden border border-gray-100`}
                 style={{ animation: 'slideUp 0.2s ease-out' }}
             >
                 {/* Header */}
@@ -138,7 +138,7 @@ export default function Modal({
                     <div className={`flex-shrink-0 w-10 h-10 rounded-full ${config.iconBg} flex items-center justify-center`}>
                         {config.icon}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 mt-2">
                         {title && (
                             <h3 className={`text-base font-bold ${config.titleColor} leading-tight`}>
                                 {title}
@@ -172,11 +172,11 @@ export default function Modal({
                             <button
                                 key={idx}
                                 onClick={action.onClick}
-                                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${action.variant === 'danger'
-                                        ? 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500'
-                                        : action.variant === 'ghost'
-                                            ? 'bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 focus:ring-gray-300'
-                                            : 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-500'
+                                className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${action.variant === 'danger'
+                                    ? 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500'
+                                    : action.variant === 'ghost'
+                                        ? 'bg-white hover:bg-gray-100 text-gray-700 border-2 border-gray-200 focus:ring-gray-300'
+                                        : 'bg-indigo-600 hover:bg-indigo-700 text-white focus:ring-indigo-500'
                                     }`}
                             >
                                 {action.label}

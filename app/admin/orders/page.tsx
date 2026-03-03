@@ -358,7 +358,7 @@ function AdminOrdersContent() {
                     >
                         <div className="flex justify-between items-start mb-10">
                             <div>
-                                <h2 className="text-2xl font-black text-indigo-600 italic uppercase">ELECTROMART</h2>
+                                <h2 className="text-2xl font-black text-blue-600 italic uppercase">HealthPortall</h2>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Official Order Summary</p>
                             </div>
                             <div className="text-right">
@@ -390,7 +390,7 @@ function AdminOrdersContent() {
                                     <div key={item.name} className="flex justify-between items-center">
                                         <div className="flex items-center gap-4">
                                             <div className="h-10 w-10 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100">
-                                                {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <Package className="h-5 w-5 text-gray-300" />}
+                                                {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" crossOrigin="anonymous" /> : <Package className="h-5 w-5 text-gray-300" />}
                                             </div>
                                             <div>
                                                 <p className="text-xs font-black text-gray-900 uppercase">{item.name}</p>
