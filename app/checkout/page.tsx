@@ -379,7 +379,7 @@ export default function CheckoutPage() {
                             </form>
                         </div>
 
-                        {settings.advanceOption === 'Paid' && (
+                        /* {settings.advanceOption === 'Paid' && ( */
                             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
                                 <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
                                     <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
@@ -420,7 +420,7 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
                             </div>
-                        )}
+                        /* )} */
 
                         <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
                             <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
