@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
+import Link from 'next/link';
 import { useCartStore } from '@/lib/store';
 import { Button, Input } from '@/components/ui/shared';
 import { useRouter } from 'next/navigation';
@@ -415,9 +416,9 @@ export default function CheckoutPage() {
                                             <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
                                         </p>
                                         <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <a href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
+                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <Link href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
 +880 1832-087091
-</a> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+</Link> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
                                         </p>
                                     </div>
                                 </div>
