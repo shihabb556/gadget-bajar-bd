@@ -96,10 +96,10 @@ export default function CheckoutPage() {
         e.preventDefault();
         setFieldErrors({});
 
-      if (!trxId) {
-        toast.error('Please provide your Payment Transaction ID (TrxID) to proceed.');
-        return;
-    }
+        if (!trxId) {
+            toast.error('Please provide your Payment Transaction ID (TrxID) to proceed.');
+            return;
+        }
 
         const orderData = {
             items,
@@ -383,63 +383,64 @@ export default function CheckoutPage() {
                                     </div>
                                 </div>
 
-                               <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
-                                <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
-                                    <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
-                                    Advance Payment (100 BDT)
-                                </h2>
-                                <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col md:flex-row gap-6 items-center">
-                                    <div className="flex-1">
-                                        <p className="text-indigo-900 font-bold text-sm mb-2">📲 পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
-                                        <p className="text-xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
-                                        <p className="text-xs text-gray-500 font-medium mt-2   tracking-wider">বিকাশ / নগদ / রকেট (Send Money)</p>
-                                    </div>
-                                    <div className="w-full md:w-64">
-                                        <label className="block text-xs font-black text-indigo-600   tracking-widest mb-1">Enter TrxID here</label>
-                                        <p className="text-[10px] text-indigo-400 font-bold mb-2   tracking-tight">মেসেজে আসা TrxID নাম্বারটি দিন</p>
-                                        <Input
-                                            required
-                                            value={trxId}
-                                            onChange={(e) => setTrxId(e.target.value)}
-                                            className="rounded-xl border-indigo-300 uppercase focus:border-indigo-600 focus:ring-0 font-mono text-center   py-4 shadow-sm"
-                                            placeholder="Transaction ID"
-                                        />
-                                    </div>
-                                </div>
-                                       { /* {settings.advanceOption === 'Paid' && ( */}
-                        
-                                            <div className="mt-6 space-y-4">
-                                                <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
-                                                    <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                                    </svg>
-                                                    <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
-                                                </div>
-                                                <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
-                                                    <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
-                                                        <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
-                                                    </p>
-                                                    <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                                                        অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <Link href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
-            +880 1832-087091
-            </Link> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
-                                                    </p>
-                                                </div>
-                                            </div>
+                                <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
+                                    <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
+                                        <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
+                                        Advance Payment (100 BDT)
+                                    </h2>
+                                    <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col md:flex-row gap-6 items-center">
+                                        <div className="flex-1">
+                                            <p className="text-indigo-900 font-bold text-sm mb-2">📲 পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
+                                            <p className="text-xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
+                                            <p className="text-xs text-gray-500 font-medium mt-2   tracking-wider">বিকাশ / নগদ / রকেট (Send Money)</p>
                                         </div>
-                                    {  /* )} */}
-            
-                                    <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
-                                        <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
-                                        <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                                            Our team will call you for final confirmation before dispatching your parcel.
-                                        </p>
+                                        <div className="w-full md:w-64">
+                                            <label className="block text-xs font-black text-indigo-600   tracking-widest mb-1">Enter TrxID here</label>
+                                            <p className="text-[10px] text-indigo-400 font-bold mb-2   tracking-tight">মেসেজে আসা TrxID নাম্বারটি দিন</p>
+                                            <Input
+                                                required
+                                                value={trxId}
+                                                onChange={(e) => setTrxId(e.target.value)}
+                                                className="rounded-xl border-indigo-300 uppercase focus:border-indigo-600 focus:ring-0 font-mono text-center   py-4 shadow-sm"
+                                                placeholder="Transaction ID"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
+
                             </form>
                         </div>
 
-                    
+                        <div className="mt-6 space-y-4">
+                            <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
+                                <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
+                            </div>
+                            <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
+                                <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
+                                    <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
+                                </p>
+                                <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
+                                    অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <Link href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
+                                        +880 1832-087091
+                                    </Link> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+                                </p>
+                            </div>
+                        </div>
+
+
+
+                        <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
+                            <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
+                            <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                                Our team will call you for final confirmation before dispatching your parcel.
+                            </p>
+                        </div>
+                    </div>
+
+
 
                     <div className="mt-10 lg:mt-0 lg:col-span-5">
                         <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 sticky top-8 overflow-hidden">
@@ -495,7 +496,7 @@ export default function CheckoutPage() {
                                     </div>
                                 ) : (
                                     !deliveryArea ? 'Select Delivery Area' : 'Complete Order')
-                                )}
+                                }
                             </Button>
                         </div>
                     </div>
