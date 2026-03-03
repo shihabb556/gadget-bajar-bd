@@ -398,7 +398,7 @@ export default function CheckoutPage() {
                                             required
                                             value={trxId}
                                             onChange={(e) => setTrxId(e.target.value)}
-                                            className="rounded-xl border-indigo-300 focus:border-indigo-600 focus:ring-0 font-mono text-center   py-4 shadow-sm"
+                                            className="rounded-xl border-indigo-300 uppercase focus:border-indigo-600 focus:ring-0 font-mono text-center   py-4 shadow-sm"
                                             placeholder="Transaction ID"
                                         />
                                     </div>
@@ -415,7 +415,9 @@ export default function CheckoutPage() {
                                             <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
                                         </p>
                                         <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline">(+880 1832-087091)</span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <a href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
++880 1832-087091
+</a> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
                                         </p>
                                     </div>
                                 </div>
