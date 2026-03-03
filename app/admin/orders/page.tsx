@@ -136,14 +136,14 @@ function AdminOrdersContent() {
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <h2 className="text-2xl font-bold text-gray-800">Order Management</h2>
+                <h2 className="text-lg md:text-2xl font-bold text-gray-800">Order Management</h2>
 
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-row  gap-3">
                     <form onSubmit={handleSearch} className="flex gap-2">
                         <input
                             type="text"
                             placeholder="Order ID..."
-                            className="text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
+                            className="w-full md:w-[10rem] text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2"
                             value={searchId}
                             onChange={(e) => setSearchId(e.target.value)}
                         />
@@ -153,7 +153,7 @@ function AdminOrdersContent() {
                     <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value)}
-                        className="text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-4 py-2"
+                        className="text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[10rem] px-4 py-2"
                     >
                         <option className="text-gray-700" value="ALL">All Status</option>
                         <option className="text-gray-700" value="PENDING">Pending</option>
@@ -165,92 +165,94 @@ function AdminOrdersContent() {
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Advance</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {loading ? (
+                <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 ">
+                        <thead className="bg-gray-50">
                             <tr>
-                                <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">Loading...</td>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Advance</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                             </tr>
-                        ) : orders.length === 0 ? (
-                            <tr>
-                                <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">No orders found</td>
-                            </tr>
-                        ) : (
-                            orders.map((order: any) => (
-                                <tr key={order._id}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        ...{order._id.slice(-6)}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{order.user?.name || order.guestName || 'Unknown'}</div>
-                                        <div className="text-xs text-gray-500">{order.shippingAddress?.phone}</div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        ৳{order.totalAmount}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => toggleAdvancePayment(order._id, order.paymentStatus.advancePaid)}
-                                            className={`h-7 px-3 text-[10px] uppercase tracking-wider font-black rounded-full transition-all ${order.paymentStatus.advancePaid
-                                                ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
-                                                : 'bg-white text-red-600 border-red-100 hover:bg-red-50'
-                                                }`}
-                                        >
-                                            {order.paymentStatus.advancePaid ? 'Paid' : 'Unpaid'}
-                                        </Button>
-                                        {order.paymentStatus.trxId && (
-                                            <div className="text-[10px] mt-1 font-mono text-gray-500">
-                                                ID: {order.paymentStatus.trxId}
-                                            </div>
-                                        )}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <select
-                                            value={order.status}
-                                            onChange={(e) => updateStatus(order._id, e.target.value)}
-                                            className="text-sm text-gray-700! border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                        >
-                                            <option value="PENDING">Pending</option>
-                                            <option value="PROCESSING">Processing</option>
-                                            <option value="DELIVERED">Delivered</option>
-                                            <option value="CANCELLED">Cancelled</option>
-                                        </select>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {new Date(order.createdAt).toLocaleDateString()}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                                        <Button variant="outline" size="sm" onClick={() => setViewOrder(order)}>
-                                            View
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => downloadSummary(order)}
-                                            className="h-8 w-8 p-0 text-gray-500 hover:text-indigo-600"
-                                            title="Download Summary"
-                                        >
-                                            <Download className="h-4 w-4" />
-                                        </Button>
-                                    </td>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {loading ? (
+                                <tr>
+                                    <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">Loading...</td>
                                 </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
+                            ) : orders.length === 0 ? (
+                                <tr>
+                                    <td colSpan={7} className="px-6 py-4 text-center text-sm text-gray-500">No orders found</td>
+                                </tr>
+                            ) : (
+                                orders.map((order: any) => (
+                                    <tr key={order._id}>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            ...{order._id.slice(-6)}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="text-sm font-medium text-gray-900">{order.user?.name || order.guestName || 'Unknown'}</div>
+                                            <div className="text-xs text-gray-500">{order.shippingAddress?.phone}</div>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            ৳{order.totalAmount}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => toggleAdvancePayment(order._id, order.paymentStatus.advancePaid)}
+                                                className={`h-7 px-3 text-[10px] uppercase tracking-wider font-black rounded-full transition-all ${order.paymentStatus.advancePaid
+                                                    ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
+                                                    : 'bg-white text-red-600 border-red-100 hover:bg-red-50'
+                                                    }`}
+                                            >
+                                                {order.paymentStatus.advancePaid ? 'Paid' : 'Unpaid'}
+                                            </Button>
+                                            {order.paymentStatus.trxId && (
+                                                <div className="text-[10px] mt-1 font-mono text-gray-500">
+                                                    ID: {order.paymentStatus.trxId}
+                                                </div>
+                                            )}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <select
+                                                value={order.status}
+                                                onChange={(e) => updateStatus(order._id, e.target.value)}
+                                                className="text-sm text-gray-700! border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            >
+                                                <option value="PENDING">Pending</option>
+                                                <option value="PROCESSING">Processing</option>
+                                                <option value="DELIVERED">Delivered</option>
+                                                <option value="CANCELLED">Cancelled</option>
+                                            </select>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {new Date(order.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                                            <Button variant="outline" size="sm" onClick={() => setViewOrder(order)}>
+                                                View
+                                            </Button>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                onClick={() => downloadSummary(order)}
+                                                className="h-8 w-8 p-0 text-gray-500 hover:text-indigo-600"
+                                                title="Download Summary"
+                                            >
+                                                <Download className="h-4 w-4" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {/* Order Details Modal */}
