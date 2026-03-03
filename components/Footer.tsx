@@ -13,22 +13,21 @@ export default function Footer() {
                         <div className="flex items-start gap-3 group">
                             <MapPin className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" />
                             <p className="text-sm text-gray-600 leading-relaxed">
-                                Rahman Regnum Centre, Level-6,<br />
-                                191/1, Tejgaon C/A, Dhaka-1208,<br />
+                                Dhaka, Dhanmondi 1209 <br />
                                 Bangladesh
                             </p>
                         </div>
                         <div className="flex items-center gap-3">
                             <Phone className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                            <p className="text-sm text-gray-600">+8809613444455</p>
+                            <p className="text-sm text-gray-600">+880 1832-087091</p>
                         </div>
                         <div className="flex items-center gap-3">
                             <Clock className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                            <p className="text-sm text-gray-600">9 am - 9 pm (Everyday)</p>
+                            <p className="text-sm text-gray-600">9 am - 12 pm (Everyday)</p>
                         </div>
                         <div className="flex items-center gap-3">
                             <Mail className="w-5 h-5 text-blue-600 flex-shrink-0" />
-                            <p className="text-sm text-gray-600">customer.care@electromart.com</p>
+                            <p className="text-sm text-gray-600">gadgetbazarbd.offical@gmail.com<p>
                         </div>
 
                         <div className="pt-4">
