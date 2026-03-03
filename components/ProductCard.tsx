@@ -100,7 +100,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                                 <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
                             </div>
                         ) : (
-                            <p className="text-sm md:text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                            <p className="text-sm md:text-xl font-black text-gray-700 tracking-tighter">৳{product.price.toLocaleString()}</p>
                         )}
                     </div>
 

@@ -215,7 +215,7 @@ function ProfileContent() {
                                         onClick={() => setActiveTab('profile')}
                                         className="absolute bottom-2 right-2 h-10 w-10 bg-white rounded-full shadow-xl border border-gray-100 flex items-center justify-center hover:scale-110 transition-transform active:scale-95 group-hover/avatar:translate-y-0 translate-y-2 opacity-0 group-hover/avatar:opacity-100 duration-300"
                                     >
-                                        <svg className="h-5 w-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
@@ -226,7 +226,7 @@ function ProfileContent() {
                                     onClick={() => setActiveTab('profile')}
                                     className="absolute bottom-0 right-0 h-9 w-9 bg-white rounded-full shadow-lg border border-gray-100 flex items-center justify-center hover:scale-110 transition-all active:scale-95 z-10"
                                 >
-                                    <svg className="h-4 w-4 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="h-4 w-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                     </svg>
@@ -235,7 +235,7 @@ function ProfileContent() {
 
                             {/* Info Section */}
                             <div className="flex-1 text-center md:text-left space-y-2">
-                                <h1 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tighter uppercase italic">
+                                <h1 className="text-xl md:text-xl font-black text-gray-700 tracking-tighter uppercase italic">
                                     {profile.name} {profile.lastName}
                                 </h1>
                                 <div className="space-y-1">
@@ -251,7 +251,7 @@ function ProfileContent() {
                                         Edit Profile
                                     </Button>
                                     <button
-                                        className="text-xs font-black uppercase tracking-widest text-gray-900 hover:text-blue-600 transition-colors flex items-center gap-1.5"
+                                        className="text-xs font-black uppercase tracking-widest text-gray-700 hover:text-blue-600 transition-colors flex items-center gap-1.5"
                                     >
                                         My Voucher
                                         <div className="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
@@ -262,7 +262,7 @@ function ProfileContent() {
                     </div>
 
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Account Center</h1>
+                        <h1 className="text-xl font-extrabold text-gray-700 tracking-tight">Account Center</h1>
                         <div className="flex bg-white p-1 rounded-xl shadow-sm border border-gray-200 mt-4 md:mt-0 gap-1">
                             <Button
                                 variant={activeTab === 'orders' ? 'default' : 'outline'}
@@ -286,7 +286,7 @@ function ProfileContent() {
                     {activeTab === 'orders' ? (
                         <div className="space-y-6">
                             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
-                                <h2 className="text-xl font-bold text-gray-900">Order History</h2>
+                                <h2 className="text-xl font-bold text-gray-700">Order History</h2>
                                 <div className="relative w-full sm:w-64">
                                     <input
                                         type="text"
@@ -315,7 +315,7 @@ function ProfileContent() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                         </svg>
                                     </div>
-                                    <p className="text-gray-900 font-bold text-xl">{searchTerm ? 'No matching orders found' : 'No orders yet'}</p>
+                                    <p className="text-gray-700 font-bold text-xl">{searchTerm ? 'No matching orders found' : 'No orders yet'}</p>
                                     <p className="mt-2 text-gray-500">
                                         {searchTerm ? `We couldn't find any orders matching "${searchTerm}"` : 'When you purchase items, they will appear here.'}
                                     </p>
@@ -335,7 +335,7 @@ function ProfileContent() {
                                         <div className="px-6 py-5 bg-gray-50 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4">
                                             <div>
                                                 <div className="flex items-center gap-3">
-                                                    <h3 className="text-lg font-bold text-gray-900 uppercase">
+                                                    <h3 className="text-lg font-bold text-gray-700 uppercase">
                                                         Order #{order._id.slice(-6)}
                                                     </h3>
                                                     <span className={`px-3 py-1 text-xs font-bold rounded-full tracking-wide ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
@@ -351,7 +351,7 @@ function ProfileContent() {
                                             </div>
                                             <div className="flex items-center gap-4">
                                                 <div className="text-right mr-4">
-                                                    <p className="text-2xl font-black text-indigo-600">৳{order.totalAmount}</p>
+                                                    <p className="text-xl font-black text-indigo-600">৳{order.totalAmount}</p>
                                                     <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter mt-1">Total (Inc. ৳{order.deliveryCharge || 0} Delivery)</p>
                                                 </div>
                                                 <Button
@@ -376,11 +376,11 @@ function ProfileContent() {
                                                                     {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <div className="h-6 w-6 text-gray-300">📦</div>}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-sm font-bold text-gray-900 group-hover:text-indigo-600 transition-colors uppercase">{item.name}</p>
+                                                                    <p className="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors uppercase">{item.name}</p>
                                                                     <p className="text-xs text-gray-500">Quantity: {item.quantity}</p>
                                                                 </div>
                                                             </div>
-                                                            <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                                            <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                                                         </li>
                                                     ))}
                                                 </ul>
@@ -414,7 +414,7 @@ function ProfileContent() {
                             <div className="px-6 py-8 md:px-10">
                                 <form onSubmit={handleProfileUpdate} className="space-y-8">
                                     <div>
-                                        <h3 className="text-lg font-bold text-gray-900 border-b pb-4 border-gray-100">Personal Information</h3>
+                                        <h3 className="text-lg font-bold text-gray-700 border-b pb-4 border-gray-100">Personal Information</h3>
                                         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">First Name</label>
@@ -455,7 +455,7 @@ function ProfileContent() {
                                     </div>
 
                                     <div>
-                                        <h3 className="text-lg font-bold text-gray-900 border-b pb-4 border-gray-100">Contact & Address</h3>
+                                        <h3 className="text-lg font-bold text-gray-700 border-b pb-4 border-gray-100">Contact & Address</h3>
                                         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
                                             <div>
                                                 <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Primary Phone</label>
@@ -553,11 +553,11 @@ function ProfileContent() {
                     >
                         <div className="flex justify-between items-start mb-10">
                             <div>
-                                <h2 className="text-2xl font-black text-indigo-600 italic uppercase">ELECTROMART</h2>
+                                <h2 className="text-xl font-black text-indigo-600 italic uppercase">ELECTROMART</h2>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Official Order Summary</p>
                             </div>
                             <div className="text-right">
-                                <p className="text-sm font-black text-gray-900 uppercase">Order ID</p>
+                                <p className="text-sm font-black text-gray-700 uppercase">Order ID</p>
                                 <p className="text-sm font-mono font-medium text-gray-500">#{selectedOrder._id}</p>
                             </div>
                         </div>
@@ -565,7 +565,7 @@ function ProfileContent() {
                         <div className="grid grid-cols-2 gap-8 mb-10 pb-10 border-b border-dashed border-gray-100">
                             <div>
                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Customer Info</p>
-                                <p className="text-sm font-bold text-gray-900">{selectedOrder.user?.name || profile.name || 'Valued Customer'}</p>
+                                <p className="text-sm font-bold text-gray-700">{selectedOrder.user?.name || profile.name || 'Valued Customer'}</p>
                                 <p className="text-xs text-gray-500 font-medium">{selectedOrder.user?.email || profile.email || 'customer@example.com'}</p>
                                 <p className="text-xs text-gray-500 font-medium">{selectedOrder.shippingAddress?.phone}</p>
                             </div>
@@ -588,11 +588,11 @@ function ProfileContent() {
                                                 {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <Package className="h-5 w-5 text-gray-300" />}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-black text-gray-900 uppercase">{item.name}</p>
+                                                <p className="text-xs font-black text-gray-700 uppercase">{item.name}</p>
                                                 <p className="text-[10px] text-gray-500 font-bold uppercase">Qty: {item.quantity} × ৳{item.price}</p>
                                             </div>
                                         </div>
-                                        <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                        <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                                     </div>
                                 ))}
                             </div>
@@ -601,7 +601,7 @@ function ProfileContent() {
                         {selectedOrder.deliveryCharge > 0 && (
                             <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
-                                <p className="text-sm font-black text-gray-900">৳{selectedOrder.deliveryCharge}</p>
+                                <p className="text-sm font-black text-gray-700">৳{selectedOrder.deliveryCharge}</p>
                             </div>
                         )}
 
@@ -610,7 +610,7 @@ function ProfileContent() {
                                 <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Total Payable</p>
                                 <p className="text-sm font-medium opacity-60">Status: {selectedOrder.status}</p>
                             </div>
-                            <p className="text-4xl font-black italic">৳{selectedOrder.totalAmount}</p>
+                            <p className="text-xl font-black italic">৳{selectedOrder.totalAmount}</p>
                         </div>
                     </div>
                 )}

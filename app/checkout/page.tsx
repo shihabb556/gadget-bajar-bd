@@ -173,13 +173,13 @@ export default function CheckoutPage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                         </svg>
                     </div>
-                    <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight italic">Secure Checkout</h1>
+                    <h1 className="text-xl font-extrabold text-gray-700 tracking-tight italic">Secure Checkout</h1>
                 </div>
 
                 <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
                     <div className="lg:col-span-7">
                         <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 transition-all hover:shadow-md">
-                            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                            <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
                                 <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">1</span>
                                 Shipping Information
                             </h2>
@@ -210,7 +210,7 @@ export default function CheckoutPage() {
                                                 <span className="text-xl">📲</span>
                                             </div>
                                             <div>
-                                                <p className="text-xl font-black text-gray-900">01620-919681</p>
+                                                <p className="text-xl font-black text-gray-700">01620-919681</p>
                                                 <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">বিকাশ / নগদ / রকেট (Send Money)</p>
                                             </div>
                                         </div>
@@ -320,7 +320,7 @@ export default function CheckoutPage() {
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
-                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Inside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Inside Dhaka' ? 'text-indigo-600' : 'text-gray-700'}`}>
                                                         Inside Dhaka
                                                     </span>
                                                     {deliveryArea === 'Inside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
@@ -336,7 +336,7 @@ export default function CheckoutPage() {
                                                     }`}
                                             >
                                                 <div className="flex items-center justify-between mb-1">
-                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Outside Dhaka' ? 'text-indigo-600' : 'text-gray-900'}`}>
+                                                    <span className={`text-sm font-black uppercase tracking-tight ${deliveryArea === 'Outside Dhaka' ? 'text-indigo-600' : 'text-gray-700'}`}>
                                                         Outside Dhaka
                                                     </span>
                                                     {deliveryArea === 'Outside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
@@ -381,14 +381,14 @@ export default function CheckoutPage() {
 
                         {settings.advanceOption === 'Paid' && (
                             <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 mb-8 ring-1 ring-indigo-50 transition-all hover:shadow-md">
-                                <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
                                     <span className="h-6 w-6 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center text-xs">2</span>
                                     Advance Payment (100 BDT)
                                 </h2>
                                 <div className="bg-indigo-50/50 p-6 rounded-2xl border border-indigo-100 flex flex-col md:flex-row gap-6 items-center">
                                     <div className="flex-1">
                                         <p className="text-indigo-900 font-bold text-sm mb-2">📲 পেমেন্ট নাম্বার (অ্যাডভান্স):</p>
-                                        <p className="text-3xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
+                                        <p className="text-xl font-black text-indigo-700 tracking-tighter">01620-919681</p>
                                         <p className="text-xs text-gray-500 font-medium mt-2 uppercase tracking-wider">বিকাশ / নগদ / রকেট (Send Money)</p>
                                     </div>
                                     <div className="w-full md:w-64">
@@ -423,7 +423,7 @@ export default function CheckoutPage() {
                         )}
 
                         <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
-                            <h3 className="text-sm font-bold text-gray-900 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
+                            <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
                             <p className="text-xs text-gray-500 font-medium leading-relaxed">
                                 Our team will call you for final confirmation before dispatching your parcel.
                             </p>
@@ -433,7 +433,7 @@ export default function CheckoutPage() {
                     <div className="mt-10 lg:mt-0 lg:col-span-5">
                         <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 sticky top-8 overflow-hidden">
                             <div className="absolute top-0 right-0 -mt-4 -mr-4 h-24 w-24 bg-indigo-50 rounded-full opacity-50"></div>
-                            <h2 className="text-xl font-bold text-gray-900 mb-6 relative">Order Summary</h2>
+                            <h2 className="text-xl font-bold text-gray-700 mb-6 relative">Order Summary</h2>
                             <div className="flow-root relative">
                                 <ul className="divide-y divide-gray-100">
                                     {items.map((item) => (
@@ -443,11 +443,11 @@ export default function CheckoutPage() {
                                                     {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <div className="h-6 w-6 text-gray-300">📦</div>}
                                                 </div>
                                                 <div className="space-y-0.5">
-                                                    <h3 className="text-sm font-bold text-gray-900 uppercase group-hover:text-indigo-600 transition-colors">{item.name}</h3>
+                                                    <h3 className="text-sm font-bold text-gray-700 uppercase group-hover:text-indigo-600 transition-colors">{item.name}</h3>
                                                     <p className="text-xs text-gray-500 font-medium">Quantity: {item.quantity}</p>
                                                 </div>
                                             </div>
-                                            <p className="text-sm font-black text-gray-900 whitespace-nowrap">৳{item.price * item.quantity}</p>
+                                            <p className="text-sm font-black text-gray-700 whitespace-nowrap">৳{item.price * item.quantity}</p>
                                         </li>
                                     ))}
                                 </ul>
@@ -460,11 +460,11 @@ export default function CheckoutPage() {
                                 </div>
                                 <div className="flex justify-between text-sm text-gray-500 font-medium uppercase tracking-tighter">
                                     <p>Delivery Fee</p>
-                                    <p className="text-gray-900 font-bold">{deliveryArea ? `৳${deliveryCharge}` : 'Select Area'}</p>
+                                    <p className="text-gray-700 font-bold">{deliveryArea ? `৳${deliveryCharge}` : 'Select Area'}</p>
                                 </div>
                                 <div className="flex justify-between pt-4 border-t border-gray-100">
-                                    <p className="text-lg font-black text-gray-900 uppercase">Total Payable</p>
-                                    <p className="text-2xl font-black text-indigo-600">৳{total() + deliveryCharge}</p>
+                                    <p className="text-lg font-black text-gray-700 uppercase">Total Payable</p>
+                                    <p className="text-xl font-black text-indigo-600">৳{total() + deliveryCharge}</p>
                                 </div>
                             </div>
 

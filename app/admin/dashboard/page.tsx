@@ -121,7 +121,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
             {/* Header */}
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
+                <h2 className="text-xl font-bold text-gray-800">Dashboard Overview</h2>
                 <Link href="/admin/products/new">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
@@ -145,7 +145,7 @@ export default function DashboardPage() {
                             {loading ? (
                                 <div className="h-7 w-20 bg-gray-100 rounded animate-pulse mt-1" />
                             ) : (
-                                <h3 className="text-xl font-black text-gray-900 mt-0.5">{card.value}</h3>
+                                <h3 className="text-xl font-black text-gray-700 mt-0.5">{card.value}</h3>
                             )}
                         </div>
                     </div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
                                         <td className="px-6 py-4 text-sm text-gray-500">
                                             {order.items?.length ?? 0} item{(order.items?.length ?? 0) !== 1 ? 's' : ''}
                                         </td>
-                                        <td className="px-6 py-4 text-sm font-bold text-gray-900">
+                                        <td className="px-6 py-4 text-sm font-bold text-gray-700">
                                             ৳{order.totalAmount?.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-4 text-xs text-gray-400">

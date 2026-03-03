@@ -136,7 +136,7 @@ function AdminOrdersContent() {
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <h2 className="text-lg md:text-2xl font-bold text-gray-800">Order Management</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-800">Order Management</h2>
 
                 <div className="flex flex-row  gap-3">
                     <form onSubmit={handleSearch} className="flex gap-2">
@@ -194,10 +194,10 @@ function AdminOrdersContent() {
                                             ...{order._id.slice(-6)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">{order.user?.name || order.guestName || 'Unknown'}</div>
+                                            <div className="text-sm font-medium text-gray-700">{order.user?.name || order.guestName || 'Unknown'}</div>
                                             <div className="text-xs text-gray-500">{order.shippingAddress?.phone}</div>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                             ৳{order.totalAmount}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
@@ -273,7 +273,7 @@ function AdminOrdersContent() {
                             </div>
                             <div>
                                 <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Customer</p>
-                                <p className="text-sm font-bold text-gray-900">{viewOrder.user?.name || viewOrder.guestName || 'Unknown'}</p>
+                                <p className="text-sm font-bold text-gray-700">{viewOrder.user?.name || viewOrder.guestName || 'Unknown'}</p>
                                 {viewOrder.user?.email && <p className="text-xs text-gray-500">{viewOrder.user.email}</p>}
                             </div>
                         </div>
@@ -339,10 +339,10 @@ function AdminOrdersContent() {
                                             <img src={item.image} alt={item.name} className="w-10 h-10 object-cover rounded-lg border border-gray-200" />
                                         )}
                                         <div className="flex-1">
-                                            <p className="text-sm font-semibold text-gray-900">{item.name}</p>
+                                            <p className="text-sm font-semibold text-gray-700">{item.name}</p>
                                             <p className="text-xs text-gray-500">Qty: {item.quantity} × ৳{item.price}</p>
                                         </div>
-                                        <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                        <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                                     </div>
                                 ))}
                             </div>
@@ -360,11 +360,11 @@ function AdminOrdersContent() {
                     >
                         <div className="flex justify-between items-start mb-10">
                             <div>
-                                <h2 className="text-2xl font-black text-blue-600 italic uppercase">HealthPortall</h2>
+                                <h2 className="text-xl font-black text-blue-600 italic uppercase">HealthPortall</h2>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Official Order Summary</p>
                             </div>
                             <div className="text-right">
-                                <p className="text-sm font-black text-gray-900 uppercase">Order ID</p>
+                                <p className="text-sm font-black text-gray-700 uppercase">Order ID</p>
                                 <p className="text-sm font-mono font-medium text-gray-500">#{selectedOrder._id}</p>
                             </div>
                         </div>
@@ -372,7 +372,7 @@ function AdminOrdersContent() {
                         <div className="grid grid-cols-2 gap-8 mb-10 pb-10 border-b border-dashed border-gray-100">
                             <div>
                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Customer Info</p>
-                                <p className="text-sm font-bold text-gray-900">{selectedOrder.user?.name || selectedOrder.guestName || 'Valued Customer'}</p>
+                                <p className="text-sm font-bold text-gray-700">{selectedOrder.user?.name || selectedOrder.guestName || 'Valued Customer'}</p>
                                 <p className="text-xs text-gray-500 font-medium">{selectedOrder.user?.email || selectedOrder.guestEmail || 'customer@example.com'}</p>
                                 <p className="text-xs text-gray-500 font-medium">{selectedOrder.shippingAddress?.phone}</p>
                             </div>
@@ -395,11 +395,11 @@ function AdminOrdersContent() {
                                                 {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" crossOrigin="anonymous" /> : <Package className="h-5 w-5 text-gray-300" />}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-black text-gray-900 uppercase">{item.name}</p>
+                                                <p className="text-xs font-black text-gray-700 uppercase">{item.name}</p>
                                                 <p className="text-[10px] text-gray-500 font-bold uppercase">Qty: {item.quantity} × ৳{item.price}</p>
                                             </div>
                                         </div>
-                                        <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                        <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                                     </div>
                                 ))}
                             </div>
@@ -408,7 +408,7 @@ function AdminOrdersContent() {
                         {selectedOrder.deliveryCharge > 0 && (
                             <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
-                                <p className="text-sm font-black text-gray-900">৳{selectedOrder.deliveryCharge}</p>
+                                <p className="text-sm font-black text-gray-700">৳{selectedOrder.deliveryCharge}</p>
                             </div>
                         )}
 
@@ -417,7 +417,7 @@ function AdminOrdersContent() {
                                 <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Total Payable</p>
                                 <p className="text-sm font-medium opacity-60">Status: {selectedOrder.status}</p>
                             </div>
-                            <p className="text-4xl font-black italic">৳{selectedOrder.totalAmount}</p>
+                            <p className="text-xl font-black italic">৳{selectedOrder.totalAmount}</p>
                         </div>
                     </div>
                 )}

@@ -234,7 +234,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                         checked={formData.isActive}
                         onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     />
-                    <label htmlFor="isActive" className="ml-2 block text-sm text-gray-900">
+                    <label htmlFor="isActive" className="ml-2 block text-sm text-gray-700">
                         Active (Visible to customers)
                     </label>
                 </div>

@@ -52,7 +52,7 @@ export default function AdminSettingsPage() {
     return (
         <div className="max-w-4xl space-y-8">
             <div>
-                <h2 className="text-2xl font-bold text-gray-900">General Settings</h2>
+                <h2 className="text-xl font-bold text-gray-700">General Settings</h2>
                 <p className="mt-1 text-sm text-gray-500">
                     Configure global application settings and options.
                 </p>
@@ -60,7 +60,7 @@ export default function AdminSettingsPage() {
 
             <div className="bg-white shadow sm:rounded-lg">
                 <div className="px-4 py-5 sm:p-6">
-                    <h3 className="text-lg font-medium leading-6 text-gray-900">Advance Payment Option</h3>
+                    <h3 className="text-lg font-medium leading-6 text-gray-700">Advance Payment Option</h3>
                     <div className="mt-2 max-w-xl text-sm text-gray-500">
                         <p>
                             When set to <strong>"Paid"</strong>, customers will be required to pay 100 Taka advance

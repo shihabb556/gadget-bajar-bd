@@ -96,7 +96,7 @@ export default function TrackOrderPage() {
 
             <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 <div className="text-center mb-12">
-                    <h1 className="text-4xl font-black text-gray-900 tracking-tight uppercase italic mb-4">Track Your Order</h1>
+                    <h1 className="text-xl font-black text-gray-700 tracking-tight uppercase italic mb-4">Track Your Order</h1>
                     <p className="text-gray-500 font-medium">Enter your Order ID to see real-time status updates.</p>
                 </div>
 
@@ -157,7 +157,7 @@ export default function TrackOrderPage() {
                                 <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
                                     <div>
                                         <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Order Status</p>
-                                        <h2 className="text-2xl font-black text-gray-900 uppercase italic underline decoration-blue-500 decoration-4">
+                                        <h2 className="text-xl font-black text-gray-700 uppercase italic underline decoration-blue-500 decoration-4">
                                             {order.status}
                                         </h2>
                                     </div>
@@ -210,7 +210,7 @@ export default function TrackOrderPage() {
                             {/* Order Details Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 text-left">
-                                    <h3 className="text-lg font-black text-gray-900 uppercase italic mb-6">Order Items</h3>
+                                    <h3 className="text-lg font-black text-gray-700 uppercase italic mb-6">Order Items</h3>
                                     <div className="space-y-4">
                                         {order.items.map((item: any) => (
                                             <div key={item.name} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
@@ -219,22 +219,22 @@ export default function TrackOrderPage() {
                                                         {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <Package className="p-3 text-gray-300" />}
                                                     </div>
                                                     <div>
-                                                        <p className="text-sm font-bold text-gray-900 uppercase truncate max-w-[150px]">{item.name}</p>
+                                                        <p className="text-sm font-bold text-gray-700 uppercase truncate max-w-[150px]">{item.name}</p>
                                                         <p className="text-[10px] text-gray-500 font-bold uppercase">Qty: {item.quantity} × ৳{item.price}</p>
                                                     </div>
                                                 </div>
-                                                <p className="text-sm font-black text-gray-900">৳{item.price * item.quantity}</p>
+                                                <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                                             </div>
                                         ))}
                                         <div className="pt-4 flex justify-between items-center border-t-2 border-dashed border-gray-100">
                                             <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Total Amount</p>
-                                            <p className="text-2xl font-black text-blue-600">৳{order.totalAmount}</p>
+                                            <p className="text-xl font-black text-blue-600">৳{order.totalAmount}</p>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className="bg-white p-8 rounded-3xl shadow-lg border border-gray-100 text-left">
-                                    <h3 className="text-lg font-black text-gray-900 uppercase italic mb-6">Payment & Shipping</h3>
+                                    <h3 className="text-lg font-black text-gray-700 uppercase italic mb-6">Payment & Shipping</h3>
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-4 hover:translate-x-1 transition-transform">
                                             <div className={`h-12 w-12 rounded-2xl flex items-center justify-center ${order.paymentStatus?.advancePaid ? 'bg-green-100 text-green-600' : 'bg-amber-100 text-amber-600'}`}>
@@ -251,7 +251,7 @@ export default function TrackOrderPage() {
                                         {order.paymentStatus?.trxId && (
                                             <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100 group">
                                                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Transaction ID</p>
-                                                <p className="text-sm font-mono font-bold text-gray-900 break-all select-all">
+                                                <p className="text-sm font-mono font-bold text-gray-700 break-all select-all">
                                                     {order.paymentStatus.trxId}
                                                 </p>
                                             </div>

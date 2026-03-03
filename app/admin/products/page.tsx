@@ -46,7 +46,7 @@ export default function ProductsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-800">Products</h2>
+                <h2 className="text-xl font-bold text-gray-800">Products</h2>
                 <Link href="/admin/products/new">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
@@ -89,7 +89,7 @@ export default function ProductsPage() {
                                                 </div>
                                                 <div className="ml-4 max-w-[220px]">
                                                     <div
-                                                        className="text-sm font-medium text-gray-900 truncate"
+                                                        className="text-sm font-medium text-gray-700 truncate"
                                                         title={product.name}
                                                     >
                                                         {truncate(product.name)}
@@ -98,13 +98,13 @@ export default function ProductsPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{product.category}</div>
+                                            <div className="text-sm text-gray-700">{product.category}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">৳{product.price}</div>
+                                            <div className="text-sm text-gray-700">৳{product.price}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{product.stock}</div>
+                                            <div className="text-sm text-gray-700">{product.stock}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'

@@ -71,7 +71,7 @@ export default function AdminLayout({
                                 "flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-colors",
                                 isActive
                                     ? "bg-indigo-50 text-indigo-600"
-                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                                    : "text-gray-600 hover:bg-gray-50 hover:text-gray-700"
                             )}
                         >
                             <Icon className="w-5 h-5" />

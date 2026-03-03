@@ -62,7 +62,7 @@ export default function RegisterPage() {
         <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
                 <div>
-                    <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    <h2 className="mt-6 text-center text-xl font-extrabold text-gray-700">
                         Create your account
                     </h2>
                     <p className="mt-2 text-center text-sm text-gray-600">
@@ -81,7 +81,7 @@ export default function RegisterPage() {
                                 name="name"
                                 type="text"
                                 required
-                                className={`relative block w-full appearance-none rounded-md border ${fieldErrors.name ? 'border-red-500' : 'border-gray-300'} py-2 text-gray-900 placeholder-gray-500 focus:ring-indigo-500 sm:text-sm`}
+                                className={`relative block w-full appearance-none rounded-md border ${fieldErrors.name ? 'border-red-500' : 'border-gray-300'} py-2 text-gray-700 placeholder-gray-500 focus:ring-indigo-500 sm:text-sm`}
                                 placeholder="Full Name"
                                 value={formData.name}
                                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -98,7 +98,7 @@ export default function RegisterPage() {
                                 type="email"
                                 autoComplete="email"
                                 required
-                                className={`relative block w-full appearance-none border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
+                                className={`relative block w-full appearance-none border ${fieldErrors.email ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-gray-700 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
                                 placeholder="Email address"
                                 value={formData.email}
                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -115,7 +115,7 @@ export default function RegisterPage() {
                                 type="password"
                                 autoComplete="new-password"
                                 required
-                                className={`relative block w-full appearance-none rounded-md border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
+                                className={`relative block w-full appearance-none rounded-md border ${fieldErrors.password ? 'border-red-500' : 'border-gray-300'} px-3 py-2 text-gray-700 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm`}
                                 placeholder="Password"
                                 value={formData.password}
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}

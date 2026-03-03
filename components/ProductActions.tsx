@@ -68,7 +68,7 @@ export default function ProductActions({ product }: { product: any }) {
                     >
                         <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="w-12 text-center text-sm font-black text-gray-900">{quantity}</span>
+                    <span className="w-12 text-center text-sm font-black text-gray-700">{quantity}</span>
                     <Button
                         variant="ghost"
                         size="icon"

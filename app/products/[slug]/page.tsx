@@ -99,7 +99,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <ChevronRight className="h-3 w-3" />
                     <Link href={`/?category=${product.category}`} className="hover:text-blue-600 transition-colors">{product.category}</Link>
                     <ChevronRight className="h-3 w-3" />
-                    <span className="text-gray-900 truncate max-w-[200px]">{product.name}</span>
+                    <span className="text-gray-700 truncate max-w-[200px]">{product.name}</span>
                 </nav>
 
                 <div className="lg:grid lg:grid-cols-2 lg:gap-x-16 lg:items-start bg-white rounded-[3rem] p-6 md:p-12 shadow-xl shadow-blue-100/20 border border-gray-100">
@@ -136,7 +136,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 <div className="h-4 w-[1px] bg-gray-200"></div>
                                 <div className="flex items-center gap-1.5">
                                     <ShieldCheck className="h-4 w-4 text-blue-600" />
-                                    <span className="text-xs font-black text-gray-900 uppercase tracking-widest">Official Warranty</span>
+                                    <span className="text-xs font-black text-gray-700 uppercase tracking-widest">Official Warranty</span>
                                 </div>
                             </div>
 
@@ -148,7 +148,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         const hasDiscount = dp > 0 && dp < product.price;
                                         return hasDiscount ? (
                                             <>
-                                                <p className="text-4xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
+                                                <p className="text-xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
                                                 <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
                                                 <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
                                                     SAVE {Math.round(((product.price - dp) / product.price) * 100)}%
@@ -156,7 +156,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                             </>
                                         ) : (
                                             <>
-                                                <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                                                <p className="text-xl font-black text-gray-700 tracking-tighter">৳{product.price.toLocaleString()}</p>
                                                 <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
                                             </>
                                         );
@@ -178,7 +178,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <Truck className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-0.5">Delivery Charge</p>
+                                        <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-0.5">Delivery Charge</p>
                                         <p className="text-[14px] text-gray-500 font-bold uppercase tracking-widest">
                                             Inside Dhaka: ৳80 (ঢাকাঃ ৮০ টাকা) <br />
                                             Outside Dhaka: ৳170 (ঢাকার বাইরেঃ ১৭০ টাকা)
@@ -190,7 +190,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <RefreshCcw className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-gray-900 uppercase tracking-widest mb-0.5">7 Days Return</p>
+                                        <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-0.5">7 Days Return</p>
                                         <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Easy Return Policy</p>
                                     </div>
                                 </div>
@@ -202,15 +202,15 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {/* Description & Specs Section */}
                 <div className="mt-16 mx-auto">
                     <div>
-                        <h2 className="text-xl font-black text-gray-900 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
+                        <h2 className="text-xl font-black text-gray-700 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
                             <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                             Description
                         </h2>
                         <div className="text-gray-700 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
                             <div
                                 className="text-base break-words text-gray-600 leading-relaxed font-medium prose prose-sm max-w-none ql-editor overflow-hidden
-                                        prose-headings:text-gray-900 prose-headings:font-black prose-headings:uppercase 
-                                        prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900"
+                                        prose-headings:text-gray-700 prose-headings:font-black prose-headings:uppercase 
+                                        prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-700"
                                 dangerouslySetInnerHTML={{ __html: product.description }}
                             />
                         </div>
@@ -223,7 +223,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {relatedProducts.length > 0 && (
                     <div className="mt-24">
                         <div className="flex items-center justify-between mb-12">
-                            <h2 className="text-xl font-black text-gray-900 uppercase italic tracking-tighter flex items-center gap-3">
+                            <h2 className="text-xl font-black text-gray-700 uppercase italic tracking-tighter flex items-center gap-3">
                                 <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                                 Related Products
                             </h2>

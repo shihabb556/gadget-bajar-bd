@@ -49,7 +49,7 @@ export default function Navbar() {
                                 <Flag className="h-6 w-6" fill="currentColor" />
                             </div>
                             <div className="hidden md:block">
-                                <span className="text-xl font-black text-gray-900 tracking-tighter uppercase italic">Gadget Bazar BD</span>
+                                <span className="text-xl font-black text-gray-700 tracking-tighter uppercase italic">Gadget Bazar BD</span>
                             </div>
                         </Link>
 
@@ -109,7 +109,7 @@ export default function Navbar() {
                                     {session ? (
                                         <>
                                             <div className="px-4 py-3 border-b border-gray-50 mb-2">
-                                                <p className="text-sm font-black text-gray-900 truncate">Hello, {session.user.name}</p>
+                                                <p className="text-sm font-black text-gray-700 truncate">Hello, {session.user.name}</p>
                                                 <p className="text-xs text-gray-500 truncate">{session.user.email}</p>
                                             </div>
                                             <Link href="/track-order" className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
@@ -190,10 +190,10 @@ export default function Navbar() {
             {isMenuOpen && (
                 <div className="md:hidden border-t border-gray-100 bg-white animate-in slide-in-from-top-4 duration-300">
                     <div className="px-4 pt-4 pb-6 space-y-1">
-                        <Link href="/" className="block px-4 py-3 text-base font-black text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Link href="/" className="block px-4 py-3 text-base font-black text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
                             Home
                         </Link>
-                        <Link href="/track-order" className="block px-4 py-3 text-base font-black text-gray-900 hover:bg-gray-50 rounded-xl transition-colors">
+                        <Link href="/track-order" className="block px-4 py-3 text-base font-black text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
                             Track Order
                         </Link>
                     </div>

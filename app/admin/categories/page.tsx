@@ -96,7 +96,7 @@ export default function CategoriesPage() {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">Manage Categories</h2>
+            <h2 className="text-xl font-bold text-gray-800">Manage Categories</h2>
 
             {/* Error Modal */}
             <Modal
@@ -173,7 +173,7 @@ export default function CategoriesPage() {
                             ) : (
                                 categories.map((cat) => (
                                     <tr key={cat._id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{cat.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{cat.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cat.slug}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {cat.parent ? cat.parent.name : '-'}

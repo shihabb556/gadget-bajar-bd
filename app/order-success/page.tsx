@@ -124,7 +124,7 @@ function OrderSuccessContent() {
                     </div>
                 </div>
 
-                <h1 className="text-4xl font-black text-gray-900 tracking-tight uppercase italic mb-2">Order Confirmed!</h1>
+                <h1 className="text-xl font-black text-gray-700 tracking-tight uppercase italic mb-2">Order Confirmed!</h1>
                 <p className="text-gray-500 font-medium mb-4">Your e-receipt is being generated and will download automatically.</p>
 
                 <div className="bg-amber-50 border border-amber-100 p-3 rounded-xl inline-block mb-10">
@@ -169,7 +169,7 @@ function OrderSuccessContent() {
                     {/* Receipt Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start gap-6 border-b-4 border-blue-600 pb-8">
                         <div className="space-y-2">
-                            <h1 className="text-5xl font-black text-blue-600 italic tracking-tighter uppercase leading-none">
+                            <h1 className="text-xl font-black text-blue-600 italic tracking-tighter uppercase leading-none">
                                 ELECTRO<br /> <span className="text-blue-500">MART</span>
 
                             </h1>
@@ -179,7 +179,7 @@ function OrderSuccessContent() {
                         </div>
                         <div className="text-left md:text-right space-y-1">
                             <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Order Identifier</p>
-                            <p className="text-xl font-mono font-bold text-gray-900 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100 italic">
+                            <p className="text-xl font-mono font-bold text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100 italic">
                                 #{orderId?.split('-').pop()?.toUpperCase()}
                             </p>
                             {order && <p className="text-[10px] text-gray-500 font-bold uppercase mt-2">Date: {new Date(order.createdAt).toLocaleDateString()}</p>}
@@ -189,7 +189,7 @@ function OrderSuccessContent() {
                     <div className="grid grid-cols-2 gap-12 my-12 relative z-10">
                         <div>
                             <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-3">BILL TO</p>
-                            <p className="text-md font-black text-gray-900 uppercase">{order?.guestName || order?.user?.name || 'Valued Customer'}</p>
+                            <p className="text-md font-black text-gray-700 uppercase">{order?.guestName || order?.user?.name || 'Valued Customer'}</p>
                             <p className="text-xs text-gray-500 font-bold mt-1">{order?.guestEmail || order?.user?.email || 'customer@example.com'}</p>
                             <p className="text-xs text-gray-500 font-bold mt-1">{order?.shippingAddress?.phone}</p>
                         </div>
@@ -215,11 +215,11 @@ function OrderSuccessContent() {
                                             {itemValue.image ? <img src={itemValue.image} alt={itemValue.name} className="h-full w-full object-cover rounded-lg" /> : <Package className="h-5 w-5 text-gray-300" />}
                                         </div>
                                         <div>
-                                            <p className="text-xs font-black text-gray-900 uppercase tracking-tight">{itemValue.name}</p>
+                                            <p className="text-xs font-black text-gray-700 uppercase tracking-tight">{itemValue.name}</p>
                                             <p className="text-[9px] text-gray-400 font-black uppercase tracking-wider mt-0.5">Qty: {itemValue.quantity} × ৳{itemValue.price}</p>
                                         </div>
                                     </div>
-                                    <p className="text-sm font-black text-gray-900 italic">৳{itemValue.price * itemValue.quantity}</p>
+                                    <p className="text-sm font-black text-gray-700 italic">৳{itemValue.price * itemValue.quantity}</p>
                                 </div>
                             ))}
                         </div>
@@ -232,7 +232,7 @@ function OrderSuccessContent() {
                             {order && <p className="text-xl font-bold italic">Status: <span className="underline decoration-2 underline-offset-4">{order.status}</span></p>}
                         </div>
                         <div className="text-center sm:text-right">
-                            <p className="text-5xl font-black italic tracking-tighter">৳{order?.totalAmount}</p>
+                            <p className="text-xl font-black italic tracking-tighter">৳{order?.totalAmount}</p>
                         </div>
                     </div>
 

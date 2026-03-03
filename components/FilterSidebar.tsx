@@ -108,7 +108,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
         <aside className="w-full lg:w-72 space-y-8 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm sticky top-28 h-fit">
             <div className="flex items-center gap-2 mb-2">
                 <Filter className="h-4 w-4 text-blue-600" />
-                <h2 className="text-lg font-black text-gray-900 uppercase italic tracking-tighter">Filters</h2>
+                <h2 className="text-lg font-black text-gray-700 uppercase italic tracking-tighter">Filters</h2>
             </div>
 
             {/* Categories */}
@@ -185,7 +185,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                                     onFilterApplied?.();
                                 }}
                             />
-                            <span className="text-sm font-bold text-gray-600 group-hover:text-gray-900">{status}</span>
+                            <span className="text-sm font-bold text-gray-600 group-hover:text-gray-700">{status}</span>
                         </label>
                     ))}
                 </div>

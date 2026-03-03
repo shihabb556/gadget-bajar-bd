@@ -65,7 +65,7 @@ export default function UsersPage() {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
+            <h2 className="text-xl font-bold text-gray-800">User Management</h2>
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
@@ -90,7 +90,7 @@ export default function UsersPage() {
                                 users.map((user: any) => (
                                     <tr key={user._id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                                            <div className="text-sm font-medium text-gray-700">{user.name}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-500">{user.email}</div>
@@ -102,7 +102,7 @@ export default function UsersPage() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-bold text-gray-900">{user.orderCount || 0}</div>
+                                            <div className="text-sm font-bold text-gray-700">{user.orderCount || 0}</div>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"

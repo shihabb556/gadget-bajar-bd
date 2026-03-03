@@ -55,7 +55,7 @@ export default function Footer() {
 
                     {/* Company Links */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Gadget Bazar BD</h3>
+                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Gadget Bazar BD</h3>
                         <ul className="space-y-4">
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">About Us</Link></li>
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Gadget Bazar BD Blog</Link></li>
@@ -66,7 +66,7 @@ export default function Footer() {
 
                     {/* Customer Care */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Customer Care</h3>
+                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Customer Care</h3>
                         <ul className="space-y-4">
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Returns & Refunds</Link></li>
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Privacy Policy</Link></li>
@@ -79,7 +79,7 @@ export default function Footer() {
 
                     {/* Payment Methods */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-900 uppercase tracking-widest mb-6">Payment Methods</h3>
+                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Payment Methods</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center   overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
                                 <span className="text-[10px] font-black text-[#ED1C24] uppercase italic group-hover:scale-110 transition-transform">Nagad</span>

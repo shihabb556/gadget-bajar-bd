@@ -39,7 +39,7 @@ export default function MobileFilterDrawer({ categories }: MobileFilterDrawerPro
                 <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-50 sticky top-0 bg-white z-10 rounded-t-[2.5rem]">
                     <div className="flex items-center gap-2">
                         <Filter className="h-4 w-4 text-blue-600" />
-                        <h2 className="text-base font-black text-gray-900 uppercase italic tracking-tighter">Filters</h2>
+                        <h2 className="text-base font-black text-gray-700 uppercase italic tracking-tighter">Filters</h2>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}

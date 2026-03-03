@@ -21,14 +21,14 @@ export default function CartPage() {
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+                <h1 className="text-xl font-bold text-gray-700 mb-8">Shopping Cart</h1>
 
                 {items.length === 0 ? (
                     <div className="bg-white rounded-[2rem] shadow-xl shadow-blue-100/50 p-12 text-center border border-gray-100">
                         <div className="h-24 w-24 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
                             <ShoppingBag className="h-12 w-12" />
                         </div>
-                        <h2 className="text-2xl font-black text-gray-900 uppercase italic mb-2">Your cart is empty</h2>
+                        <h2 className="text-xl font-black text-gray-700 uppercase italic mb-2">Your cart is empty</h2>
                         <p className="text-gray-500 font-medium mb-8">Looks like you haven't added any tech to your list yet.</p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link href="/" className="w-full sm:w-auto">
@@ -60,7 +60,7 @@ export default function CartPage() {
 
                                         <div className="ml-4 flex-1 flex flex-col">
                                             <div>
-                                                <div className="flex justify-between text-base font-medium text-gray-900">
+                                                <div className="flex justify-between text-base font-medium text-gray-700">
                                                     <h3>
                                                         <Link href={`/products/${item.slug}`}>{item.name}</Link>
                                                     </h3>
@@ -78,7 +78,7 @@ export default function CartPage() {
                                                     >
                                                         <Minus className="w-4 h-4" />
                                                     </Button>
-                                                    <span className="px-3 py-1 font-bold text-gray-900 border-y h-8 flex items-center bg-gray-50 border-gray-100">{item.quantity}</span>
+                                                    <span className="px-3 py-1 font-bold text-gray-700 border-y h-8 flex items-center bg-gray-50 border-gray-100">{item.quantity}</span>
                                                     <Button
                                                         variant="outline"
                                                         size="icon"
@@ -105,9 +105,9 @@ export default function CartPage() {
                         </div>
 
                         <div className="bg-white rounded-lg shadow mt-16 lg:mt-0 lg:col-span-5 p-6 space-y-4">
-                            <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+                            <h2 className="text-lg font-medium text-gray-700">Order Summary</h2>
 
-                            <div className="flex justify-between text-base font-medium text-gray-900 pt-4 border-t">
+                            <div className="flex justify-between text-base font-medium text-gray-700 pt-4 border-t">
                                 <p>Subtotal</p>
                                 <p>৳{total()}</p>
                             </div>
