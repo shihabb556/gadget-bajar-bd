@@ -406,39 +406,40 @@ export default function CheckoutPage() {
                                         />
                                     </div>
                                 </div>
-                            </form>
-                        </div>
-
-                        { /* {settings.advanceOption === 'Paid' && ( */}
+                                       { /* {settings.advanceOption === 'Paid' && ( */}
                         
-                                <div className="mt-6 space-y-4">
-                                    <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
-                                        <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
-                                    </div>
-                                    <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
-                                        <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
-                                            <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
-                                        </p>
-                                        <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
-                                            অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <Link href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
-+880 1832-087091
-</Link> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+                                            <div className="mt-6 space-y-4">
+                                                <div className="flex gap-3 items-start text-xs text-gray-400 font-medium leading-relaxed">
+                                                    <svg className="h-5 w-5 text-indigo-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    <p>Your order will remain in "PENDING" status until our team verifies the Transaction ID. Verification usually takes 1-2 hours.</p>
+                                                </div>
+                                                <div className="p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100 shadow-sm">
+                                                    <p className="text-xs text-gray-600 font-bold mb-3 flex items-center gap-2">
+                                                        <span className="text-lg">📞</span> যোগাযোগ: 01620-919681
+                                                    </p>
+                                                    <p className="text-[11px] text-gray-500 font-medium leading-relaxed">
+                                                        অর্ডার করতে কোনো অসুবিধা হলে দয়া করে এই নাম্বারে <span className="font-bold text-indigo-600 underline"> <Link href="https://wa.me/8801832087091?text=Hello%20I%20want%20to%20know%20more" target="_blank">
+            +880 1832-087091
+            </Link> </span> হোয়াটসঅ্যাপ করুন। আমাদের টিম দ্রুত আপনার সহায়তা করবে।
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {  /* )} */}
+            
+                                    <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
+                                        <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
+                                        <p className="text-xs text-gray-500 font-medium leading-relaxed">
+                                            Our team will call you for final confirmation before dispatching your parcel.
                                         </p>
                                     </div>
                                 </div>
-                            </div>
-                        {  /* )} */}
-
-                        <div className="bg-gray-100/50 p-6 rounded-2xl border border-gray-200 border-dashed">
-                            <h3 className="text-sm font-bold text-gray-700 mb-2">🚚 ডেলিভারি টাইম: ২-৩ দিন ⏳</h3>
-                            <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                                Our team will call you for final confirmation before dispatching your parcel.
-                            </p>
+                            </form>
                         </div>
-                    </div>
+
+                    
 
                     <div className="mt-10 lg:mt-0 lg:col-span-5">
                         <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 sticky top-8 overflow-hidden">
