@@ -33,7 +33,7 @@ export default function CheckoutPage() {
     const [guestName, setGuestName] = useState('');
     const [fieldErrors, setFieldErrors] = useState<any>({});
     const [deliveryArea, setDeliveryArea] = useState<'Inside Dhaka' | 'Outside Dhaka' | ''>('');
-    const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : deliveryArea === 'Outside Dhaka' ? 170 : 0;
+    const deliveryCharge = deliveryArea === 'Inside Dhaka' ? 80 : deliveryArea === 'Outside Dhaka' ? 120 : 0;
 
     useEffect(() => setMounted(true), []);
 
@@ -347,7 +347,7 @@ export default function CheckoutPage() {
                                                     </span>
                                                     {deliveryArea === 'Outside Dhaka' && <span className="text-indigo-600 font-bold">✓</span>}
                                                 </div>
-                                                <p className="text-[10px] text-gray-500 font-bold   tracking-widest">Charge: ৳170 (ঢাকার বাইরে)</p>
+                                                <p className="text-[10px] text-gray-500 font-bold   tracking-widest">Charge: ৳120 (ঢাকার বাইরে)</p>
                                             </button>
                                         </div>
                                         {fieldErrors.deliveryArea && (
