@@ -19,8 +19,8 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
         max: Number(searchParams.get('maxPrice')) || 150000
     });
 
-    const [selectedCategories, setSelectedCategories] = useState<string[]>(
-        searchParams.get('category')?.split(',') || []
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(
+        searchParams.get('category') || null
     );
 
     const updateFilters = (newParams: Record<string, string | null>) => {
@@ -36,12 +36,9 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
     };
 
     const handleCategoryToggle = (slug: string) => {
-        const newCategories = selectedCategories.includes(slug)
-            ? selectedCategories.filter(c => c !== slug)
-            : [...selectedCategories, slug];
-
-        setSelectedCategories(newCategories);
-        updateFilters({ category: newCategories.length > 0 ? newCategories.join(',') : null });
+        const nextCategory = selectedCategory === slug ? null : slug;
+        setSelectedCategory(nextCategory);
+        updateFilters({ category: nextCategory });
         onFilterApplied?.();
     };
 
@@ -71,7 +68,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
     // Helper to render tree
     const renderCategory = (cat: any, depth: number = 0) => {
         const hasChildren = cat.children && cat.children.length > 0;
-        const isSelected = selectedCategories.includes(cat.slug);
+        const isSelected = selectedCategory === cat.slug;
 
         return (
             <div key={cat._id} className="space-y-1">
@@ -91,11 +88,18 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                         isSelected && <ChevronRight className="h-3 w-3" />
                     )}
                 </Button>
-                {hasChildren && (isSelected || selectedCategories.some(slug => cat.children.some((child: any) => child.slug === slug))) && (
-                    <div className="ml-2 border-l border-gray-50 pl-2">
-                        {cat.children.map((child: any) => renderCategory(child, depth + 1))}
-                    </div>
-                )}
+                {hasChildren && (isSelected || (selectedCategory && cat.children.some((child: any) => {
+                    const checkChildren = (c: any): boolean => {
+                        if (c.slug === selectedCategory) return true;
+                        if (c.children) return c.children.some(checkChildren);
+                        return false;
+                    };
+                    return checkChildren(child);
+                }))) && (
+                        <div className="ml-2 border-l border-gray-50 pl-2">
+                            {cat.children.map((child: any) => renderCategory(child, depth + 1))}
+                        </div>
+                    )}
             </div>
         );
     };
@@ -112,18 +116,18 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                 <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">Categories</h3>
                 <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                     <Button
-                        variant={selectedCategories.length === 0 ? 'default' : 'outline'}
+                        variant={!selectedCategory ? 'default' : 'outline'}
                         onClick={() => {
-                            setSelectedCategories([]);
+                            setSelectedCategory(null);
                             updateFilters({ category: null });
                         }}
-                        className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm transition-all ${selectedCategories.length === 0
+                        className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-sm transition-all ${!selectedCategory
                             ? 'bg-blue-600 text-white font-bold shadow-lg shadow-blue-100'
                             : 'border-transparent hover:border-gray-200 text-gray-500 hover:bg-gray-50 font-medium'
                             }`}
                     >
                         <span>All Products</span>
-                        <ChevronRight className={`h-4 w-4 ${selectedCategories.length === 0 ? 'text-white' : 'text-gray-300'}`} />
+                        <ChevronRight className={`h-4 w-4 ${!selectedCategory ? 'text-white' : 'text-gray-300'}`} />
                     </Button>
                     {categoryTree.map(cat => renderCategory(cat))}
                 </div>
