@@ -486,7 +486,7 @@ export default function CheckoutPage() {
                                         Processing Order...
                                     </div>
                                 ) : (
-                                    !deliveryArea ? 'Select Delivery Area' : (settings.advanceOption === 'Paid' ? 'Complete Order & Pay Advance' : 'Complete Order')
+                                    !deliveryArea ? 'Select Delivery Area' :  'Complete Order')
                                 )}
                             </Button>
                         </div>
