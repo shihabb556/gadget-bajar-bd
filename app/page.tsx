@@ -136,7 +136,7 @@ export default async function Home({ searchParams }: {
 
             {/* Product Grid */}
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 xl:grid-cols-3 gap-2 md:gap-5 xl:gap-8">
                 {products.map((product) => (
                   <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
                 ))}
