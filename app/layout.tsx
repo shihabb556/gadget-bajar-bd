@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { NextAuthProvider } from "@/components/providers/NextAuthProvider";
 import { Toaster } from 'react-hot-toast';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 import Footer from "@/components/Footer";
 import MetaPixel from "@/components/MetaPixel";
@@ -49,16 +51,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={inter.className}>
         <MetaPixel />
-        <NextAuthProvider>
+        <NextAuthProvider session={session}>
           <div className="flex flex-col min-h-screen">
             <main className="flex-grow">
               {children}
