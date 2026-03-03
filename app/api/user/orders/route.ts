@@ -4,7 +4,7 @@ import { Order, Product } from '@/models/schema';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { orderSchema } from '@/lib/validations';
- import { sendTelegramNotification } from '@lib/sendTelegramNotification';
+ import { sendTelegramNotification } from '@/lib/sendTelegramNotification';
 
 export async function POST(req: Request) {
     try {
