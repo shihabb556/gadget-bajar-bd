@@ -106,14 +106,29 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
 
     return (
         <aside className="w-full lg:w-72 space-y-8 bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm sticky top-28 h-fit">
-            <div className="flex items-center gap-2 mb-2">
-                <Filter className="h-4 w-4 text-blue-600" />
-                <h2 className="text-lg font-black text-gray-700 uppercase italic tracking-tighter">Filters</h2>
+            <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-2">
+                    <Filter className="h-4 w-4 text-blue-600" />
+                    <h2 className="text-lg font-black text-gray-700 italic tracking-tighter">Filters</h2>
+                </div>
+                {(selectedCategory || searchParams.get('minPrice') || searchParams.get('maxPrice') || searchParams.get('availability') || searchParams.get('search')) && (
+                    <button
+                        onClick={() => {
+                            setSelectedCategory(null);
+                            setPriceRange({ min: 0, max: 150000 });
+                            router.push('/');
+                            onFilterApplied?.();
+                        }}
+                        className="text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition-colors"
+                    >
+                        Reset All
+                    </button>
+                )}
             </div>
 
             {/* Categories */}
             <div className="space-y-4">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest border-b border-gray-50 pb-2">Categories</h3>
+                <h3 className="text-[10px] font-black text-gray-400   tracking-widest border-b border-gray-50 pb-2">Categories</h3>
                 <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                     <Button
                         variant={!selectedCategory ? 'default' : 'outline'}
@@ -135,11 +150,11 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
 
             {/* Price Range */}
             <div className="space-y-4 pt-4 border-t border-gray-50">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pb-2">Price Range (BDT)</h3>
+                <h3 className="text-[10px] font-black text-gray-400   tracking-widest pb-2">Price Range (BDT)</h3>
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-2">
                         <div className="space-y-1">
-                            <label className="text-[9px] font-black text-gray-400 uppercase">Min</label>
+                            <label className="text-[9px] font-black text-gray-400  ">Min</label>
                             <Input
                                 type="number"
                                 value={priceRange.min}
@@ -148,7 +163,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                             />
                         </div>
                         <div className="space-y-1">
-                            <label className="text-[9px] font-black text-gray-400 uppercase">Max</label>
+                            <label className="text-[9px] font-black text-gray-400  ">Max</label>
                             <Input
                                 type="number"
                                 value={priceRange.max}
@@ -159,7 +174,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                     </div>
                     <Button
                         onClick={handlePriceChange}
-                        className="w-full bg-gray-900 hover:bg-black text-white rounded-xl py-2 text-xs font-black uppercase tracking-widest shadow-xl shadow-gray-100"
+                        className="w-full bg-gray-900 hover:bg-black text-white rounded-xl py-2 text-xs font-black   tracking-widest shadow-xl shadow-gray-100"
                     >
                         Apply Price
                     </Button>
@@ -168,7 +183,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
 
             {/* Availability */}
             <div className="space-y-4 pt-4 border-t border-gray-50">
-                <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-widest pb-2">Availability</h3>
+                <h3 className="text-[10px] font-black text-gray-400   tracking-widest pb-2">Availability</h3>
                 <div className="space-y-2">
                     {['In Stock', 'Pre-order'].map((status) => (
                         <label key={status} className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 rounded-xl cursor-pointer group transition-colors">
@@ -194,8 +209,8 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
             {/* Promo Card */}
             <div className="mt-8 p-6 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl text-white relative overflow-hidden group shadow-2xl shadow-blue-200">
                 <div className="absolute top-0 right-0 -mt-4 -mr-4 h-20 w-20 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700"></div>
-                <h4 className="text-lg font-black uppercase italic tracking-tighter mb-2 relative z-10">Flash Sale</h4>
-                <p className="text-xs font-bold text-blue-100 mb-4 relative z-10 leading-relaxed uppercase tracking-wider">Get 10% off on all accessories this week!</p>
+                <h4 className="text-lg font-black   italic tracking-tighter mb-2 relative z-10">Flash Sale</h4>
+                <p className="text-xs font-bold text-blue-100 mb-4 relative z-10 leading-relaxed   tracking-wider">Get 10% off on all accessories this week!</p>
                 <div className="h-24 w-24 bg-blue-500/20 absolute -bottom-6 -right-6 rounded-full blur-xl"></div>
                 <ShoppingBag className="absolute bottom-4 right-4 h-12 w-12 text-white/10" />
             </div>

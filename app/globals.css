@@ -32,3 +32,8 @@ input {
   color: #0a0a0a;
 
 }
+
+button,
+a {
+  cursor: pointer;
+}

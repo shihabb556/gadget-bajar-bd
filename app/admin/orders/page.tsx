@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
+import { Download, MapPin, Phone, CreditCard, ShoppingBag, User } from 'lucide-react';
 import { Button } from '@/components/ui/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
-import * as htmlToImage from 'html-to-image';
-import { Download, Package, MapPin, Phone, CreditCard, ShoppingBag, User } from 'lucide-react';
-import { jsPDF } from 'jspdf';
 import Modal from '@/components/ui/Modal';
+import OrderReceipt from '@/components/OrderReceipt';
 
 function AdminOrdersContent() {
     const searchParams = useSearchParams();
@@ -19,63 +18,6 @@ function AdminOrdersContent() {
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
     const [viewOrder, setViewOrder] = useState<any>(null);
 
-    const downloadSummary = async (order: any) => {
-        setSelectedOrder(order);
-        import('react-hot-toast').then(async ({ toast }) => {
-            const toastId = toast.loading('Preparing your receipt...');
-            // Wait for DOM to render the hidden template
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            if (!summaryRef.current) {
-                toast.error('Failed to initialize download template.', { id: toastId });
-                setSelectedOrder(null);
-                return;
-            }
-
-            try {
-                const element = summaryRef.current;
-                if (!element) throw new Error('Summary element not found');
-
-                const originalWidth = element.style.width;
-                element.style.width = '800px';
-
-                const dataUrl = await htmlToImage.toPng(element, {
-                    backgroundColor: '#ffffff',
-                    quality: 1,
-                    pixelRatio: 2,
-                    cacheBust: true,
-                    skipFonts: true,
-                    style: {
-                        transform: 'scale(1)',
-                        transformOrigin: 'top left',
-                        width: '800px'
-                    }
-                });
-
-                element.style.width = originalWidth;
-
-                const pdf = new jsPDF({
-                    orientation: 'p',
-                    unit: 'px',
-                    format: 'a4'
-                });
-
-                const imgProps = pdf.getImageProperties(dataUrl);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`e-receipt-${order._id.slice(-6).toUpperCase()}.pdf`);
-
-                toast.success('Receipt downloaded successfully!', { id: toastId });
-            } catch (err) {
-                console.error('Download error:', err);
-                toast.error('Download failed. Please try again.', { id: toastId });
-            } finally {
-                setSelectedOrder(null);
-            }
-        });
-    };
 
     useEffect(() => {
         fetchOrders();
@@ -169,13 +111,13 @@ function AdminOrdersContent() {
                     <table className="min-w-full divide-y divide-gray-200 ">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Advance</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Order ID</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Customer</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Total</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Advance</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Date</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500   tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -205,7 +147,7 @@ function AdminOrdersContent() {
                                                 variant="outline"
                                                 size="sm"
                                                 onClick={() => toggleAdvancePayment(order._id, order.paymentStatus.advancePaid)}
-                                                className={`h-7 px-3 text-[10px] uppercase tracking-wider font-black rounded-full transition-all ${order.paymentStatus.advancePaid
+                                                className={`h-7 px-3 text-[10px]   tracking-wider font-black rounded-full transition-all ${order.paymentStatus.advancePaid
                                                     ? 'bg-green-500 text-white border-green-500 hover:bg-green-600'
                                                     : 'bg-white text-red-600 border-red-100 hover:bg-red-50'
                                                     }`}
@@ -240,7 +182,7 @@ function AdminOrdersContent() {
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
-                                                onClick={() => downloadSummary(order)}
+                                                onClick={() => setSelectedOrder(order)}
                                                 className="h-8 w-8 p-0 text-gray-500 hover:text-indigo-600"
                                                 title="Download Summary"
                                             >
@@ -272,7 +214,7 @@ function AdminOrdersContent() {
                                 <User className="w-4 h-4 text-indigo-600" />
                             </div>
                             <div>
-                                <p className="text-[10px] font-black text-indigo-400 uppercase tracking-widest mb-1">Customer</p>
+                                <p className="text-[10px] font-black text-indigo-400   tracking-widest mb-1">Customer</p>
                                 <p className="text-sm font-bold text-gray-700">{viewOrder.user?.name || viewOrder.guestName || 'Unknown'}</p>
                                 {viewOrder.user?.email && <p className="text-xs text-gray-500">{viewOrder.user.email}</p>}
                             </div>
@@ -285,7 +227,7 @@ function AdminOrdersContent() {
                                     <Phone className="w-4 h-4 text-gray-600" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Phone</p>
+                                    <p className="text-[10px] font-black text-gray-400   tracking-widest mb-1">Phone</p>
                                     <p className="text-sm font-semibold text-gray-800">{viewOrder.shippingAddress?.phone || 'N/A'}</p>
                                     {viewOrder.shippingAddress?.secondaryPhone && (
                                         <p className="text-xs text-gray-500">Alt: {viewOrder.shippingAddress.secondaryPhone}</p>
@@ -297,7 +239,7 @@ function AdminOrdersContent() {
                                     <MapPin className="w-4 h-4 text-gray-600" />
                                 </div>
                                 <div>
-                                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Address</p>
+                                    <p className="text-[10px] font-black text-gray-400   tracking-widest mb-1">Address</p>
                                     <p className="text-xs font-semibold text-gray-800 leading-relaxed">
                                         {viewOrder.shippingAddress?.village}, {viewOrder.shippingAddress?.thana || ''}<br />
                                         {viewOrder.shippingAddress?.district || viewOrder.shippingAddress?.city}
@@ -312,14 +254,14 @@ function AdminOrdersContent() {
                                 <CreditCard className="w-4 h-4 text-emerald-600" />
                             </div>
                             <div className="flex-1">
-                                <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">Payment</p>
+                                <p className="text-[10px] font-black text-emerald-500   tracking-widest mb-1">Payment</p>
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-xs text-gray-500">TrxID: <span className="font-mono font-bold text-gray-800">{viewOrder.paymentStatus?.trxId || 'N/A'}</span></p>
                                         <p className="text-xs text-gray-500 mt-0.5">Advance: <span className={`font-semibold ${viewOrder.paymentStatus?.advancePaid ? 'text-emerald-600' : 'text-red-500'}`}>{viewOrder.paymentStatus?.advancePaid ? 'Paid ✓' : 'Unpaid'}</span></p>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-[10px] font-black text-gray-400 uppercase">Total</p>
+                                        <p className="text-[10px] font-black text-gray-400  ">Total</p>
                                         <p className="text-xl font-black text-indigo-600">৳{viewOrder.totalAmount}</p>
                                         {viewOrder.deliveryCharge > 0 && <p className="text-xs text-gray-400">Inc. ৳{viewOrder.deliveryCharge} delivery</p>}
                                     </div>
@@ -329,7 +271,7 @@ function AdminOrdersContent() {
 
                         {/* Items */}
                         <div>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                            <p className="text-[10px] font-black text-gray-400   tracking-widest mb-3 flex items-center gap-2">
                                 <ShoppingBag className="w-3 h-3" /> Items Ordered
                             </p>
                             <div className="space-y-2">
@@ -352,76 +294,10 @@ function AdminOrdersContent() {
             </Modal>
 
             {/* Hidden Summary Template for Download */}
-            <div className="fixed left-[-9999px] top-0">
-                {selectedOrder && (
-                    <div
-                        ref={summaryRef}
-                        className="bg-white p-10 w-[800px] border border-gray-100"
-                    >
-                        <div className="flex justify-between items-start mb-10">
-                            <div>
-                                <h2 className="text-xl font-black text-blue-600 italic uppercase">HealthPortall</h2>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Official Order Summary</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-sm font-black text-gray-700 uppercase">Order ID</p>
-                                <p className="text-sm font-mono font-medium text-gray-500">#{selectedOrder._id}</p>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-8 mb-10 pb-10 border-b border-dashed border-gray-100">
-                            <div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Customer Info</p>
-                                <p className="text-sm font-bold text-gray-700">{selectedOrder.user?.name || selectedOrder.guestName || 'Valued Customer'}</p>
-                                <p className="text-xs text-gray-500 font-medium">{selectedOrder.user?.email || selectedOrder.guestEmail || 'customer@example.com'}</p>
-                                <p className="text-xs text-gray-500 font-medium">{selectedOrder.shippingAddress?.phone}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Shipping Address</p>
-                                <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                                    {selectedOrder.shippingAddress?.village}, {selectedOrder.shippingAddress?.thana}<br />
-                                    {selectedOrder.shippingAddress?.district}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="mb-10">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Items Ordered</p>
-                            <div className="space-y-4">
-                                {selectedOrder.items.map((item: any) => (
-                                    <div key={item.name} className="flex justify-between items-center">
-                                        <div className="flex items-center gap-4">
-                                            <div className="h-10 w-10 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100">
-                                                {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" crossOrigin="anonymous" /> : <Package className="h-5 w-5 text-gray-300" />}
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-black text-gray-700 uppercase">{item.name}</p>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Qty: {item.quantity} × ৳{item.price}</p>
-                                            </div>
-                                        </div>
-                                        <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {selectedOrder.deliveryCharge > 0 && (
-                            <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
-                                <p className="text-sm font-black text-gray-700">৳{selectedOrder.deliveryCharge}</p>
-                            </div>
-                        )}
-
-                        <div className="bg-indigo-600 p-8 rounded-3xl text-white flex justify-between items-center">
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Total Payable</p>
-                                <p className="text-sm font-medium opacity-60">Status: {selectedOrder.status}</p>
-                            </div>
-                            <p className="text-xl font-black italic">৳{selectedOrder.totalAmount}</p>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <OrderReceipt
+                order={selectedOrder}
+                onComplete={() => setSelectedOrder(null)}
+            />
         </div>
     );
 }

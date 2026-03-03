@@ -16,7 +16,7 @@ export default function MobileFilterDrawer({ categories }: MobileFilterDrawerPro
             {/* Floating Filter Button – visible only on mobile/tablet */}
             <button
                 onClick={() => setIsOpen(true)}
-                className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2.5 bg-gray-900 text-white px-6 py-3.5 rounded-full shadow-2xl shadow-gray-900/30 font-black uppercase text-xs tracking-widest hover:bg-blue-600 transition-colors duration-300 active:scale-95"
+                className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2.5 bg-gray-900 text-white px-6 py-3.5 rounded-full shadow-2xl shadow-gray-900/30 font-black   text-xs tracking-widest hover:bg-blue-600 transition-colors duration-300 active:scale-95"
             >
                 <SlidersHorizontal className="h-4 w-4" />
                 Filters
@@ -39,7 +39,7 @@ export default function MobileFilterDrawer({ categories }: MobileFilterDrawerPro
                 <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-50 sticky top-0 bg-white z-10 rounded-t-[2.5rem]">
                     <div className="flex items-center gap-2">
                         <Filter className="h-4 w-4 text-blue-600" />
-                        <h2 className="text-base font-black text-gray-700 uppercase italic tracking-tighter">Filters</h2>
+                        <h2 className="text-base font-black text-gray-700   italic tracking-tighter">Filters</h2>
                     </div>
                     <button
                         onClick={() => setIsOpen(false)}

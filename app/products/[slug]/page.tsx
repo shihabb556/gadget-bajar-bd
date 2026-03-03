@@ -94,7 +94,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 ">
                 {/* Breadcrumbs */}
-                <nav className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">
+                <nav className="flex items-center gap-2 text-[10px] font-black   tracking-[0.2em] text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
                     <ChevronRight className="h-3 w-3" />
                     <Link href={`/?category=${product.category}`} className="hover:text-blue-600 transition-colors">{product.category}</Link>
@@ -111,10 +111,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                         <div className="space-y-6">
                             {/* Badges & Status */}
                             <div className="flex flex-wrap items-center gap-3">
-                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black uppercase tracking-widest border border-green-100">
+                                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-600 text-[10px] font-black   tracking-widest border border-green-100">
                                     <CheckCircle2 className="h-3 w-3" /> In Stock
                                 </span>
-                                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
+                                <span className="text-[10px] font-bold text-gray-400   tracking-widest bg-gray-50 px-3 py-1 rounded-full border border-gray-100">
                                     SKU: GB-{product._id.slice(-8).toUpperCase()}
                                 </span>
                             </div>
@@ -136,7 +136,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 <div className="h-4 w-[1px] bg-gray-200"></div>
                                 <div className="flex items-center gap-1.5">
                                     <ShieldCheck className="h-4 w-4 text-blue-600" />
-                                    <span className="text-xs font-black text-gray-700 uppercase tracking-widest">Official Warranty</span>
+                                    <span className="text-xs font-black text-gray-700   tracking-widest">Official Warranty</span>
                                 </div>
                             </div>
 
@@ -150,7 +150,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                             <>
                                                 <p className="text-xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
                                                 <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
-                                                <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
+                                                <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg   tracking-widest shadow-lg shadow-red-100">
                                                     SAVE {Math.round(((product.price - dp) / product.price) * 100)}%
                                                 </span>
                                             </>
@@ -178,8 +178,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <Truck className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-0.5">Delivery Charge</p>
-                                        <p className="text-[14px] text-gray-500 font-bold uppercase tracking-widest">
+                                        <p className="text-xs font-black text-gray-700   tracking-widest mb-0.5">Delivery Charge</p>
+                                        <p className="text-[14px] text-gray-500 font-bold   tracking-widest">
                                             Inside Dhaka: ৳80 (ঢাকাঃ ৮০ টাকা) <br />
                                             Outside Dhaka: ৳170 (ঢাকার বাইরেঃ ১৭০ টাকা)
                                         </p>
@@ -190,8 +190,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <RefreshCcw className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs font-black text-gray-700 uppercase tracking-widest mb-0.5">7 Days Return</p>
-                                        <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Easy Return Policy</p>
+                                        <p className="text-xs font-black text-gray-700   tracking-widest mb-0.5">7 Days Return</p>
+                                        <p className="text-[10px] text-gray-500 font-bold   tracking-widest">Easy Return Policy</p>
                                     </div>
                                 </div>
                             </div>
@@ -202,14 +202,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {/* Description & Specs Section */}
                 <div className="mt-16 mx-auto">
                     <div>
-                        <h2 className="text-xl font-black text-gray-700 uppercase italic tracking-tighter mb-6 flex items-center gap-3">
+                        <h2 className="text-xl font-black text-gray-700   italic tracking-tighter mb-6 flex items-center gap-3">
                             <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                             Description
                         </h2>
                         <div className="text-gray-700 bg-white rounded-[2rem] p-8 border border-gray-100 shadow-xl shadow-blue-100/10 transition-all hover:shadow-blue-100/20">
                             <div
                                 className="text-base break-words text-gray-600 leading-relaxed font-medium prose prose-sm max-w-none ql-editor overflow-hidden
-                                        prose-headings:text-gray-700 prose-headings:font-black prose-headings:uppercase 
+                                        prose-headings:text-gray-700 prose-headings:font-black prose-headings:  
                                         prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-700"
                                 dangerouslySetInnerHTML={{ __html: product.description }}
                             />
@@ -223,11 +223,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {relatedProducts.length > 0 && (
                     <div className="mt-24">
                         <div className="flex items-center justify-between mb-12">
-                            <h2 className="text-xl font-black text-gray-700 uppercase italic tracking-tighter flex items-center gap-3">
+                            <h2 className="text-xl font-black text-gray-700   italic tracking-tighter flex items-center gap-3">
                                 <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                                 Related Products
                             </h2>
-                            <Link href={`/?category=${product.category}`} className="text-xs font-black text-blue-600 uppercase tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
+                            <Link href={`/?category=${product.category}`} className="text-xs font-black text-blue-600   tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
                                 View All <ChevronRight className="h-4 w-4" />
                             </Link>
                         </div>

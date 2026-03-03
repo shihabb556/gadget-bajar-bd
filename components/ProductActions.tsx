@@ -57,7 +57,7 @@ export default function ProductActions({ product }: { product: any }) {
         <div className="space-y-6">
             {/* Quantity Selector */}
             <div className="space-y-3">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Select Quantity</p>
+                <p className="text-[10px] font-black text-gray-400   tracking-widest">Select Quantity</p>
                 <div className="flex items-center w-fit bg-gray-50 rounded-2xl p-1 border border-gray-100">
                     <Button
                         variant="ghost"
@@ -86,7 +86,7 @@ export default function ProductActions({ product }: { product: any }) {
                 <Button
                     onClick={handleAddToCart}
                     disabled={product.stock <= 0}
-                    className="h-16 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black uppercase tracking-[0.2em] text-xs gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
+                    className="h-16 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-black   tracking-[0.2em] text-xs gap-3 shadow-xl shadow-blue-100 transition-all active:scale-95"
                 >
                     <ShoppingCart className="h-4 w-4" /> Add to Cart
                 </Button>
@@ -94,7 +94,7 @@ export default function ProductActions({ product }: { product: any }) {
                     onClick={handleBuyNow}
                     disabled={product.stock <= 0}
                     variant="outline"
-                    className="h-16 rounded-2xl border-2 border-gray-900 bg-gray-900 text-white hover:bg-gray-800 font-black uppercase tracking-[0.2em] text-xs gap-3 transition-all active:scale-95"
+                    className="h-16 rounded-2xl border-2 border-gray-900 bg-gray-900 text-white hover:bg-gray-800 font-black   tracking-[0.2em] text-xs gap-3 transition-all active:scale-95"
                 >
                     <Zap className="h-4 w-4" /> Buy It Now
                 </Button>

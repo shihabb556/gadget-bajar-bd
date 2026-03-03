@@ -4,10 +4,9 @@ import Navbar from '@/components/Navbar';
 import { useEffect, useState, Suspense, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/shared';
-import * as htmlToImage from 'html-to-image';
 import { Download, Package } from 'lucide-react';
-import { jsPDF } from 'jspdf';
+import { Button } from '@/components/ui/shared';
+import OrderReceipt from '@/components/OrderReceipt';
 import { profileSchema, ProfileInput } from '@/lib/validations';
 
 function ProfileContent() {
@@ -33,61 +32,6 @@ function ProfileContent() {
     const summaryRef = useRef<HTMLDivElement>(null);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
-    const downloadSummary = async (order: any) => {
-        setSelectedOrder(order);
-        import('react-hot-toast').then(async ({ toast }) => {
-            const toastId = toast.loading('Preparing your receipt...');
-            // Wait for DOM to render the hidden template
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            if (!summaryRef.current) {
-                toast.error('Failed to initialize download template.', { id: toastId });
-                setSelectedOrder(null);
-                return;
-            }
-
-            try {
-                const element = summaryRef.current;
-                const originalWidth = element.style.width;
-                element.style.width = '800px';
-
-                const dataUrl = await htmlToImage.toPng(element, {
-                    backgroundColor: '#ffffff',
-                    quality: 1,
-                    pixelRatio: 2,
-                    cacheBust: true,
-                    skipFonts: true, // Fix for "trim" error
-                    style: {
-                        transform: 'scale(1)',
-                        transformOrigin: 'top left',
-                        width: '800px'
-                    }
-                });
-
-                element.style.width = originalWidth;
-
-                const pdf = new jsPDF({
-                    orientation: 'p',
-                    unit: 'px',
-                    format: 'a4'
-                });
-
-                const imgProps = pdf.getImageProperties(dataUrl);
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-                pdf.addImage(dataUrl, 'PNG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save(`e-receipt-${order._id.slice(-6).toUpperCase()}.pdf`);
-
-                toast.success('Receipt downloaded successfully!', { id: toastId });
-            } catch (err) {
-                console.error('Download error:', err);
-                toast.error('Download failed. Please try again.', { id: toastId });
-            } finally {
-                setSelectedOrder(null);
-            }
-        });
-    };
 
     const filteredOrders = orders.filter((order: any) =>
         order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -235,7 +179,7 @@ function ProfileContent() {
 
                             {/* Info Section */}
                             <div className="flex-1 text-center md:text-left space-y-2">
-                                <h1 className="text-xl md:text-xl font-black text-gray-700 tracking-tighter uppercase italic">
+                                <h1 className="text-xl md:text-xl font-black text-gray-700 tracking-tighter   italic">
                                     {profile.name} {profile.lastName}
                                 </h1>
                                 <div className="space-y-1">
@@ -246,12 +190,12 @@ function ProfileContent() {
                                     <Button
                                         variant="outline"
                                         onClick={() => setActiveTab('profile')}
-                                        className="h-10 px-6 rounded-full bg-gray-50 border-gray-100 text-xs font-black uppercase tracking-widest hover:bg-white hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm"
+                                        className="h-10 px-6 rounded-full bg-gray-50 border-gray-100 text-xs font-black   tracking-widest hover:bg-white hover:border-blue-600 hover:text-blue-600 transition-all shadow-sm"
                                     >
                                         Edit Profile
                                     </Button>
                                     <button
-                                        className="text-xs font-black uppercase tracking-widest text-gray-700 hover:text-blue-600 transition-colors flex items-center gap-1.5"
+                                        className="text-xs font-black   tracking-widest text-gray-700 hover:text-blue-600 transition-colors flex items-center gap-1.5"
                                     >
                                         My Voucher
                                         <div className="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
@@ -335,7 +279,7 @@ function ProfileContent() {
                                         <div className="px-6 py-5 bg-gray-50 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4">
                                             <div>
                                                 <div className="flex items-center gap-3">
-                                                    <h3 className="text-lg font-bold text-gray-700 uppercase">
+                                                    <h3 className="text-lg font-bold text-gray-700  ">
                                                         Order #{order._id.slice(-6)}
                                                     </h3>
                                                     <span className={`px-3 py-1 text-xs font-bold rounded-full tracking-wide ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
@@ -352,12 +296,12 @@ function ProfileContent() {
                                             <div className="flex items-center gap-4">
                                                 <div className="text-right mr-4">
                                                     <p className="text-xl font-black text-indigo-600">৳{order.totalAmount}</p>
-                                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-tighter mt-1">Total (Inc. ৳{order.deliveryCharge || 0} Delivery)</p>
+                                                    <p className="text-[10px] text-gray-500 font-bold   tracking-tighter mt-1">Total (Inc. ৳{order.deliveryCharge || 0} Delivery)</p>
                                                 </div>
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => downloadSummary(order)}
+                                                    onClick={() => setSelectedOrder(order)}
                                                     className="h-10 w-10 p-0 text-gray-400 hover:text-indigo-600 rounded-xl bg-white shadow-sm border border-gray-100 transition-all hover:scale-110 active:scale-95"
                                                     title="Download Summary"
                                                 >
@@ -367,7 +311,7 @@ function ProfileContent() {
                                         </div>
                                         <div className="px-6 py-6 lg:flex lg:gap-12">
                                             <div className="flex-1">
-                                                <h4 className="text-xs font-black uppercase text-gray-400 tracking-widest mb-4">Ordered Items</h4>
+                                                <h4 className="text-xs font-black   text-gray-400 tracking-widest mb-4">Ordered Items</h4>
                                                 <ul className="space-y-4">
                                                     {order.items.map((item: any) => (
                                                         <li key={item._id} className="flex items-center justify-between group">
@@ -376,7 +320,7 @@ function ProfileContent() {
                                                                     {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <div className="h-6 w-6 text-gray-300">📦</div>}
                                                                 </div>
                                                                 <div>
-                                                                    <p className="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors uppercase">{item.name}</p>
+                                                                    <p className="text-sm font-bold text-gray-700 group-hover:text-indigo-600 transition-colors  ">{item.name}</p>
                                                                     <p className="text-xs text-gray-500">Quantity: {item.quantity}</p>
                                                                 </div>
                                                             </div>
@@ -386,17 +330,17 @@ function ProfileContent() {
                                                 </ul>
                                             </div>
                                             <div className="mt-8 lg:mt-0 lg:w-72 bg-gray-50 p-5 rounded-2xl border border-dashed border-gray-200">
-                                                <h4 className="text-xs font-black uppercase text-gray-400 tracking-widest mb-4">Verification Info</h4>
+                                                <h4 className="text-xs font-black   text-gray-400 tracking-widest mb-4">Verification Info</h4>
                                                 <div className="space-y-4">
                                                     <div>
-                                                        <p className="text-xs text-gray-400 font-bold uppercase">Advance Status</p>
+                                                        <p className="text-xs text-gray-400 font-bold  ">Advance Status</p>
                                                         <p className={`text-sm font-bold mt-1 ${order.paymentStatus.advancePaid ? 'text-green-600' : 'text-amber-600 animate-pulse'}`}>
                                                             {order.paymentStatus.advancePaid ? '✅ VERIFIED' : '⏳ PENDING'}
                                                         </p>
                                                     </div>
                                                     {order.paymentStatus.trxId && (
                                                         <div>
-                                                            <p className="text-xs text-gray-400 font-bold uppercase">Transaction ID</p>
+                                                            <p className="text-xs text-gray-400 font-bold  ">Transaction ID</p>
                                                             <p className="text-sm font-mono font-bold bg-white px-2 py-1 rounded inline-block mt-1 border border-gray-200">
                                                                 {order.paymentStatus.trxId}
                                                             </p>
@@ -417,7 +361,7 @@ function ProfileContent() {
                                         <h3 className="text-lg font-bold text-gray-700 border-b pb-4 border-gray-100">Personal Information</h3>
                                         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">First Name</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">First Name</label>
                                                 <input
                                                     type="text"
                                                     required
@@ -430,7 +374,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Last Name</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Last Name</label>
                                                 <input
                                                     type="text"
                                                     value={profile.lastName}
@@ -442,7 +386,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div className="sm:col-span-2">
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Email Address</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Email Address</label>
                                                 <input
                                                     type="email"
                                                     readOnly
@@ -458,7 +402,7 @@ function ProfileContent() {
                                         <h3 className="text-lg font-bold text-gray-700 border-b pb-4 border-gray-100">Contact & Address</h3>
                                         <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Primary Phone</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Primary Phone</label>
                                                 <input
                                                     type="tel"
                                                     placeholder="017XXXXXXXX"
@@ -471,7 +415,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Secondary Phone (Optional)</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Secondary Phone (Optional)</label>
                                                 <input
                                                     type="tel"
                                                     placeholder="018XXXXXXXX"
@@ -484,7 +428,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div className="sm:col-span-2">
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Village / Ward / Road</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Village / Ward / Road</label>
                                                 <input
                                                     type="text"
                                                     placeholder="House 12, Road 5, Block B"
@@ -497,7 +441,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">Thana / Sub-district</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">Thana / Sub-district</label>
                                                 <input
                                                     type="text"
                                                     value={profile.thana}
@@ -509,7 +453,7 @@ function ProfileContent() {
                                                 )}
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-2">District</label>
+                                                <label className="block text-xs font-black text-gray-400   tracking-widest mb-2">District</label>
                                                 <input
                                                     type="text"
                                                     value={profile.district}
@@ -544,77 +488,10 @@ function ProfileContent() {
                 </main>
             </div>
 
-            {/* Hidden Summary Template for Download */}
-            <div className="fixed left-[-9999px] top-0">
-                {selectedOrder && (
-                    <div
-                        ref={summaryRef}
-                        className="bg-white p-10 w-[800px] border border-gray-100"
-                    >
-                        <div className="flex justify-between items-start mb-10">
-                            <div>
-                                <h2 className="text-xl font-black text-indigo-600 italic uppercase">ELECTROMART</h2>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-1">Official Order Summary</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-sm font-black text-gray-700 uppercase">Order ID</p>
-                                <p className="text-sm font-mono font-medium text-gray-500">#{selectedOrder._id}</p>
-                            </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-8 mb-10 pb-10 border-b border-dashed border-gray-100">
-                            <div>
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Customer Info</p>
-                                <p className="text-sm font-bold text-gray-700">{selectedOrder.user?.name || profile.name || 'Valued Customer'}</p>
-                                <p className="text-xs text-gray-500 font-medium">{selectedOrder.user?.email || profile.email || 'customer@example.com'}</p>
-                                <p className="text-xs text-gray-500 font-medium">{selectedOrder.shippingAddress?.phone}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Shipping Address</p>
-                                <p className="text-xs text-gray-500 font-medium leading-relaxed">
-                                    {selectedOrder.shippingAddress?.village}, {selectedOrder.shippingAddress?.thana}<br />
-                                    {selectedOrder.shippingAddress?.district}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div className="mb-10">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Items Ordered</p>
-                            <div className="space-y-4">
-                                {selectedOrder.items.map((item: any) => (
-                                    <div key={item.name} className="flex justify-between items-center">
-                                        <div className="flex items-center gap-4">
-                                            <div className="h-10 w-10 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100">
-                                                {item.image ? <img src={item.image} alt={item.name} className="h-full w-full object-cover" /> : <Package className="h-5 w-5 text-gray-300" />}
-                                            </div>
-                                            <div>
-                                                <p className="text-xs font-black text-gray-700 uppercase">{item.name}</p>
-                                                <p className="text-[10px] text-gray-500 font-bold uppercase">Qty: {item.quantity} × ৳{item.price}</p>
-                                            </div>
-                                        </div>
-                                        <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        {selectedOrder.deliveryCharge > 0 && (
-                            <div className="flex justify-between items-center mb-6 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100">
-                                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Delivery Fee ({selectedOrder.deliveryArea})</p>
-                                <p className="text-sm font-black text-gray-700">৳{selectedOrder.deliveryCharge}</p>
-                            </div>
-                        )}
-
-                        <div className="bg-indigo-600 p-8 rounded-3xl text-white flex justify-between items-center">
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-widest opacity-80 mb-1">Total Payable</p>
-                                <p className="text-sm font-medium opacity-60">Status: {selectedOrder.status}</p>
-                            </div>
-                            <p className="text-xl font-black italic">৳{selectedOrder.totalAmount}</p>
-                        </div>
-                    </div>
-                )}
-            </div>
+            <OrderReceipt
+                order={selectedOrder}
+                onComplete={() => setSelectedOrder(null)}
+            />
         </>
     );
 }

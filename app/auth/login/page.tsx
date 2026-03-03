@@ -137,13 +137,13 @@ function LoginForm() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m0 0v2m0-2h2m-2 0H10m4-11a4 4 0 11-8 0 4 4 0 018 0zM7 10h10M5 21h14a2 2 0 002-2V11a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                         </svg>
                                     </div>
-                                    <span className="text-xs uppercase tracking-widest opacity-70">Security Lockout</span>
+                                    <span className="text-xs   tracking-widest opacity-70">Security Lockout</span>
                                 </div>
                             )}
                             {error}
                             {lockedUntil && (
                                 <div className="mt-3 py-2 bg-white rounded-lg border border-red-100 shadow-sm inline-block px-4">
-                                    <span className="text-gray-400 text-[10px] uppercase font-black block mb-1">Time Remaining</span>
+                                    <span className="text-gray-400 text-[10px]   font-black block mb-1">Time Remaining</span>
                                     <span className="text-red-600 font-mono text-xl tabular-nums">{timeLeft}</span>
                                 </div>
                             )}
@@ -154,12 +154,12 @@ function LoginForm() {
                         <Button
                             type="submit"
                             disabled={loading || !!lockedUntil}
-                            className={`group relative flex w-full justify-center rounded-xl py-3 px-4 text-xs font-black uppercase tracking-widest transition-all duration-300 ${lockedUntil ? 'bg-gray-100 text-gray-400! border-gray-200 cursor-not-allowed shadow-none' : 'bg-indigo-600 text-white! hover:bg-indigo-700 shadow-lg shadow-indigo-100'}`}
+                            className={`group relative flex w-full justify-center rounded-xl py-3 px-4 text-xs font-black   tracking-widest transition-all duration-300 ${lockedUntil ? 'bg-gray-100 text-gray-400! border-gray-200 cursor-not-allowed shadow-none' : 'bg-indigo-600 text-white! hover:bg-indigo-700 shadow-lg shadow-indigo-100'}`}
                         >
                             {loading ? 'Processing...' : lockedUntil ? 'Locked' : 'Sign in'}
                         </Button>
                         {lockedUntil && (
-                            <p className="mt-4 text-center text-[10px] font-bold text-gray-400 uppercase tracking-tighter">
+                            <p className="mt-4 text-center text-[10px] font-bold text-gray-400   tracking-tighter">
                                 For security reasons, this sign-in method is temporarily disabled.
                             </p>
                         )}

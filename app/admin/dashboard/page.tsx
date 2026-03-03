@@ -13,6 +13,7 @@ interface Stats {
     totalOrders: number;
     totalProducts: number;
     totalUsers: number;
+    cancelledOrders: number;
 }
 
 interface RecentOrder {
@@ -67,11 +68,14 @@ export default function DashboardPage() {
                 (sum: number, o: any) => sum + (o.totalAmount || 0), 0
             );
 
+            const cancelledOrders = orders.filter((o: any) => o.status === 'CANCELLED').length;
+
             setStats({
                 totalSales,
                 totalOrders: orders.length,
                 totalProducts: products.length,
                 totalUsers: users.length,
+                cancelledOrders,
             });
 
             setRecentOrders(orders.slice(0, 7));
@@ -115,6 +119,14 @@ export default function DashboardPage() {
             border: 'border-orange-100',
             iconBg: 'bg-orange-100',
         },
+        {
+            label: 'Cancelled Orders',
+            value: stats ? stats.cancelledOrders.toLocaleString() : '—',
+            icon: <XCircle className="w-5 h-5 text-red-600" />,
+            bg: 'bg-red-50',
+            border: 'border-red-100',
+            iconBg: 'bg-red-100',
+        },
     ];
 
     return (
@@ -131,7 +143,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
                 {statCards.map((card, i) => (
                     <div
                         key={i}
@@ -141,7 +153,7 @@ export default function DashboardPage() {
                             {card.icon}
                         </div>
                         <div>
-                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{card.label}</p>
+                            <p className="text-xs font-semibold text-gray-400   tracking-wider">{card.label}</p>
                             {loading ? (
                                 <div className="h-7 w-20 bg-gray-100 rounded animate-pulse mt-1" />
                             ) : (
@@ -158,7 +170,7 @@ export default function DashboardPage() {
                     <h3 className="text-base font-bold text-gray-800">Recent Orders</h3>
                     <Link
                         href="/admin/orders"
-                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-wider"
+                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800   tracking-wider"
                     >
                         View All →
                     </Link>
@@ -185,12 +197,12 @@ export default function DashboardPage() {
                         <table className="min-w-full">
                             <thead>
                                 <tr className="bg-gray-50">
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Order ID</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Items</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Total</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Order ID</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Customer</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Items</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Total</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Date</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
@@ -224,7 +236,7 @@ export default function DashboardPage() {
                                             })}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600'}`}>
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black   tracking-wider ${STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600'}`}>
                                                 {STATUS_ICONS[order.status]}
                                                 {order.status}
                                             </span>

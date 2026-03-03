@@ -6,7 +6,7 @@ import { ShoppingBag, Heart, User, Search, Flag, Menu, X, LogOut, Settings, Pack
 import { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '@/lib/store';
 import { Button, Input } from './ui/shared';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Navbar() {
     const { data: session } = useSession();
@@ -18,8 +18,14 @@ export default function Navbar() {
     const [mounted, setMounted] = useState(false);
     const profileRef = useRef<HTMLDivElement>(null);
 
+    const searchParams = useSearchParams();
+
     useEffect(() => {
         setMounted(true);
+        const query = searchParams.get('search');
+        if (query) setSearchQuery(query);
+        else setSearchQuery('');
+
         const handleClickOutside = (event: MouseEvent) => {
             if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
                 setIsProfileOpen(false);
@@ -31,11 +37,30 @@ export default function Navbar() {
 
     const totalItems = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (mounted) {
+                const params = new URLSearchParams(searchParams.toString());
+                const currentSearch = params.get('search') || '';
+
+                if (searchQuery.trim() !== currentSearch) {
+                    if (searchQuery.trim()) {
+                        params.set('search', searchQuery.trim());
+                    } else {
+                        params.delete('search');
+                    }
+                    const newPath = params.toString() ? `/?${params.toString()}` : '/';
+                    router.push(newPath);
+                }
+            }
+        }, 600);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, router, mounted, searchParams]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
-        if (searchQuery.trim()) {
-            router.push(`/?search=${encodeURIComponent(searchQuery)}`);
-        }
+        // Prevent manual enter if needed, though the useEffect handles it
     };
 
     return (
@@ -49,12 +74,12 @@ export default function Navbar() {
                                 <Flag className="h-6 w-6" fill="currentColor" />
                             </div>
                             <div className="hidden md:block">
-                                <span className="text-xl font-black text-gray-700 tracking-tighter uppercase italic">Gadget Bazar BD</span>
+                                <span className="text-xl font-black text-gray-700 tracking-tighter   italic">Gadget Bazar BD</span>
                             </div>
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6">
-                            <Link href="/track-order" className="text-sm font-black text-gray-500 hover:text-blue-600 transition-colors uppercase tracking-widest">
+                            <Link href="/track-order" className="text-sm font-black text-gray-500 hover:text-blue-600 transition-colors   tracking-widest">
                                 Track Order
                             </Link>
                         </div>
@@ -71,8 +96,17 @@ export default function Navbar() {
                             placeholder="Search gadgets..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-gray-50/50 border-transparent focus:bg-white focus:border-blue-500 rounded-full pl-11 pr-4 py-2 text-sm transition-all"
+                            className="w-full bg-gray-50/50 border-transparent focus:bg-white focus:border-blue-500 rounded-full pl-11 pr-10 py-2 text-sm transition-all"
                         />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                onClick={() => setSearchQuery('')}
+                                className="absolute inset-y-0 right-3 flex items-center p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                <X className="h-3.5 w-3.5" />
+                            </button>
+                        )}
                     </form>
 
                     {/* Action Icons */}
@@ -140,7 +174,7 @@ export default function Navbar() {
                                         <div className="p-4 space-y-3">
                                             <p className="text-sm text-gray-500 font-medium mb-2">Welcome to ElectroMart</p>
                                             <Link href="/auth/login" className="block">
-                                                <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 py-5 font-black uppercase text-xs tracking-widest">Login</Button>
+                                                <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 py-5 font-black   text-xs tracking-widest">Login</Button>
                                             </Link>
                                             <Link href="/auth/register" className="block text-center text-xs text-gray-400 font-bold hover:text-blue-600 transition-colors">
                                                 Don't have an account? Sign Up
@@ -181,8 +215,17 @@ export default function Navbar() {
                         placeholder="Search gadgets..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-gray-50/50 border-transparent focus:bg-white focus:border-blue-500 rounded-xl pl-11 pr-4 py-2.5 text-sm transition-all shadow-sm"
+                        className="w-full bg-gray-50/50 border-transparent focus:bg-white focus:border-blue-500 rounded-xl pl-11 pr-10 py-2.5 text-sm transition-all shadow-sm"
                     />
+                    {searchQuery && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchQuery('')}
+                            className="absolute inset-y-0 right-3 flex items-center p-2 text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                            <X className="h-4 w-4" />
+                        </button>
+                    )}
                 </form>
             </div>
 

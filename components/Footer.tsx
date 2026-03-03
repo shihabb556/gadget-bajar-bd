@@ -32,7 +32,7 @@ export default function Footer() {
                         </div>
 
                         <div className="pt-4">
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Follow us on</p>
+                            <p className="text-xs font-black text-gray-400   tracking-widest mb-4">Follow us on</p>
                             <div className="flex gap-3">
                                 <Link href="#" className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all">
                                     <Facebook className="w-4 h-4" />
@@ -55,7 +55,7 @@ export default function Footer() {
 
                     {/* Company Links */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Gadget Bazar BD</h3>
+                        <h3 className="text-sm font-black text-gray-700   tracking-widest mb-6">Gadget Bazar BD</h3>
                         <ul className="space-y-4">
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">About Us</Link></li>
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Gadget Bazar BD Blog</Link></li>
@@ -66,7 +66,7 @@ export default function Footer() {
 
                     {/* Customer Care */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Customer Care</h3>
+                        <h3 className="text-sm font-black text-gray-700   tracking-widest mb-6">Customer Care</h3>
                         <ul className="space-y-4">
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Returns & Refunds</Link></li>
                             <li><Link href="#" className="text-sm text-gray-500 hover:text-blue-600 transition-colors font-medium">Privacy Policy</Link></li>
@@ -79,28 +79,28 @@ export default function Footer() {
 
                     {/* Payment Methods */}
                     <div>
-                        <h3 className="text-sm font-black text-gray-700 uppercase tracking-widest mb-6">Payment Methods</h3>
+                        <h3 className="text-sm font-black text-gray-700   tracking-widest mb-6">Payment Methods</h3>
                         <div className="grid grid-cols-3 gap-4">
                             <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center   overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
-                                <span className="text-[10px] font-black text-[#ED1C24] uppercase italic group-hover:scale-110 transition-transform">Nagad</span>
+                                <span className="text-[10px] font-black text-[#ED1C24]   italic group-hover:scale-110 transition-transform">Nagad</span>
                             </div>
                             <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
-                                <span className="text-[10px] font-black text-[#D12053] uppercase italic group-hover:scale-110 transition-transform">bKash</span>
+                                <span className="text-[10px] font-black text-[#D12053]   italic group-hover:scale-110 transition-transform">bKash</span>
                             </div>
                             <div className="h-12 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all cursor-pointer group">
-                                <span className="text-[10px] font-black text-[#D12053] uppercase italic group-hover:scale-110 transition-transform">Cash on delivery</span>
+                                <span className="text-[10px] font-black text-[#D12053]   italic group-hover:scale-110 transition-transform">Cash on delivery</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="border-t border-gray-50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">
+                    <p className="text-xs font-bold text-gray-400   tracking-[0.2em]">
                         © {new Date().getFullYear()} Gadget Bazar BD. All rights reserved.
                     </p>
                     <div className="flex gap-6">
-                        <Link href="/track-order" className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-blue-600 transition-colors">Track Order</Link>
-                        <Link href="/auth/login" className="text-[10px] font-black text-gray-400 uppercase tracking-widest hover:text-blue-600 transition-colors">Member Login</Link>
+                        <Link href="/track-order" className="text-[10px] font-black text-gray-400   tracking-widest hover:text-blue-600 transition-colors">Track Order</Link>
+                        <Link href="/auth/login" className="text-[10px] font-black text-gray-400   tracking-widest hover:text-blue-600 transition-colors">Member Login</Link>
                     </div>
                 </div>
             </div>

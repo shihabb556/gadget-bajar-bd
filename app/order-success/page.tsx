@@ -108,7 +108,7 @@ function OrderSuccessContent() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 text-indigo-600">
             <div className="flex flex-col items-center gap-4">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-current"></div>
-                <p className="font-bold uppercase tracking-widest text-xs">Generating Your Receipt...</p>
+                <p className="font-bold   tracking-widest text-xs">Generating Your Receipt...</p>
             </div>
         </div>
     );
@@ -124,11 +124,11 @@ function OrderSuccessContent() {
                     </div>
                 </div>
 
-                <h1 className="text-xl font-black text-gray-700 tracking-tight uppercase italic mb-2">Order Confirmed!</h1>
+                <h1 className="text-xl font-black text-gray-700 tracking-tight   italic mb-2">Order Confirmed!</h1>
                 <p className="text-gray-500 font-medium mb-4">Your e-receipt is being generated and will download automatically.</p>
 
                 <div className="bg-amber-50 border border-amber-100 p-3 rounded-xl inline-block mb-10">
-                    <p className="text-[10px] font-bold text-amber-700 uppercase tracking-widest">
+                    <p className="text-[10px] font-bold text-amber-700   tracking-widest">
                         Note: Please keep this receipt for verification during delivery.
                     </p>
                 </div>
@@ -138,7 +138,7 @@ function OrderSuccessContent() {
                         size="lg"
                         onClick={downloadSummary}
                         disabled={downloading}
-                        className="rounded-2xl gap-2 font-black uppercase tracking-widest text-xs h-14 shadow-lg shadow-indigo-100 min-w-[240px]"
+                        className="rounded-2xl gap-2 font-black   tracking-widest text-xs h-14 shadow-lg shadow-indigo-100 min-w-[240px]"
                     >
                         {downloading ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
@@ -151,7 +151,7 @@ function OrderSuccessContent() {
                         variant="outline"
                         size="lg"
                         onClick={() => window.print()}
-                        className="rounded-2xl gap-2 font-black uppercase tracking-widest text-xs h-14 bg-white"
+                        className="rounded-2xl gap-2 font-black   tracking-widest text-xs h-14 bg-white"
                     >
                         <Printer className="h-4 w-4" /> Print PDF
                     </Button>
@@ -169,33 +169,33 @@ function OrderSuccessContent() {
                     {/* Receipt Header */}
                     <div className="flex flex-col md:flex-row justify-between items-start gap-6 border-b-4 border-blue-600 pb-8">
                         <div className="space-y-2">
-                            <h1 className="text-xl font-black text-blue-600 italic tracking-tighter uppercase leading-none">
+                            <h1 className="text-xl font-black text-blue-600 italic tracking-tighter   leading-none">
                                 ELECTRO<br /> <span className="text-blue-500">MART</span>
 
                             </h1>
                             <div className="inline-block bg-blue-600 px-3 py-1 rounded-full">
-                                <p className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Official Order Summary</p>
+                                <p className="text-[10px] font-black text-white   tracking-[0.2em]">Official Order Summary</p>
                             </div>
                         </div>
                         <div className="text-left md:text-right space-y-1">
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Order Identifier</p>
+                            <p className="text-xs font-black text-gray-400   tracking-widest">Order Identifier</p>
                             <p className="text-xl font-mono font-bold text-gray-700 bg-gray-50 px-3 py-1 rounded-lg border border-gray-100 italic">
                                 #{orderId?.split('-').pop()?.toUpperCase()}
                             </p>
-                            {order && <p className="text-[10px] text-gray-500 font-bold uppercase mt-2">Date: {new Date(order.createdAt).toLocaleDateString()}</p>}
+                            {order && <p className="text-[10px] text-gray-500 font-bold   mt-2">Date: {new Date(order.createdAt).toLocaleDateString()}</p>}
                         </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-12 my-12 relative z-10">
                         <div>
-                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-3">BILL TO</p>
-                            <p className="text-md font-black text-gray-700 uppercase">{order?.guestName || order?.user?.name || 'Valued Customer'}</p>
+                            <p className="text-[10px] font-black text-gray-300   tracking-[0.2em] mb-3">BILL TO</p>
+                            <p className="text-md font-black text-gray-700  ">{order?.guestName || order?.user?.name || 'Valued Customer'}</p>
                             <p className="text-xs text-gray-500 font-bold mt-1">{order?.guestEmail || order?.user?.email || 'customer@example.com'}</p>
                             <p className="text-xs text-gray-500 font-bold mt-1">{order?.shippingAddress?.phone}</p>
                         </div>
                         <div className="text-right">
-                            <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-3">SHIP TO</p>
-                            <p className="text-xs text-gray-600 font-bold leading-relaxed uppercase">
+                            <p className="text-[10px] font-black text-gray-300   tracking-[0.2em] mb-3">SHIP TO</p>
+                            <p className="text-xs text-gray-600 font-bold leading-relaxed  ">
                                 {order?.shippingAddress?.village}, {order?.shippingAddress?.thana}<br />
                                 {order?.shippingAddress?.district}
                             </p>
@@ -204,8 +204,8 @@ function OrderSuccessContent() {
 
                     <div className="mb-12 relative z-10">
                         <div className="flex justify-between items-center bg-gray-50 px-4 py-2 rounded-lg mb-4">
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Description</p>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Amount</p>
+                            <p className="text-[10px] font-black text-gray-400   tracking-widest">Description</p>
+                            <p className="text-[10px] font-black text-gray-400   tracking-widest">Amount</p>
                         </div>
                         <div className="space-y-6 px-2">
                             {order?.items.map((itemValue: any) => (
@@ -215,8 +215,8 @@ function OrderSuccessContent() {
                                             {itemValue.image ? <img src={itemValue.image} alt={itemValue.name} className="h-full w-full object-cover rounded-lg" /> : <Package className="h-5 w-5 text-gray-300" />}
                                         </div>
                                         <div>
-                                            <p className="text-xs font-black text-gray-700 uppercase tracking-tight">{itemValue.name}</p>
-                                            <p className="text-[9px] text-gray-400 font-black uppercase tracking-wider mt-0.5">Qty: {itemValue.quantity} × ৳{itemValue.price}</p>
+                                            <p className="text-xs font-black text-gray-700   tracking-tight">{itemValue.name}</p>
+                                            <p className="text-[9px] text-gray-400 font-black   tracking-wider mt-0.5">Qty: {itemValue.quantity} × ৳{itemValue.price}</p>
                                         </div>
                                     </div>
                                     <p className="text-sm font-black text-gray-700 italic">৳{itemValue.price * itemValue.quantity}</p>
@@ -228,7 +228,7 @@ function OrderSuccessContent() {
                     {/* Total Footer */}
                     <div className="bg-blue-600 p-8 rounded-[2rem] text-white shadow-xl shadow-blue-100 flex flex-col sm:flex-row justify-between items-center gap-6">
                         <div className="space-y-1 text-center sm:text-left">
-                            <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80">Total Payable Amount</p>
+                            <p className="text-[10px] font-black   tracking-[0.3em] opacity-80">Total Payable Amount</p>
                             {order && <p className="text-xl font-bold italic">Status: <span className="underline decoration-2 underline-offset-4">{order.status}</span></p>}
                         </div>
                         <div className="text-center sm:text-right">
@@ -240,7 +240,7 @@ function OrderSuccessContent() {
                         <div className="h-10 w-10 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-600 mb-4">
                             <CheckCircle className="h-5 w-5" />
                         </div>
-                        <p className="text-[11px] text-gray-400 font-black uppercase tracking-[0.2em] mb-2 leading-relaxed">
+                        <p className="text-[11px] text-gray-400 font-black   tracking-[0.2em] mb-2 leading-relaxed">
                             Thank you for your business!
                         </p>
                         <p className="text-[9px] text-gray-300 font-bold italic">
@@ -273,7 +273,7 @@ function OrderSuccessContent() {
 
 export default function OrderSuccessPage() {
     return (
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50 text-indigo-600 uppercase font-black tracking-widest text-xs">Loading Secure Receipt...</div>}>
+        <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-50 text-indigo-600   font-black tracking-widest text-xs">Loading Secure Receipt...</div>}>
             <OrderSuccessContent />
         </Suspense>
     );

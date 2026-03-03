@@ -28,14 +28,14 @@ export default function CartPage() {
                         <div className="h-24 w-24 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
                             <ShoppingBag className="h-12 w-12" />
                         </div>
-                        <h2 className="text-xl font-black text-gray-700 uppercase italic mb-2">Your cart is empty</h2>
+                        <h2 className="text-xl font-black text-gray-700   italic mb-2">Your cart is empty</h2>
                         <p className="text-gray-500 font-medium mb-8">Looks like you haven't added any tech to your list yet.</p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link href="/" className="w-full sm:w-auto">
-                                <Button className="w-full sm:px-8 py-6 h-auto rounded-2xl bg-blue-600 hover:bg-blue-700 font-black uppercase text-xs tracking-[0.2em]">Continue Shopping</Button>
+                                <Button className="w-full sm:px-8 py-6 h-auto rounded-2xl bg-blue-600 hover:bg-blue-700 font-black   text-xs tracking-[0.2em]">Continue Shopping</Button>
                             </Link>
                             <Link href="/track-order" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:px-8 py-6 h-auto rounded-2xl border-2 font-black uppercase text-xs tracking-[0.2em] gap-2">
+                                <Button variant="outline" className="w-full sm:px-8 py-6 h-auto rounded-2xl border-2 font-black   text-xs tracking-[0.2em] gap-2">
                                     <Search className="h-4 w-4" /> Track Existing Order
                                 </Button>
                             </Link>

@@ -38,10 +38,10 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="aspect-square h-[120px] sm:h-[150px] md:h-[200px] bg-gray-50 relative overflow-hidden">
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
                     {isNew && (
-                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-blue-200 w-fit">New</span>
+                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full   tracking-widest shadow-lg shadow-blue-200 w-fit">New</span>
                     )}
                     {hasDiscount && (
-                        <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-200 w-fit">-{discountPercentage}% Off</span>
+                        <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full   tracking-widest shadow-lg shadow-red-200 w-fit">-{discountPercentage}% Off</span>
                     )}
                 </div>
                 {product.images?.[0] ? (
@@ -68,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             {/* Content Container */}
             <div className="flex-1 p-6 flex flex-col">
                 <div className="mb-1">
-                    <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">{product.category || 'GADGET'}</span>
+                    <span className="text-[10px] font-black text-blue-500   tracking-[0.2em]">{product.category || 'GADGET'}</span>
                 </div>
 
                 <h3 className="text-base font-bold text-gray-700 mb-2 leading-tight min-h-[2.5rem] line-clamp-2  tracking-tighter " >
@@ -90,14 +90,14 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 <div className="flex items-end justify-between mt-auto">
                     <div className="space-y-0.5">
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pricing</p>
+                        <p className="text-[10px] text-gray-400 font-bold   tracking-widest">Pricing</p>
                         {hasDiscount ? (
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2">
                                     <span className="text-sm md:text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString()}</span>
                                     <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString()}</span>
                                 </div>
-                                <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
+                                <p className="text-[9px] font-black text-green-600   tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
                             </div>
                         ) : (
                             <p className="text-sm md:text-xl font-black text-gray-700 tracking-tighter">৳{product.price.toLocaleString()}</p>
