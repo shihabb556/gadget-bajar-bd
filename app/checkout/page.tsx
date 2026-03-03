@@ -1,4 +1,4 @@
-transaction id na ddile order submit hobena , eta ki kora ase ekhane 'use client';
+'use client';
 
 import Navbar from '@/components/Navbar';
 import Link from 'next/link';
@@ -493,7 +493,7 @@ export default function CheckoutPage() {
                                         Processing Order...
                                     </div>
                                 ) : (
-                                    !deliveryArea ? 'Select Delivery Area' :   'Complete Order')
+                                    !deliveryArea ? 'Select Delivery Area' : 'Complete Order')
                                 )}
                             </Button>
                         </div>
