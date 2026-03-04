@@ -172,7 +172,7 @@ export default function Navbar() {
                                         </>
                                     ) : (
                                         <div className="p-4 space-y-3">
-                                            <p className="text-sm text-gray-500 font-medium mb-2">Welcome to ElectroMart</p>
+                                            <p className="text-sm text-gray-500 font-medium mb-2">Welcome to Gadget Bazar BD</p>
                                             <Link href="/auth/login" className="block">
                                                 <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 py-5 font-black   text-xs tracking-widest">Login</Button>
                                             </Link>

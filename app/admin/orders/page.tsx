@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense, useRef } from 'react';
-import { Download, MapPin, Phone, CreditCard, ShoppingBag, User } from 'lucide-react';
+import { Download, MapPin, Phone, CreditCard, ShoppingBag, User, Trash2, AlertTriangle, Calendar, History, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
@@ -17,6 +17,17 @@ function AdminOrdersContent() {
     const summaryRef = useRef<HTMLDivElement>(null);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
     const [viewOrder, setViewOrder] = useState<any>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [deleteConfig, setDeleteConfig] = useState({
+        timeframe: 'month',
+        statuses: ['CANCELLED', 'DELIVERED']
+    });
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+    const [exportDateRange, setExportDateRange] = useState({
+        from: new Date().toISOString().split('T')[0],
+        to: new Date().toISOString().split('T')[0]
+    });
 
 
     useEffect(() => {
@@ -75,34 +86,111 @@ function AdminOrdersContent() {
         }
     };
 
+    const handleDeleteHistory = async () => {
+        if (!confirm('Are you absolutely sure? This action cannot be undone.')) return;
+
+        setIsDeleting(true);
+        try {
+            const res = await fetch('/api/admin/orders', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(deleteConfig),
+            });
+            if (res.ok) {
+                const data = await res.json();
+                alert(data.message);
+                setIsDeleteModalOpen(false);
+                fetchOrders();
+            } else {
+                alert('Failed to delete history');
+            }
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred while deleting history');
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleExportCSV = async () => {
+        const params = new URLSearchParams({
+            from: new Date(exportDateRange.from).toISOString(),
+            to: new Date(new Date(exportDateRange.to).setHours(23, 59, 59, 999)).toISOString()
+        });
+        window.open(`/api/admin/orders/export?${params.toString()}`, '_blank');
+        setIsExportModalOpen(false);
+    };
+
+    const setQuickExport = (type: 'today' | 'month' | 'year') => {
+        const today = new Date();
+        let from = new Date();
+        const to = today.toISOString().split('T')[0];
+
+        if (type === 'today') {
+            from = today;
+        } else if (type === 'month') {
+            from = new Date(today.getFullYear(), today.getMonth(), 1);
+        } else if (type === 'year') {
+            from = new Date(today.getFullYear(), 0, 1);
+        }
+
+        setExportDateRange({
+            from: from.toISOString().split('T')[0],
+            to: to
+        });
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <h2 className="text-lg md:text-xl font-bold text-gray-800">Order Management</h2>
 
-                <div className="flex flex-row  gap-3">
-                    <form onSubmit={handleSearch} className="flex gap-2">
+                <div className="flex flex-wrap items-center gap-3">
+                    <form onSubmit={handleSearch} className="flex gap-2 w-full sm:w-auto">
                         <input
                             type="text"
                             placeholder="Order ID..."
-                            className="w-full md:w-[10rem] text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2"
+                            className="flex-1 sm:w-[10rem] text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2"
                             value={searchId}
                             onChange={(e) => setSearchId(e.target.value)}
                         />
                         <Button type="submit" size="sm" className="bg-gray-800">Search</Button>
                     </form>
 
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value)}
-                        className="text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[10rem] px-4 py-2"
-                    >
-                        <option className="text-gray-700" value="ALL">All Status</option>
-                        <option className="text-gray-700" value="PENDING">Pending</option>
-                        <option className="text-gray-700" value="PROCESSING">Processing</option>
-                        <option className="text-gray-700" value="DELIVERED">Delivered</option>
-                        <option className="text-gray-700" value="CANCELLED">Cancelled</option>
-                    </select>
+                    <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="flex-1 sm:w-[10rem] text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2"
+                        >
+                            <option className="text-gray-700" value="ALL">All Status</option>
+                            <option className="text-gray-700" value="PENDING">Pending</option>
+                            <option className="text-gray-700" value="PROCESSING">Processing</option>
+                            <option className="text-gray-700" value="DELIVERED">Delivered</option>
+                        </select>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsExportModalOpen(true)}
+                            className="flex-1 sm:flex-none text-blue-600 border-blue-100 hover:bg-blue-50"
+                        >
+                            <FileText className="w-4 h-4 mr-2" />
+                            <span className="hidden xs:inline">Export CSV</span>
+                            <span className="xs:hidden">CSV</span>
+                        </Button>
+
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="flex-1 sm:flex-none text-red-600 border-red-100 hover:bg-red-50"
+                        >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            <span className="hidden xs:inline">Delete History</span>
+                            <span className="xs:hidden">Delete</span>
+                        </Button>
+                    </div>
                 </div>
             </div>
 
@@ -298,6 +386,145 @@ function AdminOrdersContent() {
                 order={selectedOrder}
                 onComplete={() => setSelectedOrder(null)}
             />
+
+            {/* Delete History Modal */}
+            <Modal
+                isOpen={isDeleteModalOpen}
+                onClose={() => setIsDeleteModalOpen(false)}
+                title="Delete Order History"
+                variant="error"
+                maxWidth="md"
+                actions={[
+                    { label: 'Cancel', onClick: () => setIsDeleteModalOpen(false), variant: 'ghost' },
+                    {
+                        label: isDeleting ? 'Deleting...' : 'Confirm Deletion',
+                        onClick: handleDeleteHistory,
+                        variant: 'danger',
+                        disabled: isDeleting || deleteConfig.statuses.length === 0
+                    }
+                ]}
+            >
+                <div className="space-y-6">
+                    <div className="flex items-start gap-4 p-4 bg-red-50 rounded-xl border border-red-100">
+                        <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
+                            <AlertTriangle className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-red-800">Dangerous Action</p>
+                            <p className="text-xs text-red-600 mt-1">
+                                This will permanently delete orders that match your criteria. This action cannot be reversed.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-[10px] font-black text-gray-400 tracking-widest mb-3 flex items-center gap-2">
+                                <History className="w-3 h-3" /> Select Statuses
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                                {['CANCELLED', 'DELIVERED'].map((status) => (
+                                    <button
+                                        key={status}
+                                        onClick={() => {
+                                            const newStatuses = deleteConfig.statuses.includes(status)
+                                                ? deleteConfig.statuses.filter(s => s !== status)
+                                                : [...deleteConfig.statuses, status];
+                                            setDeleteConfig({ ...deleteConfig, statuses: newStatuses });
+                                        }}
+                                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border ${deleteConfig.statuses.includes(status)
+                                            ? 'bg-red-600 text-white border-red-600'
+                                            : 'bg-white text-gray-600 border-gray-200 hover:border-red-200'
+                                            }`}
+                                    >
+                                        {status}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div>
+                            <p className="text-[10px] font-black text-gray-400 tracking-widest mb-3 flex items-center gap-2">
+                                <Calendar className="w-3 h-3" /> Select Timeframe
+                            </p>
+                            <div className="grid grid-cols-2 gap-3">
+                                <button
+                                    onClick={() => setDeleteConfig({ ...deleteConfig, timeframe: 'month' })}
+                                    className={`p-4 rounded-xl border text-left transition-all ${deleteConfig.timeframe === 'month'
+                                        ? 'bg-indigo-50 border-indigo-200 ring-2 ring-indigo-500/20'
+                                        : 'bg-gray-50 border-gray-100 hover:border-indigo-100'
+                                        }`}
+                                >
+                                    <p className={`text-sm font-bold ${deleteConfig.timeframe === 'month' ? 'text-indigo-700' : 'text-gray-700'}`}>Last Month</p>
+                                    <p className="text-[10px] text-gray-500 mt-1">Orders older than 30 days only</p>
+                                </button>
+                                <button
+                                    onClick={() => setDeleteConfig({ ...deleteConfig, timeframe: 'all' })}
+                                    className={`p-4 rounded-xl border text-left transition-all ${deleteConfig.timeframe === 'all'
+                                        ? 'bg-indigo-50 border-indigo-200 ring-2 ring-indigo-500/20'
+                                        : 'bg-gray-50 border-gray-100 hover:border-indigo-100'
+                                        }`}
+                                >
+                                    <p className={`text-sm font-bold ${deleteConfig.timeframe === 'all' ? 'text-indigo-700' : 'text-gray-700'}`}>All Times</p>
+                                    <p className="text-[10px] text-gray-500 mt-1">All orders regardless of date</p>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Export CSV Modal */}
+            <Modal
+                isOpen={isExportModalOpen}
+                onClose={() => setIsExportModalOpen(false)}
+                title="Export Orders (CSV)"
+                variant="info"
+                maxWidth="md"
+                actions={[
+                    { label: 'Cancel', onClick: () => setIsExportModalOpen(false), variant: 'ghost' },
+                    { label: 'Download CSV', onClick: handleExportCSV, variant: 'primary' }
+                ]}
+            >
+                <div className="space-y-6">
+                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 flex items-start gap-3">
+                        <FileText className="w-5 h-5 text-blue-600 mt-0.5" />
+                        <div>
+                            <p className="text-sm font-bold text-blue-800">Export Order Details</p>
+                            <p className="text-xs text-blue-600 mt-1">
+                                Download order history including customer details, addresses, and payment information in CSV format.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                        <Button variant="outline" size="sm" onClick={() => setQuickExport('today')}>Today</Button>
+                        <Button variant="outline" size="sm" onClick={() => setQuickExport('month')}>This Month</Button>
+                        <Button variant="outline" size="sm" onClick={() => setQuickExport('year')}>This Year</Button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-[10px] font-black text-gray-400 tracking-widest block mb-2 uppercase">From Date</label>
+                            <input
+                                type="date"
+                                className="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2 bg-gray-50 border shadow-sm"
+                                value={exportDateRange.from}
+                                onChange={(e) => setExportDateRange({ ...exportDateRange, from: e.target.value })}
+                            />
+                        </div>
+                        <div>
+                            <label className="text-[10px] font-black text-gray-400 tracking-widest block mb-2 uppercase">To Date</label>
+                            <input
+                                type="date"
+                                className="w-full text-sm border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2 bg-gray-50 border shadow-sm"
+                                value={exportDateRange.to}
+                                onChange={(e) => setExportDateRange({ ...exportDateRange, to: e.target.value })}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

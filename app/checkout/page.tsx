@@ -17,6 +17,7 @@ export default function CheckoutPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
     const [settings, setSettings] = useState({ advanceOption: 'Unpaid' });
 
     const [shippingAddress, setShippingAddress] = useState<ShippingAddressInput>({
@@ -38,7 +39,7 @@ export default function CheckoutPage() {
     useEffect(() => setMounted(true), []);
 
     useEffect(() => {
-        if (mounted && items.length === 0) {
+        if (mounted && items.length === 0 && !isSuccess) {
             router.push('/cart');
         }
         fetchSettings();
@@ -158,9 +159,10 @@ export default function CheckoutPage() {
                 order_id: data.orderId,
             });
             clearCart();
+            setIsSuccess(true);
             console.log('Order placed successfully!', data.orderId, data);
             toast.success('Order placed successfully!');
-            router.push(`/order-success?orderId=${data.orderId}`);
+            router.push(`/orders/${data.orderId}`);
         } catch (error: any) {
             toast.error(error.message);
         } finally {

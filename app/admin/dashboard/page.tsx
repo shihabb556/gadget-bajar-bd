@@ -14,6 +14,7 @@ interface Stats {
     totalProducts: number;
     totalUsers: number;
     cancelledOrders: number;
+    pendingOrders: number;
 }
 
 interface RecentOrder {
@@ -64,11 +65,12 @@ export default function DashboardPage() {
                 usersRes.ok ? usersRes.json() : [],
             ]);
 
-            const totalSales = orders.reduce(
-                (sum: number, o: any) => sum + (o.totalAmount || 0), 0
-            );
+            const totalSales = orders
+                .filter((o: any) => o.status === 'DELIVERED')
+                .reduce((sum: number, o: any) => sum + (o.totalAmount || 0), 0);
 
             const cancelledOrders = orders.filter((o: any) => o.status === 'CANCELLED').length;
+            const pendingOrders = orders.filter((o: any) => o.status === 'PENDING').length;
 
             setStats({
                 totalSales,
@@ -76,6 +78,7 @@ export default function DashboardPage() {
                 totalProducts: products.length,
                 totalUsers: users.length,
                 cancelledOrders,
+                pendingOrders,
             });
 
             setRecentOrders(orders.slice(0, 7));
@@ -89,7 +92,7 @@ export default function DashboardPage() {
     const statCards = [
         {
             label: 'Total Sales',
-            value: stats ? `৳${stats.totalSales.toLocaleString()}` : '—',
+            value: stats?.totalSales !== undefined ? `৳${stats.totalSales.toLocaleString()}` : '—',
             icon: <TrendingUp className="w-5 h-5 text-blue-600" />,
             bg: 'bg-blue-50',
             border: 'border-blue-100',
@@ -97,7 +100,7 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Orders',
-            value: stats ? stats.totalOrders.toLocaleString() : '—',
+            value: stats?.totalOrders?.toLocaleString() ?? '—',
             icon: <ShoppingCart className="w-5 h-5 text-indigo-600" />,
             bg: 'bg-indigo-50',
             border: 'border-indigo-100',
@@ -105,7 +108,7 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Products',
-            value: stats ? stats.totalProducts.toLocaleString() : '—',
+            value: stats?.totalProducts?.toLocaleString() ?? '—',
             icon: <Package className="w-5 h-5 text-emerald-600" />,
             bg: 'bg-emerald-50',
             border: 'border-emerald-100',
@@ -113,7 +116,7 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Users',
-            value: stats ? stats.totalUsers.toLocaleString() : '—',
+            value: stats?.totalUsers?.toLocaleString() ?? '—',
             icon: <Users className="w-5 h-5 text-orange-600" />,
             bg: 'bg-orange-50',
             border: 'border-orange-100',
@@ -121,11 +124,19 @@ export default function DashboardPage() {
         },
         {
             label: 'Cancelled Orders',
-            value: stats ? stats.cancelledOrders.toLocaleString() : '—',
+            value: stats?.cancelledOrders?.toLocaleString() ?? '—',
             icon: <XCircle className="w-5 h-5 text-red-600" />,
             bg: 'bg-red-50',
             border: 'border-red-100',
             iconBg: 'bg-red-100',
+        },
+        {
+            label: 'Pending Orders',
+            value: stats?.pendingOrders?.toLocaleString() ?? '—',
+            icon: <Clock className="w-5 h-5 text-amber-600" />,
+            bg: 'bg-amber-50',
+            border: 'border-amber-100',
+            iconBg: 'bg-amber-100',
         },
     ];
 
@@ -143,7 +154,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
                 {statCards.map((card, i) => (
                     <div
                         key={i}

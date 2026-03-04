@@ -66,3 +66,32 @@ export async function PATCH(req: Request) {
     const order = await Order.findByIdAndUpdate(orderId, update, { new: true });
     return NextResponse.json(order);
 }
+
+export async function DELETE(req: Request) {
+    if (!await isAdmin()) {
+        return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { timeframe, statuses } = await req.json();
+    await dbConnect();
+
+    const query: any = {
+        status: { $in: statuses }
+    };
+
+    if (timeframe === 'month') {
+        const lastMonth = new Date();
+        lastMonth.setMonth(lastMonth.getMonth() - 1);
+        query.createdAt = { $lt: lastMonth };
+    }
+
+    try {
+        const result = await Order.deleteMany(query);
+        return NextResponse.json({
+            message: `Successfully deleted ${result.deletedCount} orders`,
+            deletedCount: result.deletedCount
+        });
+    } catch (error) {
+        return NextResponse.json({ message: 'Failed to delete orders' }, { status: 500 });
+    }
+}
