@@ -10,11 +10,13 @@ import { Search } from 'lucide-react';
 
 import { Metadata } from 'next';
 
+import ProductPagination from '@/components/ProductPagination';
+
 // Force dynamic because we want refreshed products
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ searchParams }: {
-  searchParams: Promise<{ category?: string; search?: string }>
+  searchParams: Promise<{ category?: string; search?: string; page?: string }>
 }): Promise<Metadata> {
   const params = await searchParams;
   let title = "Gadget Bazar BD - Premium Gadgets & Electronics Shop";
@@ -39,9 +41,13 @@ async function getProducts(params: {
   minPrice?: string;
   maxPrice?: string;
   availability?: string;
+  page?: string;
 }) {
   await dbConnect();
   const query: any = { isActive: true };
+  const page = parseInt(params.page || '1');
+  const limit = 12; // 12 products per page
+  const skip = (page - 1) * limit;
 
   // Category filter
   if (params.category) {
@@ -80,7 +86,17 @@ async function getProducts(params: {
     }
   }
 
-  return Product.find(query).sort({ createdAt: -1 }).limit(40);
+  const [products, total] = await Promise.all([
+    Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Product.countDocuments(query)
+  ]);
+
+  return {
+    products,
+    total,
+    totalPages: Math.ceil(total / limit),
+    currentPage: page
+  };
 }
 
 async function getCategories() {
@@ -96,10 +112,11 @@ export default async function Home({ searchParams }: {
     minPrice?: string;
     maxPrice?: string;
     availability?: string;
+    page?: string;
   }>
 }) {
   const params = await searchParams;
-  const products = await getProducts(params);
+  const { products, total, totalPages, currentPage } = await getProducts(params);
   const categories = await getCategories();
 
   return (
@@ -126,7 +143,7 @@ export default async function Home({ searchParams }: {
                   {params.search ? `Results for "${params.search}"` : params.category ? 'Category Items' : 'Explore Gadgets'}
                 </h1>
                 <p className="text-sm font-bold text-gray-400   tracking-wider">
-                  Found {products.length} high-quality gadgets
+                  Found {total} high-quality gadgets
                 </p>
               </div>
 
@@ -136,11 +153,18 @@ export default async function Home({ searchParams }: {
 
             {/* Product Grid */}
             {products.length > 0 ? (
-              <div className="grid grid-cols-2 xl:grid-cols-3 gap-2 md:gap-5 xl:gap-8">
-                {products.map((product) => (
-                  <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-2 md:gap-5 xl:gap-8">
+                  {products.map((product) => (
+                    <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
+                  ))}
+                </div>
+                <ProductPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  searchParams={params}
+                />
+              </>
             ) : (
               <div className="py-24 text-center bg-white rounded-[3rem] border border-gray-100 shadow-sm px-8">
                 <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
