@@ -134,10 +134,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                     {/* <span className="text-xs font-bold text-gray-500">4.8 (124 reviews)</span> */}
                                 </div>
                                 <div className="h-4 w-[1px] bg-gray-200"></div>
-                                <div className="flex items-center gap-1.5">
+                                {/* <div className="flex items-center gap-1.5">
                                     <ShieldCheck className="h-4 w-4 text-blue-600" />
                                     <span className="text-xs font-black text-gray-700   tracking-widest">Official Warranty</span>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Price Section */}
@@ -185,7 +185,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-100 transition-colors group">
+                                {/* <div className="flex gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-100 transition-colors group">
                                     <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                                         <RefreshCcw className="h-5 w-5 text-blue-600" />
                                     </div>
@@ -193,7 +193,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <p className="text-xs font-black text-gray-700   tracking-widest mb-0.5">7 Days Return</p>
                                         <p className="text-[10px] text-gray-500 font-bold   tracking-widest">Easy Return Policy</p>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
