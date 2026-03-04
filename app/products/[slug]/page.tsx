@@ -172,7 +172,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                             <ProductActions product={product} />
 
                             {/* Delivery Info */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8 pt-8 border-t border-gray-50">
+                            <div className="grid grid-cols-1 gap-4 mt-8 pt-8 border-t border-gray-50">
                                 <div className="flex gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-100 transition-colors group">
                                     <div className="h-10 w-10 bg-white rounded-xl flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                                         <Truck className="h-5 w-5 text-blue-600" />
