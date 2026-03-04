@@ -181,7 +181,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         <p className="text-xs font-black text-gray-700   tracking-widest mb-0.5">Delivery Charge</p>
                                         <p className="text-[14px] text-gray-500 font-bold   tracking-widest">
                                             Inside Dhaka: ৳80 (ঢাকাঃ ৮০ টাকা) <br />
-                                            Outside Dhaka: ৳170 (ঢাকার বাইরেঃ ১৭০ টাকা)
+                                            Outside Dhaka: ৳120 (ঢাকার বাইরেঃ ১২০ টাকা)
                                         </p>
                                     </div>
                                 </div>
