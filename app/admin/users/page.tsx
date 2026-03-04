@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/shared';
 import { Trash2, UserCog, ShieldAlert } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { Pagination } from '@/components/ui/Pagination';
 
 interface User {
     _id: string;
@@ -17,17 +18,24 @@ interface User {
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState({ totalPages: 1, total: 0 });
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [currentPage]);
 
     const fetchUsers = async () => {
+        setLoading(true);
         try {
-            const res = await fetch('/api/admin/users');
+            const res = await fetch(`/api/admin/users?page=${currentPage}&limit=10`);
             if (res.ok) {
                 const data = await res.json();
-                setUsers(data);
+                setUsers(data.users);
+                setPagination({
+                    totalPages: data.totalPages,
+                    total: data.total
+                });
             }
         } catch (error) {
             console.error('Failed to fetch users');
@@ -177,6 +185,12 @@ export default function UsersPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
         </div >
     );

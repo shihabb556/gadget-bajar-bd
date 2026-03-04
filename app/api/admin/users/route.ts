@@ -9,59 +9,99 @@ async function isAdmin() {
     return session?.user?.role === 'ADMIN';
 }
 
-export async function GET() {
-    if (!await isAdmin()) {
+export async function GET(req: Request) {
+    const isAuthorized = await isAdmin();
+    if (!isAuthorized) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    await dbConnect();
+    try {
+        const { searchParams } = new URL(req.url);
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '10');
+        const skip = (page - 1) * limit;
 
-    const users = await User.aggregate([
-        {
-            $lookup: {
-                from: 'orders',
-                localField: '_id',
-                foreignField: 'user',
-                as: 'userOrders'
-            }
-        },
-        {
-            $project: {
-                name: 1,
-                email: 1,
-                role: 1,
-                isActive: 1,
-                createdAt: 1,
-                orderCount: { $size: '$userOrders' }
-            }
-        },
-        { $sort: { createdAt: -1 } }
-    ]);
+        await dbConnect();
 
-    return NextResponse.json(users);
+        const result = await User.aggregate([
+            {
+                $facet: {
+                    data: [
+                        {
+                            $lookup: {
+                                from: 'orders',
+                                localField: '_id',
+                                foreignField: 'user',
+                                as: 'userOrders'
+                            }
+                        },
+                        {
+                            $project: {
+                                name: 1,
+                                email: 1,
+                                role: 1,
+                                isActive: 1,
+                                createdAt: 1,
+                                orderCount: { $size: '$userOrders' }
+                            }
+                        },
+                        { $sort: { createdAt: -1 } },
+                        { $skip: skip },
+                        { $limit: limit }
+                    ],
+                    total: [
+                        { $count: 'count' }
+                    ]
+                }
+            }
+        ]);
+
+        const users = result[0]?.data || [];
+        const total = result[0]?.total[0]?.count || 0;
+
+        return NextResponse.json({
+            users,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
+
+    } catch (error) {
+        console.error('Fetch users error:', error);
+        return NextResponse.json(
+            { message: 'Internal Server Error' },
+            { status: 500 }
+        );
+    }
 }
-
 export async function PATCH(req: Request) {
-    if (!await isAdmin()) {
+    const isAuthorized = await isAdmin();
+    if (!isAuthorized) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
-    const { userId, action, value } = await req.json();
-    await dbConnect();
+    try {
+        const { userId, action, value } = await req.json();
+        await dbConnect();
 
-    let update = {};
-    if (action === 'toggleStatus') {
-        update = { isActive: value };
-    } else if (action === 'toggleRole') {
-        update = { role: value };
+        let update = {};
+        if (action === 'toggleStatus') {
+            update = { isActive: value };
+        } else if (action === 'toggleRole') {
+            update = { role: value };
+        }
+
+        const user = await User.findByIdAndUpdate(userId, update, { new: true }).select('-password');
+        return NextResponse.json(user);
+    } catch (error) {
+        console.error('Update user error:', error);
+        return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
     }
-
-    const user = await User.findByIdAndUpdate(userId, update, { new: true }).select('-password');
-    return NextResponse.json(user);
 }
 
 export async function DELETE(req: Request) {
-    if (!await isAdmin()) {
+    const isAuthorized = await isAdmin();
+    if (!isAuthorized) {
         return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
     }
 
@@ -75,12 +115,11 @@ export async function DELETE(req: Request) {
 
         const session = await getServerSession(authOptions);
         if (session?.user?.id === userId) {
-            return NextResponse.json({ message: 'You cannot delete your own account' }, { status: 1.0e2 * 4 });
+            return NextResponse.json({ message: 'You cannot delete your own account' }, { status: 400 });
         }
 
         await dbConnect();
 
-        // Check if user has orders
         const orderCount = await Order.countDocuments({ user: userId });
         if (orderCount > 0) {
             return NextResponse.json({ message: 'Cannot delete user with existing orders. Deactivate them instead.' }, { status: 400 });

@@ -6,6 +6,7 @@ import { Button, Input } from '@/components/ui/shared';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Modal from '@/components/ui/Modal';
+import { Pagination } from '@/components/ui/Pagination';
 
 interface Product {
     _id: string;
@@ -23,18 +24,25 @@ const truncate = (str: string, max = 40) =>
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState({ totalPages: 1, total: 0 });
     const [deleteModal, setDeleteModal] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [currentPage]);
 
     const fetchProducts = async () => {
+        setLoading(true);
         try {
-            const res = await fetch('/api/admin/products');
+            const res = await fetch(`/api/admin/products?page=${currentPage}&limit=10`);
             if (res.ok) {
                 const data = await res.json();
-                setProducts(data);
+                setProducts(data.products);
+                setPagination({
+                    totalPages: data.totalPages,
+                    total: data.total
+                });
             }
         } catch (error) {
             console.error('Failed to fetch products');
@@ -133,6 +141,12 @@ export default function ProductsPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
 
             {/* Delete Confirm Modal */}

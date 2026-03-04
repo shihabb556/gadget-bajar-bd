@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/shared';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import OrderReceipt from '@/components/OrderReceipt';
+import { Pagination } from '@/components/ui/Pagination';
 
 function AdminOrdersContent() {
     const searchParams = useSearchParams();
@@ -13,6 +14,8 @@ function AdminOrdersContent() {
     const [loading, setLoading] = useState(true);
     const [searchId, setSearchId] = useState(searchParams.get('orderId') || '');
     const [statusFilter, setStatusFilter] = useState(searchParams.get('status') || 'ALL');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState({ totalPages: 1, total: 0 });
     const router = useRouter();
     const summaryRef = useRef<HTMLDivElement>(null);
     const [selectedOrder, setSelectedOrder] = useState<any>(null);
@@ -32,7 +35,7 @@ function AdminOrdersContent() {
 
     useEffect(() => {
         fetchOrders();
-    }, [statusFilter, searchParams]);
+    }, [statusFilter, searchParams, currentPage]);
 
     const fetchOrders = async () => {
         setLoading(true);
@@ -42,11 +45,17 @@ function AdminOrdersContent() {
             if (userIdFromUrl) params.append('userId', userIdFromUrl);
             if (searchId) params.append('orderId', searchId);
             if (statusFilter !== 'ALL') params.append('status', statusFilter);
+            params.append('page', currentPage.toString());
+            params.append('limit', '10');
 
             const res = await fetch(`/api/admin/orders?${params.toString()}`);
             if (res.ok) {
                 const data = await res.json();
-                setOrders(data);
+                setOrders(data.orders);
+                setPagination({
+                    totalPages: data.totalPages,
+                    total: data.total
+                });
             }
         } catch (error) {
             console.error('Failed to fetch orders');
@@ -57,7 +66,13 @@ function AdminOrdersContent() {
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
+        setCurrentPage(1);
         fetchOrders();
+    };
+
+    const handleStatusFilterChange = (status: string) => {
+        setStatusFilter(status);
+        setCurrentPage(1);
     };
 
     const updateStatus = async (orderId: string, status: string) => {
@@ -160,7 +175,7 @@ function AdminOrdersContent() {
                     <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
                         <select
                             value={statusFilter}
-                            onChange={(e) => setStatusFilter(e.target.value)}
+                            onChange={(e) => handleStatusFilterChange(e.target.value)}
                             className="flex-1 sm:w-[10rem] text-sm text-gray-700! bg-gray-50 border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-4 py-2"
                         >
                             <option className="text-gray-700" value="ALL">All Status</option>
@@ -192,6 +207,12 @@ function AdminOrdersContent() {
                         </Button>
                     </div>
                 </div>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">

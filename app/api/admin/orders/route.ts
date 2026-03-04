@@ -18,6 +18,9 @@ export async function GET(req: Request) {
     const orderId = searchParams.get('orderId');
     const status = searchParams.get('status');
     const userId = searchParams.get('userId');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const skip = (page - 1) * limit;
 
     await dbConnect();
 
@@ -42,10 +45,21 @@ export async function GET(req: Request) {
         query.user = userId;
     }
 
-    const orders = await Order.find(query)
-        .populate('user', 'name email')
-        .sort({ createdAt: -1 });
-    return NextResponse.json(orders);
+    const [orders, total] = await Promise.all([
+        Order.find(query)
+            .populate('user', 'name email')
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit),
+        Order.countDocuments(query)
+    ]);
+
+    return NextResponse.json({
+        orders,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit)
+    });
 }
 
 export async function PATCH(req: Request) {

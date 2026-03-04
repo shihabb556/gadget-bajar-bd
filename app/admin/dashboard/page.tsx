@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/shared';
 import {
     Plus, ShoppingCart, Package, Users, TrendingUp,
-    Clock, CheckCircle, XCircle, Loader
+    Clock, CheckCircle, XCircle, Loader, Filter, Calendar
 } from 'lucide-react';
 
 interface Stats {
@@ -45,43 +45,41 @@ export default function DashboardPage() {
     const [stats, setStats] = useState<Stats | null>(null);
     const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
     const [loading, setLoading] = useState(true);
+    const [dateRange, setDateRange] = useState('all'); // all, today, month, year
 
     useEffect(() => {
         fetchDashboardData();
-    }, []);
+    }, [dateRange]);
 
     const fetchDashboardData = async () => {
         setLoading(true);
         try {
-            const [ordersRes, productsRes, usersRes] = await Promise.all([
-                fetch('/api/admin/orders'),
-                fetch('/api/admin/products'),
-                fetch('/api/admin/users'),
-            ]);
+            let from, to;
+            const now = new Date();
 
-            const [orders, products, users] = await Promise.all([
-                ordersRes.ok ? ordersRes.json() : [],
-                productsRes.ok ? productsRes.json() : [],
-                usersRes.ok ? usersRes.json() : [],
-            ]);
+            if (dateRange === 'today') {
+                from = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+                to = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+            } else if (dateRange === 'month') {
+                from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+            } else if (dateRange === 'year') {
+                from = new Date(now.getFullYear(), 0, 1).toISOString();
+                to = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).toISOString();
+            }
 
-            const totalSales = orders
-                .filter((o: any) => o.status === 'DELIVERED')
-                .reduce((sum: number, o: any) => sum + (o.totalAmount || 0), 0);
+            const params = new URLSearchParams();
+            if (from && to) {
+                params.append('from', from);
+                params.append('to', to);
+            }
 
-            const cancelledOrders = orders.filter((o: any) => o.status === 'CANCELLED').length;
-            const pendingOrders = orders.filter((o: any) => o.status === 'PENDING').length;
-
-            setStats({
-                totalSales,
-                totalOrders: orders.length,
-                totalProducts: products.length,
-                totalUsers: users.length,
-                cancelledOrders,
-                pendingOrders,
-            });
-
-            setRecentOrders(orders.slice(0, 7));
+            const res = await fetch(`/api/admin/dashboard/stats?${params.toString()}`);
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data.stats);
+                setRecentOrders(data.recentOrders);
+            }
         } catch (err) {
             console.error('Dashboard fetch error:', err);
         } finally {
@@ -143,14 +141,40 @@ export default function DashboardPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-gray-800">Dashboard Overview</h2>
-                <Link href="/admin/products/new">
-                    <Button>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Product
-                    </Button>
-                </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex-1 w-full sm:w-auto">
+                    <h2 className="text-xl font-bold text-gray-800">Dashboard Overview</h2>
+                    <p className="text-xs text-gray-400 mt-1">Real-time stats based on your selection</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-1 shadow-sm w-full sm:w-auto">
+                        {[
+                            { id: 'all', label: 'All Time' },
+                            { id: 'today', label: 'Today' },
+                            { id: 'month', label: 'This Month' },
+                            { id: 'year', label: 'This Year' }
+                        ].map((range) => (
+                            <button
+                                key={range.id}
+                                onClick={() => setDateRange(range.id)}
+                                className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${dateRange === range.id
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                {range.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <Link href="/admin/products/new" className="w-full sm:w-auto">
+                        <Button className="w-full sm:w-auto">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Product
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             {/* Stat Cards */}
