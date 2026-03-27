@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { ShoppingBag, Heart, User, Search, Flag, Menu, X, LogOut, Settings, Package } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -64,17 +65,23 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <nav className="bg-gray-800 border-b border-gray-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo & Desktop Nav */}
                     <div className="flex items-center gap-8">
                         <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
-                            <div className="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
-                                <Flag className="h-6 w-6" fill="currentColor" />
-                            </div>
-                            <div className="hidden md:block">
-                                <span className="text-xl font-black text-gray-700 tracking-tighter   italic">Gadget Bazar BD</span>
+
+                            <div className="">
+                                {/* <Image
+                                    src="/logo/logo-1.png"
+                                    alt="Logo"
+                                    width={100}
+                                    height={100}
+                                    className="h-40 w-40 object-contain "
+                                /> */}
+
+                                <h1 className="text-2xl font-bold !text-blue-400">Gadget<span className="text-gray-200">Bazar<sup className='text-sm'>BD</sup></span></h1>
                             </div>
                         </Link>
 
