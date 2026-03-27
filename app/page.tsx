@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import BannerSlider from '@/components/BannerSlider';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
@@ -119,9 +120,13 @@ export default async function Home({ searchParams }: {
   const { products, total, totalPages, currentPage } = await getProducts(params);
   const categories = await getCategories();
 
+  const showSlider = !params.search && !params.category && !params.minPrice && !params.maxPrice && !params.availability && (!params.page || params.page === '1');
+
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <Navbar />
+
+      {showSlider && <BannerSlider />}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <MobileFilterDrawer categories={JSON.parse(JSON.stringify(categories))} />

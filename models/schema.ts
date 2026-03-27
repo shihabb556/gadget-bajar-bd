@@ -202,3 +202,28 @@ const LoginAttemptSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export const LoginAttempt = mongoose.models.LoginAttempt || mongoose.model('LoginAttempt', LoginAttemptSchema);
+
+const BannerSchema = new mongoose.Schema({
+    image: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        trim: true,
+    },
+    link: {
+        type: String,
+        trim: true,
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+    order: {
+        type: Number,
+        default: 0,
+    }
+}, { timestamps: true });
+
+export const Banner = mongoose.models.Banner || mongoose.model('Banner', BannerSchema);

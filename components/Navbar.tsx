@@ -86,7 +86,7 @@ export default function Navbar() {
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6">
-                            <Link href="/track-order" className="text-sm font-black text-gray-500 hover:text-blue-600 transition-colors   tracking-widest">
+                            <Link href="/track-order" className="text-sm font-black text-gray-300 hover:text-blue-600 transition-colors   tracking-widest">
                                 Track Order
                             </Link>
                         </div>
@@ -96,7 +96,7 @@ export default function Navbar() {
                     {/* Search Bar - Desktop */}
                     <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm mx-8 relative">
                         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <Search className="h-4 w-4 text-gray-400" />
+                            <Search className="h-4 w-4 text-gray-300" />
                         </div>
                         <Input
                             type="search"
@@ -121,12 +121,12 @@ export default function Navbar() {
                         {/* <Button
                             variant="ghost"
                             size="icon"
-                            className="text-gray-600 hover:bg-gray-50 rounded-full transition-colors hidden sm:flex"
+                            className="text-gray-300 hover:bg-gray-50 rounded-full transition-colors hidden sm:flex"
                         >
                             <Heart className="h-6 w-6" />
                         </Button> */}
 
-                        <Link href="/cart" className="p-2.5 text-gray-600 hover:bg-gray-50 rounded-full transition-colors relative">
+                        <Link href="/cart" className="p-2.5 text-gray-300 hover:bg-gray-50 hover:text-gray-500 rounded-full transition-colors relative">
                             <ShoppingBag className="h-6 w-6" />
                             {mounted && totalItems > 0 && (
                                 <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black leading-none text-white bg-blue-600 rounded-full border-2 border-white">
@@ -140,7 +140,7 @@ export default function Navbar() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                className="text-gray-600 hover:bg-gray-50 rounded-full transition-colors"
+                                className="text-gray-300 hover:bg-gray-50 rounded-full transition-colors hover:text-gray-500"
                             >
                                 <User className="h-6 w-6" />
                             </Button>
