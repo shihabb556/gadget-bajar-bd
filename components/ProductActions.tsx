@@ -11,6 +11,7 @@ import { pixelViewContent, pixelAddToCart } from '@/lib/pixel';
 export default function ProductActions({ product }: { product: any }) {
     const { addToCart } = useCartStore();
     const [quantity, setQuantity] = useState(1);
+    const [selectedColor, setSelectedColor] = useState<string>(product.colors?.[0] || '');
     const router = useRouter();
 
     // ViewContent: fired when the user lands on the product page
@@ -25,8 +26,12 @@ export default function ProductActions({ product }: { product: any }) {
 
     const handleAddToCart = () => {
         if (product.stock > 0) {
+            if (product.colors && product.colors.length > 0 && !selectedColor) {
+                toast.error('Please select a color');
+                return;
+            }
             for (let i = 0; i < quantity; i++) {
-                addToCart(product);
+                addToCart(product, selectedColor);
             }
             const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event
@@ -35,13 +40,17 @@ export default function ProductActions({ product }: { product: any }) {
                 content_name: product.name,
                 value: effectivePrice * quantity,
             });
-            toast.success(`${quantity} ${product.name} added to cart!`);
+            toast.success(`${quantity} ${product.name} ${selectedColor ? `(${selectedColor})` : ''} added to cart!`);
         }
     };
 
     const handleBuyNow = () => {
         if (product.stock > 0) {
-            addToCart(product);
+            if (product.colors && product.colors.length > 0 && !selectedColor) {
+                toast.error('Please select a color');
+                return;
+            }
+            addToCart(product, selectedColor);
             const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event (also fires on Buy Now)
             pixelAddToCart({
@@ -55,6 +64,27 @@ export default function ProductActions({ product }: { product: any }) {
 
     return (
         <div className="space-y-6">
+            {/* Color Selector */}
+            {product.colors && product.colors.length > 0 && (
+                <div className="space-y-3">
+                    <p className="text-[10px] font-black text-gray-400   tracking-widest capitalize">Select Color: <span className="text-gray-700">{selectedColor}</span></p>
+                    <div className="flex flex-wrap gap-3">
+                        {product.colors.map((color: string) => (
+                            <button
+                                key={color}
+                                onClick={() => setSelectedColor(color)}
+                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-2 ${selectedColor === color
+                                        ? 'border-blue-600 bg-blue-50 text-blue-600 shadow-sm'
+                                        : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200'
+                                    }`}
+                            >
+                                {color}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Quantity Selector */}
             <div className="space-y-3">
                 <p className="text-[10px] font-black text-gray-400   tracking-widest">Select Quantity</p>

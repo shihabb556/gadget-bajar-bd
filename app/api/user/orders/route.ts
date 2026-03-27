@@ -4,7 +4,7 @@ import { Order, Product } from '@/models/schema';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { orderSchema } from '@/lib/validations';
- import { sendTelegramNotification } from '@/lib/sendTelegramNotification';
+import { sendTelegramNotification } from '@/lib/sendTelegramNotification';
 
 export async function POST(req: Request) {
     try {
@@ -53,6 +53,7 @@ export async function POST(req: Request) {
                 price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price, // Use discount price if available
                 name: product.name,
                 image: product.images?.[0],
+                selectedColor: item.selectedColor,
             });
         }
 

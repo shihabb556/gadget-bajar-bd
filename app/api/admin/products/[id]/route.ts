@@ -26,8 +26,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
     const { id } = await params;
     const body = await req.json();
+    console.log('Update Product Request Body:', JSON.stringify(body, null, 2));
     await dbConnect();
     const product = await Product.findByIdAndUpdate(id, body, { new: true });
+    console.log('Updated Product Result:', JSON.stringify(product, null, 2));
     return NextResponse.json(product);
 }
 

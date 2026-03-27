@@ -98,13 +98,17 @@ const ProductSchema = new mongoose.Schema({
     },
     subCategory: String,
     images: [String],
+    colors: [String],
     isActive: {
         type: Boolean,
         default: true,
     },
 }, { timestamps: true });
 
-export const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+if (mongoose.models.Product) {
+    delete mongoose.models.Product;
+}
+export const Product = mongoose.model('Product', ProductSchema);
 
 const OrderSchema = new mongoose.Schema({
     user: {
@@ -137,6 +141,7 @@ const OrderSchema = new mongoose.Schema({
         },
         name: String, // Snapshot name
         image: String, // Snapshot image
+        selectedColor: String, // Selected color
     }],
     totalAmount: {
         type: Number,

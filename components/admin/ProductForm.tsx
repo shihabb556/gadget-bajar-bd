@@ -29,8 +29,10 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         category: initialData?.category || '',
         subCategory: initialData?.subCategory || '',
         images: initialData?.images || [], // Now array
+        colors: initialData?.colors || [],
         isActive: initialData?.isActive ?? true,
     });
+    const [colorInput, setColorInput] = useState(initialData?.colors?.join(', ') || '');
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [errorModal, setErrorModal] = useState(false);
@@ -206,6 +208,24 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                             onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                             className="mt-1"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Colors (Comma separated)</label>
+                        <Input
+                            placeholder="e.g. Red, Blue, Black"
+                            value={colorInput}
+                            onChange={(e) => {
+                                const val = e.target.value;
+                                setColorInput(val);
+                                setFormData({
+                                    ...formData,
+                                    colors: val.split(',').map(c => c.trim()).filter(c => c !== '')
+                                });
+                            }}
+                            className="mt-1"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Leave empty if no color options</p>
                     </div>
                 </div>
 

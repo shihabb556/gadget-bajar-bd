@@ -21,7 +21,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         e.preventDefault();
         e.stopPropagation();
         if (product.stock > 0) {
-            addToCart(product);
+            const defaultColor = product.colors?.[0] || '';
+            addToCart(product, defaultColor);
             toast.success(`${product.name} added to cart!`);
         }
     };

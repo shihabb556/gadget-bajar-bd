@@ -8,13 +8,14 @@ interface CartItem {
     image: string;
     slug: string;
     quantity: number;
+    selectedColor?: string;
 }
 
 interface CartStore {
     items: CartItem[];
-    addToCart: (product: any) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    addToCart: (product: any, selectedColor?: string) => void;
+    removeFromCart: (productId: string, selectedColor?: string) => void;
+    updateQuantity: (productId: string, quantity: number, selectedColor?: string) => void;
     clearCart: () => void;
     total: () => number;
 }
@@ -23,14 +24,16 @@ export const useCartStore = create<CartStore>()(
     persist(
         (set, get) => ({
             items: [],
-            addToCart: (product) => {
+            addToCart: (product, selectedColor) => {
                 const items = get().items;
-                const existingItem = items.find((item) => item._id === product._id);
+                const existingItem = items.find(
+                    (item) => item._id === product._id && item.selectedColor === selectedColor
+                );
 
                 if (existingItem) {
                     set({
                         items: items.map((item) =>
-                            item._id === product._id
+                            item._id === product._id && item.selectedColor === selectedColor
                                 ? { ...item, quantity: item.quantity + 1 }
                                 : item
                         ),
@@ -43,22 +46,29 @@ export const useCartStore = create<CartStore>()(
                             price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price,
                             image: product.images?.[0] || '',
                             slug: product.slug,
-                            quantity: 1
+                            quantity: 1,
+                            selectedColor
                         }],
                     });
                 }
             },
-            removeFromCart: (productId) => {
-                set({ items: get().items.filter((item) => item._id !== productId) });
+            removeFromCart: (productId, selectedColor) => {
+                set({
+                    items: get().items.filter(
+                        (item) => !(item._id === productId && item.selectedColor === selectedColor)
+                    )
+                });
             },
-            updateQuantity: (productId, quantity) => {
+            updateQuantity: (productId, quantity, selectedColor) => {
                 if (quantity <= 0) {
-                    get().removeFromCart(productId);
+                    get().removeFromCart(productId, selectedColor);
                     return;
                 }
                 set({
                     items: get().items.map((item) =>
-                        item._id === productId ? { ...item, quantity } : item
+                        item._id === productId && item.selectedColor === selectedColor
+                            ? { ...item, quantity }
+                            : item
                     ),
                 });
             },
