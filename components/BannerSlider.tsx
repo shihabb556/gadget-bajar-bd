@@ -19,13 +19,11 @@ const DEFAULT_BANNERS = [
         _id: 'default-1',
         image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&h=400&auto=format&fit=crop',
         title: 'Latest Smartphones',
-        link: '/products',
     },
     {
         _id: 'default-2',
         image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1200&h=400&auto=format&fit=crop',
         title: 'Cool Gadgets',
-        link: '/products',
     }
 ];
 
@@ -83,38 +81,18 @@ export default function BannerSlider() {
                 <div className="flex">
                     {banners.map((banner) => (
                         <div key={banner._id} className="relative flex-[0_0_100%] min-w-0 h-[200px] md:h-[400px]">
-                            {banner.link ? (
-                                <Link href={banner.link}>
-                                    <Image
-                                        src={banner.image}
-                                        alt={banner.title || 'Banner'}
-                                        fill
-                                        priority
-                                        className="object-cover"
-                                        unoptimized
-                                    />
-                                    {banner.title && (
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6 md:p-12">
-                                            <h2 className="text-white text-xl md:text-3xl font-bold">{banner.title}</h2>
-                                        </div>
-                                    )}
-                                </Link>
-                            ) : (
-                                <>
-                                    <Image
-                                        src={banner.image}
-                                        alt={banner.title || 'Banner'}
-                                        fill
-                                        priority
-                                        className="object-cover"
-                                        unoptimized
-                                    />
-                                    {banner.title && (
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6 md:p-12">
-                                            <h2 className="text-white text-xl md:text-3xl font-bold">{banner.title}</h2>
-                                        </div>
-                                    )}
-                                </>
+                            <Image
+                                src={banner.image}
+                                alt={banner.title || 'Banner'}
+                                fill
+                                priority
+                                className="object-cover"
+                                unoptimized
+                            />
+                            {banner.title && (
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6 md:p-12">
+                                    <h2 className="text-white text-xl md:text-3xl font-bold">{banner.title}</h2>
+                                </div>
                             )}
                         </div>
                     ))}

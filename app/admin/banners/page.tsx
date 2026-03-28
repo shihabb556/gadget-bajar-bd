@@ -24,7 +24,6 @@ export default function AdminBannersPage() {
     // New banner form state
     const [imageUrl, setImageUrl] = useState<string[]>([]);
     const [title, setTitle] = useState('');
-    const [link, setLink] = useState('');
 
     const fetchBanners = async () => {
         try {
@@ -59,7 +58,6 @@ export default function AdminBannersPage() {
                 body: JSON.stringify({
                     image: imageUrl[0],
                     title,
-                    link,
                     order: banners.length
                 }),
             });
@@ -68,7 +66,6 @@ export default function AdminBannersPage() {
                 toast.success('Banner added successfully');
                 setImageUrl([]);
                 setTitle('');
-                setLink('');
                 fetchBanners();
             } else {
                 toast.error('Failed to add banner');
@@ -126,23 +123,13 @@ export default function AdminBannersPage() {
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <h2 className="text-lg font-semibold mb-4 text-gray-700">Add New Banner</h2>
                 <form onSubmit={handleAddBanner} className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Banner Title (Optional)</label>
-                            <Input
-                                value={title}
-                                onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Summer Sale 2024"
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-gray-700">Link (Optional)</label>
-                            <Input
-                                value={link}
-                                onChange={(e) => setLink(e.target.value)}
-                                placeholder="/products/category/electronics"
-                            />
-                        </div>
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Banner Title (Optional)</label>
+                        <Input
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            placeholder="Summer Sale 2024"
+                        />
                     </div>
 
                     <div className="space-y-2">
@@ -179,7 +166,6 @@ export default function AdminBannersPage() {
                                 </div>
                                 <div className="flex-grow">
                                     <h3 className="font-medium text-gray-800">{banner.title || 'Untitled Banner'}</h3>
-                                    <p className="text-sm text-gray-500 truncate max-w-xs">{banner.link || 'No link'}</p>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <Button
