@@ -8,11 +8,29 @@ import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { pixelViewContent, pixelAddToCart } from '@/lib/pixel';
 
-export default function ProductActions({ product }: { product: any }) {
+export default function ProductActions({
+    product,
+    onColorChange
+}: {
+    product: any;
+    onColorChange?: (image?: string) => void;
+}) {
     const { addToCart } = useCartStore();
     const [quantity, setQuantity] = useState(1);
-    const [selectedColor, setSelectedColor] = useState<string>(product.colors?.[0] || '');
+    const [selectedColor, setSelectedColor] = useState<string>(
+        (typeof product.colors?.[0] === 'object' ? product.colors[0].name : product.colors?.[0]) || ''
+    );
     const router = useRouter();
+
+    const handleColorSelect = (color: any) => {
+        const colorName = typeof color === 'object' ? color.name : color;
+        const colorImage = typeof color === 'object' ? color.image : undefined;
+
+        setSelectedColor(colorName);
+        if (onColorChange) {
+            onColorChange(colorImage);
+        }
+    };
 
     // ViewContent: fired when the user lands on the product page
     useEffect(() => {
@@ -22,6 +40,11 @@ export default function ProductActions({ product }: { product: any }) {
             content_name: product.name,
             value: effectivePrice,
         });
+
+        // Initialize gallery with first color image if available
+        if (product.colors?.[0]?.image && onColorChange) {
+            onColorChange(product.colors[0].image);
+        }
     }, [product._id]);
 
     const handleAddToCart = () => {
@@ -30,8 +53,13 @@ export default function ProductActions({ product }: { product: any }) {
                 toast.error('Please select a color');
                 return;
             }
+
+            // Find the image for the selected color
+            const colorObj = product.colors?.find((c: any) => (typeof c === 'object' ? c.name : c) === selectedColor);
+            const colorImage = typeof colorObj === 'object' ? colorObj.image : undefined;
+
             for (let i = 0; i < quantity; i++) {
-                addToCart(product, selectedColor);
+                addToCart(product, selectedColor, colorImage);
             }
             const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event
@@ -50,7 +78,12 @@ export default function ProductActions({ product }: { product: any }) {
                 toast.error('Please select a color');
                 return;
             }
-            addToCart(product, selectedColor);
+
+            // Find the image for the selected color
+            const colorObj = product.colors?.find((c: any) => (typeof c === 'object' ? c.name : c) === selectedColor);
+            const colorImage = typeof colorObj === 'object' ? colorObj.image : undefined;
+
+            addToCart(product, selectedColor, colorImage);
             const effectivePrice = (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price;
             // AddToCart pixel event (also fires on Buy Now)
             pixelAddToCart({
@@ -69,18 +102,21 @@ export default function ProductActions({ product }: { product: any }) {
                 <div className="space-y-3">
                     <p className="text-[10px] font-black text-gray-400   tracking-widest capitalize">Select Color: <span className="text-gray-700">{selectedColor}</span></p>
                     <div className="flex flex-wrap gap-3">
-                        {product.colors.map((color: string) => (
-                            <button
-                                key={color}
-                                onClick={() => setSelectedColor(color)}
-                                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-2 ${selectedColor === color
+                        {product.colors.map((color: any) => {
+                            const name = typeof color === 'object' ? color.name : color;
+                            return (
+                                <button
+                                    key={name}
+                                    onClick={() => handleColorSelect(color)}
+                                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border-2 ${selectedColor === name
                                         ? 'border-blue-600 bg-blue-50 text-blue-600 shadow-sm'
                                         : 'border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200'
-                                    }`}
-                            >
-                                {color}
-                            </button>
-                        ))}
+                                        }`}
+                                >
+                                    {name}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
             )}

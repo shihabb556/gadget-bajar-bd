@@ -98,7 +98,10 @@ const ProductSchema = new mongoose.Schema({
     },
     subCategory: String,
     images: [String],
-    colors: [String],
+    colors: [{
+        name: String,
+        image: String
+    }],
     isActive: {
         type: Boolean,
         default: true,

@@ -13,7 +13,7 @@ interface CartItem {
 
 interface CartStore {
     items: CartItem[];
-    addToCart: (product: any, selectedColor?: string) => void;
+    addToCart: (product: any, selectedColor?: string, colorImage?: string) => void;
     removeFromCart: (productId: string, selectedColor?: string) => void;
     updateQuantity: (productId: string, quantity: number, selectedColor?: string) => void;
     clearCart: () => void;
@@ -24,7 +24,7 @@ export const useCartStore = create<CartStore>()(
     persist(
         (set, get) => ({
             items: [],
-            addToCart: (product, selectedColor) => {
+            addToCart: (product, selectedColor, colorImage) => {
                 const items = get().items;
                 const existingItem = items.find(
                     (item) => item._id === product._id && item.selectedColor === selectedColor
@@ -44,7 +44,7 @@ export const useCartStore = create<CartStore>()(
                             _id: product._id,
                             name: product.name,
                             price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price,
-                            image: product.images?.[0] || '',
+                            image: colorImage || product.images?.[0] || '',
                             slug: product.slug,
                             quantity: 1,
                             selectedColor
