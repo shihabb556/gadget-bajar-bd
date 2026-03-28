@@ -73,15 +73,23 @@ export default function Navbar() {
                         <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
 
                             <div className="">
-                                {/* <Image
-                                    src="/logo/logo-1.png"
+                                <Image
+                                    src="/logo/logo-dark.png"
                                     alt="Logo"
-                                    width={100}
-                                    height={100}
-                                    className="h-40 w-40 object-contain "
+                                    width={70}
+                                    height={70}
+                                    className="h-20 w-40 object-contain "
+                                />
+
+                                {/* <Image
+                                    src="/logo/logo-icon.png"
+                                    alt="Logo"
+                                    width={40}
+                                    height={40}
+                                    className="h-12 w-12 object-contain mx-auto  rounded-lg"
                                 /> */}
 
-                                <h1 className="text-2xl font-bold !text-blue-400">Gadget<span className="text-gray-200">Bazar<sup className='text-sm'>BD</sup></span></h1>
+                                {/* <h1 className="text-sm font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></h1> */}
                             </div>
                         </Link>
 
