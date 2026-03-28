@@ -197,10 +197,27 @@ const SettingsSchema = new mongoose.Schema({
         type: String,
         enum: ['Paid', 'Unpaid'],
         default: 'Unpaid',
-    }
+    },
 }, { timestamps: true });
 
-export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
+
+if (mongoose.models.Settings) {
+    delete mongoose.models.Settings;
+}
+export const Settings = mongoose.model('Settings', SettingsSchema);
+
+const LogoSchema = new mongoose.Schema({
+    url: {
+        type: String,
+    },
+}, { timestamps: true });
+
+if (mongoose.models.Logo) {
+    delete mongoose.models.Logo;
+}
+export const Logo =
+    mongoose.models.Logo || mongoose.model('Logo', LogoSchema);
+
 
 const LoginAttemptSchema = new mongoose.Schema({
     ip: { type: String, required: true, index: true },
@@ -234,4 +251,7 @@ const BannerSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-export const Banner = mongoose.models.Banner || mongoose.model('Banner', BannerSchema);
+if (mongoose.models.Banner) {
+    delete mongoose.models.Banner;
+}
+export const Banner = mongoose.model('Banner', BannerSchema);

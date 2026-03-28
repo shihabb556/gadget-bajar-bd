@@ -17,12 +17,34 @@ export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const cartItems = useCartStore((state) => state.items);
     const [mounted, setMounted] = useState(false);
+    const [logo, setLogo] = useState('/logo/logo-dark.png');
     const profileRef = useRef<HTMLDivElement>(null);
 
     const searchParams = useSearchParams();
 
     useEffect(() => {
         setMounted(true);
+
+        const fetchLogo = async () => {
+            try {
+                const res = await fetch('/api/logo', { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.url) {
+                        setLogo(data.url);
+                    } else {
+                        setLogo('/logo/logo-dark.png');
+                    }
+
+                }
+            } catch (error) {
+                console.error('Failed to fetch logo');
+            }
+        };
+
+        fetchLogo();
+
+
         const query = searchParams.get('search');
         if (query) setSearchQuery(query);
         else setSearchQuery('');
@@ -74,11 +96,12 @@ export default function Navbar() {
 
                             <div className="">
                                 <Image
-                                    src="/logo/logo-dark.png"
+                                    src={logo}
                                     alt="Logo"
                                     width={70}
                                     height={70}
                                     className="h-20 w-40 object-contain "
+                                    priority
                                 />
 
                                 {/* <Image

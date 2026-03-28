@@ -27,16 +27,15 @@ export async function PATCH(req: Request) {
         const { advanceOption } = await req.json();
         await dbConnect();
 
-        let settings = await Settings.findOne();
-        if (!settings) {
-            settings = await Settings.create({ advanceOption });
-        } else {
-            settings.advanceOption = advanceOption;
-            await settings.save();
-        }
+        const settings = await Settings.findOneAndUpdate(
+            {},
+            { advanceOption },
+            { new: true, upsert: true }
+        );
 
         return NextResponse.json(settings);
     } catch (error) {
         return NextResponse.json({ message: 'Error updating settings' }, { status: 500 });
     }
 }
+
