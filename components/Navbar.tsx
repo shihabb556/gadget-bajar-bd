@@ -96,7 +96,7 @@ export default function Navbar() {
 
                             <div className="">
                                 {
-                                  logo.length !== 0 && (
+                                  logo.length != 0 && (
                                        <Image
                                         src={logo}
                                         alt="Logo"
