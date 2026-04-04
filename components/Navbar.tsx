@@ -95,22 +95,20 @@ export default function Navbar() {
                         <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
 
                             <div className="">
-                                <Image
-                                    src={logo}
-                                    alt="Logo"
-                                    width={70}
-                                    height={70}
-                                    className="h-20 w-40 object-contain "
-                                    priority
-                                />
+                                {
+                                  logo.length !== 0 && (
+                                       <Image
+                                        src={logo}
+                                        alt="Logo"
+                                        width={70}
+                                        height={70}
+                                        className="h-20 w-40 object-contain "
+                                        priority
+                                    />
+                                      )
+                                }
 
-                                {/* <Image
-                                    src="/logo/logo-icon.png"
-                                    alt="Logo"
-                                    width={40}
-                                    height={40}
-                                    className="h-12 w-12 object-contain mx-auto  rounded-lg"
-                                /> */}
+                            
 
                                  <h1 className="text-sm font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></h1> 
                             </div>
