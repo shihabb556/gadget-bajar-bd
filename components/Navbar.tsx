@@ -100,9 +100,9 @@ export default function Navbar() {
                                        <Image
                                         src={logo}
                                         alt="Logo"
-                                        width={50}
-                                        height={50}
-                                        className="h-14 w-20 object-contain object-fit"
+                                        width={40}
+                                        height={04}
+                                        className="h-10 w-20 object-contain object-fit"
                                         priority
                                     />
                                       )
@@ -110,7 +110,7 @@ export default function Navbar() {
 
                             
 
-                                 <p className="text-xs font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></p> 
+                                 <p className="text-[10px] font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-[8px]'>BD</sup></span></p> 
                             </div>
                         </Link>
 
