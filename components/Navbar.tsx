@@ -100,9 +100,9 @@ export default function Navbar() {
                                        <Image
                                         src={logo}
                                         alt="Logo"
-                                        width={40}
-                                        height={40}
-                                        className="h-10 w-20 object-contain object-fit"
+                                        width={50}
+                                        height={50}
+                                        className="h-20 w-30 object-contain object-fit"
                                         priority
                                     />
                                       )
