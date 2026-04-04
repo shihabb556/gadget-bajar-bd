@@ -110,7 +110,7 @@ export default function Navbar() {
 
                             
 
-                                 <h1 className="text-sm font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></h1> 
+                                 <p className="text-xs font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></p> 
                             </div>
                         </Link>
 
