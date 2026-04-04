@@ -17,7 +17,7 @@ export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const cartItems = useCartStore((state) => state.items);
     const [mounted, setMounted] = useState(false);
-    const [logo, setLogo] = useState('');
+    const [logo, setLogo] = useState('/public/log/logo-1.png');
     const profileRef = useRef<HTMLDivElement>(null);
 
     const searchParams = useSearchParams();
@@ -42,7 +42,7 @@ export default function Navbar() {
             }
         };
 
-        fetchLogo();
+        // fetchLogo();
 
 
         const query = searchParams.get('search');
@@ -110,7 +110,7 @@ export default function Navbar() {
 
                             
 
-                                 <p className="text-[10px] font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-[8px]'>BD</sup></span></p> 
+                                {/*  <p className="text-[10px] font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-[8px]'>BD</sup></span></p> */} 
                             </div>
                         </Link>
 
