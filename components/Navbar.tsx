@@ -33,7 +33,7 @@ export default function Navbar() {
                     if (data && data.url) {
                         setLogo(data.url);
                     } else {
-                        setLogo('/logo/logo-dark.png');
+                        setLogo('');
                     }
 
                 }
@@ -112,7 +112,7 @@ export default function Navbar() {
                                     className="h-12 w-12 object-contain mx-auto  rounded-lg"
                                 /> */}
 
-                                {/* <h1 className="text-sm font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></h1> */}
+                                 <h1 className="text-sm font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-xs'>BD</sup></span></h1> 
                             </div>
                         </Link>
 
