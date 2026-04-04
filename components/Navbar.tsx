@@ -101,7 +101,7 @@ export default function Navbar() {
                                         src={logo}
                                         alt="Logo"
                                         width={40}
-                                        height={04}
+                                        height={40}
                                         className="h-10 w-20 object-contain object-fit"
                                         priority
                                     />
