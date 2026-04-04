@@ -17,7 +17,7 @@ export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const cartItems = useCartStore((state) => state.items);
     const [mounted, setMounted] = useState(false);
-    const [logo, setLogo] = useState('/logo/logo-1.png');
+    const [logo, setLogo] = useState('/logo/logo-dark.png');
     const profileRef = useRef<HTMLDivElement>(null);
 
     const searchParams = useSearchParams();
