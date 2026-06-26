@@ -148,22 +148,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                         const hasDiscount = dp > 0 && dp < product.price;
                                         return hasDiscount ? (
                                             <>
-                                                <p className="text-4xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString()}</p>
-                                                <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString()}</p>
+                                                <p className="text-4xl font-black text-red-600 tracking-tighter">৳{dp.toLocaleString('en-US')}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{product.price.toLocaleString('en-US')}</p>
                                                 <span className="bg-red-500 text-white text-[10px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-lg shadow-red-100">
                                                     SAVE {Math.round(((product.price - dp) / product.price) * 100)}%
                                                 </span>
                                             </>
                                         ) : (
                                             <>
-                                                <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
-                                                <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString()}</p>
+                                                <p className="text-4xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString('en-US')}</p>
+                                                <p className="text-lg font-bold text-gray-400 line-through">৳{(product.price * 1.05).toLocaleString('en-US')}</p>
                                             </>
                                         );
                                     })()}
                                 </div>
                                 <p className="text-xs font-bold text-blue-600 bg-blue-50 w-fit px-3 py-1 rounded-lg">
-                                    Or ৳{(Math.round((Number(product.discountPrice) > 0 && Number(product.discountPrice) < product.price ? Number(product.discountPrice) : product.price) / 12)).toLocaleString()}/month with 0% EMI
+                                    Or ৳{(Math.round((Number(product.discountPrice) > 0 && Number(product.discountPrice) < product.price ? Number(product.discountPrice) : product.price) / 12)).toLocaleString('en-US')}/month with 0% EMI
                                 </p>
                             </div>
 

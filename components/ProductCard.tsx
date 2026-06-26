@@ -6,6 +6,7 @@ import { useCartStore } from '@/lib/store';
 import { Button } from '@/components/ui/shared';
 import { Star, ShoppingCart, Info } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useState, useEffect } from 'react';
 
 interface ProductCardProps {
     product: any;
@@ -13,9 +14,14 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const addToCart = useCartStore((state) => state.addToCart);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     // Calculate if the product is "NEW" (created in the last 7 days)
-    const isNew = new Date(product.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000;
+    const isNew = mounted && new Date(product.createdAt).getTime() > new Date().getTime() - 7 * 24 * 60 * 60 * 1000;
 
     const handleAddToCart = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -93,13 +99,13 @@ export default function ProductCard({ product }: ProductCardProps) {
                         {hasDiscount ? (
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString()}</span>
-                                    <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString()}</span>
+                                    <span className="text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString('en-US')}</span>
+                                    <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString('en-US')}</span>
                                 </div>
-                                <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
+                                <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString('en-US')}</p>
                             </div>
                         ) : (
-                            <p className="text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString()}</p>
+                            <p className="text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString('en-US')}</p>
                         )}
                     </div>
 
