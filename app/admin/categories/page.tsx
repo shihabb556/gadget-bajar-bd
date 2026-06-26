@@ -96,7 +96,7 @@ export default function CategoriesPage() {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">Manage Categories</h2>
+            <h2 className="text-xl font-bold text-gray-800">Manage Categories</h2>
 
             {/* Error Modal */}
             <Modal
@@ -159,10 +159,10 @@ export default function CategoriesPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Parent</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Slug</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Parent</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500   tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -173,7 +173,7 @@ export default function CategoriesPage() {
                             ) : (
                                 categories.map((cat) => (
                                     <tr key={cat._id}>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{cat.name}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">{cat.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{cat.slug}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {cat.parent ? cat.parent.name : '-'}

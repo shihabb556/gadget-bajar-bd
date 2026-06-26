@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import { Button } from '@/components/ui/shared';
 import { Image as ImageIcon, Loader2 } from 'lucide-react';
 import Image from 'next/image';
@@ -19,6 +19,9 @@ export default function ImageUpload({
 }: ImageUploadProps) {
     const [loading, setLoading] = useState(false);
     const [uploadError, setUploadError] = useState(false);
+    const inputId = useId();
+
+
 
     const onUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         try {
@@ -49,9 +52,12 @@ export default function ImageUpload({
         }
     };
 
-    const onDelete = (url: string) => {
+    const onDelete = (e: React.MouseEvent, url: string) => {
+        e.preventDefault();
+        e.stopPropagation();
         onChange(value.filter((current) => current !== url));
     };
+
 
     return (
         <>
@@ -68,9 +74,10 @@ export default function ImageUpload({
                     {value.map((url) => (
                         <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden bg-gray-100 border border-gray-200">
                             <div className="z-10 absolute top-2 right-2">
-                                <Button type="button" onClick={() => onDelete(url)} variant="destructive" size="sm">
+                                <Button type="button" onClick={(e) => onDelete(e, url)} variant="destructive" size="sm">
                                     X
                                 </Button>
+
                             </div>
                             <Image
                                 fill
@@ -86,7 +93,7 @@ export default function ImageUpload({
                         type="button"
                         variant="outline"
                         disabled={disabled || loading}
-                        onClick={() => document.getElementById('image-upload')?.click()}
+                        onClick={() => document.getElementById(inputId)?.click()}
                     >
                         {loading ? (
                             <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -96,13 +103,14 @@ export default function ImageUpload({
                         Upload an Image
                     </Button>
                     <input
-                        id="image-upload"
+                        id={inputId}
                         type="file"
                         disabled={loading}
                         onChange={onUpload}
                         accept="image/*"
                         className="hidden"
                     />
+
                 </div>
             </div>
         </>

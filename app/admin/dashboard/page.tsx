@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/shared';
 import {
     Plus, ShoppingCart, Package, Users, TrendingUp,
-    Clock, CheckCircle, XCircle, Loader
+    Clock, CheckCircle, XCircle, Loader, Filter, Calendar
 } from 'lucide-react';
 
 interface Stats {
@@ -13,6 +13,8 @@ interface Stats {
     totalOrders: number;
     totalProducts: number;
     totalUsers: number;
+    cancelledOrders: number;
+    pendingOrders: number;
 }
 
 interface RecentOrder {
@@ -43,38 +45,41 @@ export default function DashboardPage() {
     const [stats, setStats] = useState<Stats | null>(null);
     const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
     const [loading, setLoading] = useState(true);
+    const [dateRange, setDateRange] = useState('all'); // all, today, month, year
 
     useEffect(() => {
         fetchDashboardData();
-    }, []);
+    }, [dateRange]);
 
     const fetchDashboardData = async () => {
         setLoading(true);
         try {
-            const [ordersRes, productsRes, usersRes] = await Promise.all([
-                fetch('/api/admin/orders'),
-                fetch('/api/admin/products'),
-                fetch('/api/admin/users'),
-            ]);
+            let from, to;
+            const now = new Date();
 
-            const [orders, products, users] = await Promise.all([
-                ordersRes.ok ? ordersRes.json() : [],
-                productsRes.ok ? productsRes.json() : [],
-                usersRes.ok ? usersRes.json() : [],
-            ]);
+            if (dateRange === 'today') {
+                from = new Date(now.setHours(0, 0, 0, 0)).toISOString();
+                to = new Date(now.setHours(23, 59, 59, 999)).toISOString();
+            } else if (dateRange === 'month') {
+                from = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+                to = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999).toISOString();
+            } else if (dateRange === 'year') {
+                from = new Date(now.getFullYear(), 0, 1).toISOString();
+                to = new Date(now.getFullYear(), 11, 31, 23, 59, 59, 999).toISOString();
+            }
 
-            const totalSales = orders.reduce(
-                (sum: number, o: any) => sum + (o.totalAmount || 0), 0
-            );
+            const params = new URLSearchParams();
+            if (from && to) {
+                params.append('from', from);
+                params.append('to', to);
+            }
 
-            setStats({
-                totalSales,
-                totalOrders: orders.length,
-                totalProducts: products.length,
-                totalUsers: users.length,
-            });
-
-            setRecentOrders(orders.slice(0, 7));
+            const res = await fetch(`/api/admin/dashboard/stats?${params.toString()}`);
+            if (res.ok) {
+                const data = await res.json();
+                setStats(data.stats);
+                setRecentOrders(data.recentOrders);
+            }
         } catch (err) {
             console.error('Dashboard fetch error:', err);
         } finally {
@@ -85,7 +90,7 @@ export default function DashboardPage() {
     const statCards = [
         {
             label: 'Total Sales',
-            value: stats ? `৳${stats.totalSales.toLocaleString()}` : '—',
+            value: stats?.totalSales !== undefined ? `৳${stats.totalSales.toLocaleString()}` : '—',
             icon: <TrendingUp className="w-5 h-5 text-blue-600" />,
             bg: 'bg-blue-50',
             border: 'border-blue-100',
@@ -93,7 +98,7 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Orders',
-            value: stats ? stats.totalOrders.toLocaleString() : '—',
+            value: stats?.totalOrders?.toLocaleString() ?? '—',
             icon: <ShoppingCart className="w-5 h-5 text-indigo-600" />,
             bg: 'bg-indigo-50',
             border: 'border-indigo-100',
@@ -101,7 +106,7 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Products',
-            value: stats ? stats.totalProducts.toLocaleString() : '—',
+            value: stats?.totalProducts?.toLocaleString() ?? '—',
             icon: <Package className="w-5 h-5 text-emerald-600" />,
             bg: 'bg-emerald-50',
             border: 'border-emerald-100',
@@ -109,29 +114,71 @@ export default function DashboardPage() {
         },
         {
             label: 'Total Users',
-            value: stats ? stats.totalUsers.toLocaleString() : '—',
+            value: stats?.totalUsers?.toLocaleString() ?? '—',
             icon: <Users className="w-5 h-5 text-orange-600" />,
             bg: 'bg-orange-50',
             border: 'border-orange-100',
             iconBg: 'bg-orange-100',
+        },
+        {
+            label: 'Cancelled Orders',
+            value: stats?.cancelledOrders?.toLocaleString() ?? '—',
+            icon: <XCircle className="w-5 h-5 text-red-600" />,
+            bg: 'bg-red-50',
+            border: 'border-red-100',
+            iconBg: 'bg-red-100',
+        },
+        {
+            label: 'Pending Orders',
+            value: stats?.pendingOrders?.toLocaleString() ?? '—',
+            icon: <Clock className="w-5 h-5 text-amber-600" />,
+            bg: 'bg-amber-50',
+            border: 'border-amber-100',
+            iconBg: 'bg-amber-100',
         },
     ];
 
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
-                <Link href="/admin/products/new">
-                    <Button>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Product
-                    </Button>
-                </Link>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="flex-1 w-full sm:w-auto">
+                    <h2 className="text-xl font-bold text-gray-800">Dashboard Overview</h2>
+                    <p className="text-xs text-gray-400 mt-1">Real-time stats based on your selection</p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                    <div className="flex items-center gap-2 bg-white border border-gray-200 rounded-lg p-1 shadow-sm w-full sm:w-auto">
+                        {[
+                            { id: 'all', label: 'All Time' },
+                            { id: 'today', label: 'Today' },
+                            { id: 'month', label: 'This Month' },
+                            { id: 'year', label: 'This Year' }
+                        ].map((range) => (
+                            <button
+                                key={range.id}
+                                onClick={() => setDateRange(range.id)}
+                                className={`px-3 py-1.5 text-[10px] font-black uppercase tracking-widest rounded-md transition-all ${dateRange === range.id
+                                    ? 'bg-indigo-600 text-white shadow-md'
+                                    : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                    }`}
+                            >
+                                {range.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <Link href="/admin/products/new" className="w-full sm:w-auto">
+                        <Button className="w-full sm:w-auto">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Add Product
+                        </Button>
+                    </Link>
+                </div>
             </div>
 
             {/* Stat Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
                 {statCards.map((card, i) => (
                     <div
                         key={i}
@@ -141,11 +188,11 @@ export default function DashboardPage() {
                             {card.icon}
                         </div>
                         <div>
-                            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{card.label}</p>
+                            <p className="text-xs font-semibold text-gray-400   tracking-wider">{card.label}</p>
                             {loading ? (
                                 <div className="h-7 w-20 bg-gray-100 rounded animate-pulse mt-1" />
                             ) : (
-                                <h3 className="text-xl font-black text-gray-900 mt-0.5">{card.value}</h3>
+                                <h3 className="text-xl font-black text-gray-700 mt-0.5">{card.value}</h3>
                             )}
                         </div>
                     </div>
@@ -158,7 +205,7 @@ export default function DashboardPage() {
                     <h3 className="text-base font-bold text-gray-800">Recent Orders</h3>
                     <Link
                         href="/admin/orders"
-                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-wider"
+                        className="text-xs font-bold text-indigo-600 hover:text-indigo-800   tracking-wider"
                     >
                         View All →
                     </Link>
@@ -185,12 +232,12 @@ export default function DashboardPage() {
                         <table className="min-w-full">
                             <thead>
                                 <tr className="bg-gray-50">
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Order ID</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Items</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Total</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Date</th>
-                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Order ID</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Customer</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Items</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Total</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Date</th>
+                                    <th className="px-6 py-3 text-left text-[10px] font-black text-gray-400   tracking-widest">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-50">
@@ -215,7 +262,7 @@ export default function DashboardPage() {
                                         <td className="px-6 py-4 text-sm text-gray-500">
                                             {order.items?.length ?? 0} item{(order.items?.length ?? 0) !== 1 ? 's' : ''}
                                         </td>
-                                        <td className="px-6 py-4 text-sm font-bold text-gray-900">
+                                        <td className="px-6 py-4 text-sm font-bold text-gray-700">
                                             ৳{order.totalAmount?.toLocaleString()}
                                         </td>
                                         <td className="px-6 py-4 text-xs text-gray-400">
@@ -224,7 +271,7 @@ export default function DashboardPage() {
                                             })}
                                         </td>
                                         <td className="px-6 py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider ${STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600'}`}>
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black   tracking-wider ${STATUS_STYLES[order.status] || 'bg-gray-100 text-gray-600'}`}>
                                                 {STATUS_ICONS[order.status]}
                                                 {order.status}
                                             </span>

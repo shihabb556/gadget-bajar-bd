@@ -4,6 +4,7 @@ import { Order, Product } from '@/models/schema';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { orderSchema } from '@/lib/validations';
+import { sendTelegramNotification } from '@/lib/sendTelegramNotification';
 
 export async function POST(req: Request) {
     try {
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
                 price: (product.discountPrice && product.discountPrice > 0) ? product.discountPrice : product.price, // Use discount price if available
                 name: product.name,
                 image: product.images?.[0],
+                selectedColor: item.selectedColor,
             });
         }
 
@@ -78,6 +80,8 @@ export async function POST(req: Request) {
                 method: trxId ? 'ADVANCE' : 'COD'
             }
         });
+
+        await sendTelegramNotification(order)
 
         return NextResponse.json({ message: 'Order placed successfully', orderId: order._id }, { status: 201 });
     } catch (error) {

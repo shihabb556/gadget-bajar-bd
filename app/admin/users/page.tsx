@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/shared';
+import { Trash2, UserCog, ShieldAlert } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { Pagination } from '@/components/ui/Pagination';
 
 interface User {
     _id: string;
@@ -15,17 +18,24 @@ interface User {
 export default function UsersPage() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState({ totalPages: 1, total: 0 });
 
     useEffect(() => {
         fetchUsers();
-    }, []);
+    }, [currentPage]);
 
     const fetchUsers = async () => {
+        setLoading(true);
         try {
-            const res = await fetch('/api/admin/users');
+            const res = await fetch(`/api/admin/users?page=${currentPage}&limit=10`);
             if (res.ok) {
                 const data = await res.json();
-                setUsers(data);
+                setUsers(data.users);
+                setPagination({
+                    totalPages: data.totalPages,
+                    total: data.total
+                });
             }
         } catch (error) {
             console.error('Failed to fetch users');
@@ -57,28 +67,51 @@ export default function UsersPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ userId, action: 'toggleRole', value: newRole }),
             });
-            if (res.ok) fetchUsers();
+            if (res.ok) {
+                toast.success('Role updated successfully');
+                fetchUsers();
+            }
         } catch (error) {
-            console.error('Failed to update role');
+            toast.error('Failed to update role');
+        }
+    };
+
+    const deleteUser = async (userId: string, userName: string) => {
+        if (!confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) return;
+
+        try {
+            const res = await fetch(`/api/admin/users?id=${userId}`, {
+                method: 'DELETE',
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                toast.success('User deleted successfully');
+                fetchUsers();
+            } else {
+                toast.error(data.message || 'Failed to delete user');
+            }
+        } catch (error) {
+            toast.error('An error occurred during deletion');
         }
     };
 
     return (
         <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-gray-800">User Management</h2>
+            <h2 className="text-xl font-bold text-gray-800">User Management</h2>
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Orders</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Name</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Email</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Role</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Orders</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Joined</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500   tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -90,7 +123,7 @@ export default function UsersPage() {
                                 users.map((user: any) => (
                                     <tr key={user._id}>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                                            <div className="text-sm font-medium text-gray-700">{user.name}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <div className="text-sm text-gray-500">{user.email}</div>
@@ -102,7 +135,7 @@ export default function UsersPage() {
                                             </span>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm font-bold text-gray-900">{user.orderCount || 0}</div>
+                                            <div className="text-sm font-bold text-gray-700">{user.orderCount || 0}</div>
                                             <Button
                                                 variant="ghost"
                                                 size="sm"
@@ -136,6 +169,15 @@ export default function UsersPage() {
                                             >
                                                 {user.isActive ? 'Deactivate' : 'Activate'}
                                             </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="outline"
+                                                className="text-red-600 border-red-100 hover:bg-red-50 hover:text-red-700 h-9 w-9 p-0"
+                                                onClick={() => deleteUser(user._id, user.name)}
+                                                title="Delete User"
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
                                         </td>
                                     </tr>
                                 ))
@@ -143,7 +185,13 @@ export default function UsersPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
-        </div>
+        </div >
     );
 }

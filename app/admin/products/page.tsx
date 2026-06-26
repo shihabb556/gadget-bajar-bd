@@ -6,6 +6,7 @@ import { Button, Input } from '@/components/ui/shared';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Modal from '@/components/ui/Modal';
+import { Pagination } from '@/components/ui/Pagination';
 
 interface Product {
     _id: string;
@@ -23,18 +24,25 @@ const truncate = (str: string, max = 40) =>
 export default function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pagination, setPagination] = useState({ totalPages: 1, total: 0 });
     const [deleteModal, setDeleteModal] = useState<{ open: boolean; id: string | null }>({ open: false, id: null });
 
     useEffect(() => {
         fetchProducts();
-    }, []);
+    }, [currentPage]);
 
     const fetchProducts = async () => {
+        setLoading(true);
         try {
-            const res = await fetch('/api/admin/products');
+            const res = await fetch(`/api/admin/products?page=${currentPage}&limit=10`);
             if (res.ok) {
                 const data = await res.json();
-                setProducts(data);
+                setProducts(data.products);
+                setPagination({
+                    totalPages: data.totalPages,
+                    total: data.total
+                });
             }
         } catch (error) {
             console.error('Failed to fetch products');
@@ -46,7 +54,7 @@ export default function ProductsPage() {
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-800">Products</h2>
+                <h2 className="text-xl font-bold text-gray-800">Products</h2>
                 <Link href="/admin/products/new">
                     <Button>
                         <Plus className="w-4 h-4 mr-2" />
@@ -60,12 +68,12 @@ export default function ProductsPage() {
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Product</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Category</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Price</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Stock</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500   tracking-wider">Status</th>
+                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500   tracking-wider">Actions</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
@@ -89,7 +97,7 @@ export default function ProductsPage() {
                                                 </div>
                                                 <div className="ml-4 max-w-[220px]">
                                                     <div
-                                                        className="text-sm font-medium text-gray-900 truncate"
+                                                        className="text-sm font-medium text-gray-700 truncate"
                                                         title={product.name}
                                                     >
                                                         {truncate(product.name)}
@@ -98,13 +106,13 @@ export default function ProductsPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{product.category}</div>
+                                            <div className="text-sm text-gray-700">{product.category}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">৳{product.price}</div>
+                                            <div className="text-sm text-gray-700">৳{product.price}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{product.stock}</div>
+                                            <div className="text-sm text-gray-700">{product.stock}</div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -133,6 +141,12 @@ export default function ProductsPage() {
                         </tbody>
                     </table>
                 </div>
+
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={pagination.totalPages}
+                    onPageChange={setCurrentPage}
+                />
             </div>
 
             {/* Delete Confirm Modal */}

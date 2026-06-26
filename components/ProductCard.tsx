@@ -27,7 +27,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         e.preventDefault();
         e.stopPropagation();
         if (product.stock > 0) {
-            addToCart(product);
+            const defaultColor = product.colors?.[0] || '';
+            addToCart(product, defaultColor);
             toast.success(`${product.name} added to cart!`);
         }
     };
@@ -41,13 +42,13 @@ export default function ProductCard({ product }: ProductCardProps) {
     return (
         <div className="group relative bg-white border-2 border border-gray-100 rounded-[2rem] flex flex-col overflow-hidden hover:shadow-2xl hover:shadow-blue-100/50 transition-all duration-500 hover:-translate-y-1">
             {/* Image Container */}
-            <div className="aspect-square bg-gray-50 relative overflow-hidden">
+            <div className="aspect-square h-[120px] sm:h-[150px] md:h-[200px] bg-gray-50 relative overflow-hidden">
                 <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
                     {isNew && (
-                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-blue-200 w-fit">New</span>
+                        <span className="bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full   tracking-widest shadow-lg shadow-blue-200 w-fit">New</span>
                     )}
                     {hasDiscount && (
-                        <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-red-200 w-fit">-{discountPercentage}% Off</span>
+                        <span className="bg-red-500 text-white text-[10px] font-black px-2.5 py-1 rounded-full   tracking-widest shadow-lg shadow-red-200 w-fit">-{discountPercentage}% Off</span>
                     )}
                 </div>
                 {product.images?.[0] ? (
@@ -74,11 +75,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             {/* Content Container */}
             <div className="flex-1 p-6 flex flex-col">
                 <div className="mb-1">
-                    <span className="text-[10px] font-black text-blue-500 uppercase tracking-[0.2em]">{product.category || 'GADGET'}</span>
+                    <span className="text-[10px] font-black text-blue-500   tracking-[0.2em]">{product.category || 'GADGET'}</span>
                 </div>
 
-                <h3 className="text-base font-bold text-gray-900 mb-2 leading-tight min-h-[2.5rem] line-clamp-2 uppercase italic tracking-tighter">
-                    <Link href={`/products/${product.slug}`}>
+                <h3 className="text-base font-bold text-gray-700 mb-2 leading-tight min-h-[2.5rem] line-clamp-2  tracking-tighter " >
+                    <Link href={`/products/${product.slug}`}
+                        className='text-sm sm:text-md'>
                         {product.name}
                     </Link>
                 </h3>
@@ -90,22 +92,22 @@ export default function ProductCard({ product }: ProductCardProps) {
                             <Star key={i} className={`h-3 w-3 ${i < 4 ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`} />
                         ))}
                     </div>
-                    <span className="text-[10px] font-bold text-gray-400">4.8 (120)</span>
+                    {/* <span className="text-[10px] font-bold text-gray-400">4.8 (120)</span> */}
                 </div>
 
                 <div className="flex items-end justify-between mt-auto">
                     <div className="space-y-0.5">
-                        <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Pricing</p>
+                        <p className="text-[10px] text-gray-400 font-bold   tracking-widest">Pricing</p>
                         {hasDiscount ? (
                             <div className="flex flex-col">
                                 <div className="flex items-center gap-2">
-                                    <span className="text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString('en-US')}</span>
-                                    <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString('en-US')}</span>
+                                    <span className="text-sm md:text-xl font-black text-red-600 tracking-tighter">৳{discountPrice.toLocaleString()}</span>
+                                    <span className="text-[11px] font-bold text-gray-400 line-through decoration-1">৳{product.price.toLocaleString()}</span>
                                 </div>
-                                <p className="text-[9px] font-black text-green-600 uppercase tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString('en-US')}</p>
+                                <p className="text-[9px] font-black text-green-600   tracking-tighter">Save ৳{(product.price - discountPrice).toLocaleString()}</p>
                             </div>
                         ) : (
-                            <p className="text-xl font-black text-gray-900 tracking-tighter">৳{product.price.toLocaleString('en-US')}</p>
+                            <p className="text-sm md:text-xl font-black text-gray-700 tracking-tighter">৳{product.price.toLocaleString()}</p>
                         )}
                     </div>
 
@@ -114,7 +116,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         size="icon"
                         onClick={handleAddToCart}
                         disabled={product.stock <= 0}
-                        className={`h-11 w-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${product.stock > 0
+                        className={`h-8 w-8 sm:h-11 sm:w-11 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${product.stock > 0
                             ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-100 hover:scale-105 active:scale-95'
                             : 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
                             }`}

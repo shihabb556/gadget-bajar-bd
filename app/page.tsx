@@ -1,4 +1,5 @@
 import Navbar from '@/components/Navbar';
+import BannerSlider from '@/components/BannerSlider';
 import ProductCard from '@/components/ProductCard';
 import FilterSidebar from '@/components/FilterSidebar';
 import MobileFilterDrawer from '@/components/MobileFilterDrawer';
@@ -10,11 +11,13 @@ import { Search } from 'lucide-react';
 
 import { Metadata } from 'next';
 
+import ProductPagination from '@/components/ProductPagination';
+
 // Force dynamic because we want refreshed products
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ searchParams }: {
-  searchParams: Promise<{ category?: string; search?: string }>
+  searchParams: Promise<{ category?: string; search?: string; page?: string }>
 }): Promise<Metadata> {
   const params = await searchParams;
   let title = "Gadget Bazar BD - Premium Gadgets & Electronics Shop";
@@ -39,9 +42,13 @@ async function getProducts(params: {
   minPrice?: string;
   maxPrice?: string;
   availability?: string;
+  page?: string;
 }) {
   await dbConnect();
   const query: any = { isActive: true };
+  const page = parseInt(params.page || '1');
+  const limit = 12; // 12 products per page
+  const skip = (page - 1) * limit;
 
   // Category filter
   if (params.category) {
@@ -80,7 +87,17 @@ async function getProducts(params: {
     }
   }
 
-  return Product.find(query).sort({ createdAt: -1 }).limit(40);
+  const [products, total] = await Promise.all([
+    Product.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit),
+    Product.countDocuments(query)
+  ]);
+
+  return {
+    products,
+    total,
+    totalPages: Math.ceil(total / limit),
+    currentPage: page
+  };
 }
 
 async function getCategories() {
@@ -96,15 +113,20 @@ export default async function Home({ searchParams }: {
     minPrice?: string;
     maxPrice?: string;
     availability?: string;
+    page?: string;
   }>
 }) {
   const params = await searchParams;
-  const products = await getProducts(params);
+  const { products, total, totalPages, currentPage } = await getProducts(params);
   const categories = await getCategories();
+
+  const showSlider = !params.search && !params.category && !params.minPrice && !params.maxPrice && !params.availability && (!params.page || params.page === '1');
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <Navbar />
+
+      {showSlider && <BannerSlider />}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <MobileFilterDrawer categories={JSON.parse(JSON.stringify(categories))} />
@@ -120,13 +142,13 @@ export default async function Home({ searchParams }: {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <div className="h-1 w-8 bg-blue-600 rounded-full"></div>
-                  <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Our Selection</span>
+                  <span className="text-[10px] font-black text-blue-600   tracking-widest">Our Selection</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-gray-900 tracking-tighter uppercase italic">
+                <h1 className="text-xl md:text-xl font-black text-gray-700 tracking-tighter   italic">
                   {params.search ? `Results for "${params.search}"` : params.category ? 'Category Items' : 'Explore Gadgets'}
                 </h1>
-                <p className="text-sm font-bold text-gray-400 uppercase tracking-wider">
-                  Found {products.length} high-quality gadgets
+                <p className="text-sm font-bold text-gray-400   tracking-wider">
+                  Found {total} high-quality gadgets
                 </p>
               </div>
 
@@ -136,22 +158,29 @@ export default async function Home({ searchParams }: {
 
             {/* Product Grid */}
             {products.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-                {products.map((product) => (
-                  <ProductCard key={product._id} product={JSON.parse(JSON.stringify(product))} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-2 xl:grid-cols-3 gap-2 md:gap-5 xl:gap-8">
+                  {products.map((product) => (
+                    <ProductCard key={product._id.toString()} product={JSON.parse(JSON.stringify(product))} />
+                  ))}
+                </div>
+                <ProductPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  searchParams={params}
+                />
+              </>
             ) : (
               <div className="py-24 text-center bg-white rounded-[3rem] border border-gray-100 shadow-sm px-8">
                 <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Search className="w-8 h-8 text-gray-300" />
                 </div>
-                <h2 className="text-2xl font-black text-gray-900 uppercase italic tracking-tighter mb-2">No matching products found</h2>
-                <p className="text-gray-400 font-bold uppercase text-xs tracking-widest max-w-xs mx-auto">
+                <h2 className="text-xl font-black text-gray-700   italic tracking-tighter mb-2">No matching products found</h2>
+                <p className="text-gray-400 font-bold   text-xs tracking-widest max-w-xs mx-auto">
                   Try adjusting your filters or search query to find what you're looking for.
                 </p>
                 <Link href="/" className="inline-block mt-8">
-                  <Button variant="outline" className="rounded-2xl px-8 border-gray-200 text-gray-600 font-black uppercase text-[10px] tracking-[0.2em] shadow-lg shadow-gray-100">Clear All Filters</Button>
+                  <Button variant="outline" className="rounded-2xl px-8 border-gray-200 text-gray-600 font-black   text-[10px] tracking-[0.2em] shadow-lg shadow-gray-100">Clear All Filters</Button>
                 </Link>
               </div>
             )}

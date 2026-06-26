@@ -21,21 +21,21 @@ export default function CartPage() {
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+                <h1 className="text-xl font-bold text-gray-700 mb-8">Shopping Cart</h1>
 
                 {items.length === 0 ? (
                     <div className="bg-white rounded-[2rem] shadow-xl shadow-blue-100/50 p-12 text-center border border-gray-100">
                         <div className="h-24 w-24 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto mb-6">
                             <ShoppingBag className="h-12 w-12" />
                         </div>
-                        <h2 className="text-2xl font-black text-gray-900 uppercase italic mb-2">Your cart is empty</h2>
+                        <h2 className="text-xl font-black text-gray-700   italic mb-2">Your cart is empty</h2>
                         <p className="text-gray-500 font-medium mb-8">Looks like you haven't added any tech to your list yet.</p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                             <Link href="/" className="w-full sm:w-auto">
-                                <Button className="w-full sm:px-8 py-6 h-auto rounded-2xl bg-blue-600 hover:bg-blue-700 font-black uppercase text-xs tracking-[0.2em]">Continue Shopping</Button>
+                                <Button className="w-full sm:px-8 py-6 h-auto rounded-2xl bg-blue-600 hover:bg-blue-700 font-black   text-xs tracking-[0.2em]">Continue Shopping</Button>
                             </Link>
                             <Link href="/track-order" className="w-full sm:w-auto">
-                                <Button variant="outline" className="w-full sm:px-8 py-6 h-auto rounded-2xl border-2 font-black uppercase text-xs tracking-[0.2em] gap-2">
+                                <Button variant="outline" className="w-full sm:px-8 py-6 h-auto rounded-2xl border-2 font-black   text-xs tracking-[0.2em] gap-2">
                                     <Search className="h-4 w-4" /> Track Existing Order
                                 </Button>
                             </Link>
@@ -60,12 +60,15 @@ export default function CartPage() {
 
                                         <div className="ml-4 flex-1 flex flex-col">
                                             <div>
-                                                <div className="flex justify-between text-base font-medium text-gray-900">
+                                                <div className="flex justify-between text-base font-medium text-gray-700">
                                                     <h3>
                                                         <Link href={`/products/${item.slug}`}>{item.name}</Link>
                                                     </h3>
                                                     <p className="ml-4">৳{item.price * item.quantity}</p>
                                                 </div>
+                                                {item.selectedColor && (
+                                                    <p className="mt-1 text-xs text-blue-600 font-bold tracking-widest uppercase">Color: {item.selectedColor}</p>
+                                                )}
                                                 <p className="mt-1 text-sm text-gray-500">Unit Price: ৳{item.price}</p>
                                             </div>
                                             <div className="flex-1 flex items-end justify-between text-sm">
@@ -74,25 +77,24 @@ export default function CartPage() {
                                                         variant="outline"
                                                         size="icon"
                                                         className="h-8 w-8 rounded-md"
-                                                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                                        onClick={() => updateQuantity(item._id, item.quantity - 1, item.selectedColor)}
                                                     >
                                                         <Minus className="w-4 h-4" />
                                                     </Button>
-                                                    <span className="px-3 py-1 font-bold text-gray-900 border-y h-8 flex items-center bg-gray-50 border-gray-100">{item.quantity}</span>
+                                                    <span className="px-3 py-1 font-bold text-gray-700 border-y h-8 flex items-center bg-gray-50 border-gray-100">{item.quantity}</span>
                                                     <Button
                                                         variant="outline"
                                                         size="icon"
                                                         className="h-8 w-8 rounded-md"
-                                                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                                        onClick={() => updateQuantity(item._id, item.quantity + 1, item.selectedColor)}
                                                     >
                                                         <Plus className="w-4 h-4" />
                                                     </Button>
                                                 </div>
-
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => removeFromCart(item._id)}
+                                                    onClick={() => removeFromCart(item._id, item.selectedColor)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50 font-bold"
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-1" /> Remove
@@ -105,9 +107,9 @@ export default function CartPage() {
                         </div>
 
                         <div className="bg-white rounded-lg shadow mt-16 lg:mt-0 lg:col-span-5 p-6 space-y-4">
-                            <h2 className="text-lg font-medium text-gray-900">Order Summary</h2>
+                            <h2 className="text-lg font-medium text-gray-700">Order Summary</h2>
 
-                            <div className="flex justify-between text-base font-medium text-gray-900 pt-4 border-t">
+                            <div className="flex justify-between text-base font-medium text-gray-700 pt-4 border-t">
                                 <p>Subtotal</p>
                                 <p>৳{total()}</p>
                             </div>
