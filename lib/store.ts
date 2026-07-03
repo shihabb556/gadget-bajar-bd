@@ -47,7 +47,7 @@ export const useCartStore = create<CartStore>()(
                             image: colorImage || product.images?.[0] || '',
                             slug: product.slug,
                             quantity: 1,
-                            selectedColor
+                            selectedColor: typeof selectedColor === 'object' ? selectedColor?.name || '' : selectedColor || ''
                         }],
                     });
                 }
@@ -79,6 +79,16 @@ export const useCartStore = create<CartStore>()(
         }),
         {
             name: 'shopping-cart',
+            merge: (persisted, current) => {
+                const data = { ...current, ...(persisted as Partial<CartStore>) };
+                if (data.items) {
+                    data.items = data.items.map((item: CartItem) => ({
+                        ...item,
+                        selectedColor: typeof item.selectedColor === 'object' ? '' : item.selectedColor
+                    }));
+                }
+                return data;
+            }
         }
     )
 );

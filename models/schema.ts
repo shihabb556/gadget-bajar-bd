@@ -108,10 +108,7 @@ const ProductSchema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
-if (mongoose.models.Product) {
-    delete mongoose.models.Product;
-}
-export const Product = mongoose.model('Product', ProductSchema);
+export const Product = mongoose.models.Product || mongoose.model('Product', ProductSchema);
 
 const OrderSchema = new mongoose.Schema({
     user: {
