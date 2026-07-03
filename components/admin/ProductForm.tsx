@@ -35,6 +35,12 @@ export default function ProductForm({ initialData }: ProductFormProps) {
     const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<Category[]>([]);
     const [errorModal, setErrorModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    // Field length limits
+    const MAX_NAME_LENGTH = 150;
+    const MAX_DESCRIPTION_LENGTH = 5000;
+    const MAX_COLOR_NAME_LENGTH = 50;
 
     useEffect(() => {
         fetchCategories();
@@ -79,8 +85,34 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         setFormData({ ...formData, name, slug });
     };
 
+    const validateForm = (): string | null => {
+        if (formData.name.length > MAX_NAME_LENGTH) {
+            return `Product name cannot exceed ${MAX_NAME_LENGTH} characters. Current: ${formData.name.length}`;
+        }
+
+        if (formData.description.length > MAX_DESCRIPTION_LENGTH) {
+            return `Description cannot exceed ${MAX_DESCRIPTION_LENGTH} characters. Current: ${formData.description.length}`;
+        }
+
+        for (let i = 0; i < formData.colors.length; i++) {
+            if (formData.colors[i].name.length > MAX_COLOR_NAME_LENGTH) {
+                return `Color name (${formData.colors[i].name}) cannot exceed ${MAX_COLOR_NAME_LENGTH} characters. Current: ${formData.colors[i].name.length}`;
+            }
+        }
+
+        return null;
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        const validationError = validateForm();
+        if (validationError) {
+            setErrorMessage(validationError);
+            setErrorModal(true);
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -109,6 +141,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
             router.refresh();
         } catch (error) {
             console.error(error);
+            setErrorMessage('There was an error saving the product. Please check your inputs and try again.');
             setErrorModal(true);
         } finally {
             setLoading(false);
@@ -122,7 +155,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                 onClose={() => setErrorModal(false)}
                 title="Save Failed"
                 variant="error"
-                message="There was an error saving the product. Please check your inputs and try again."
+                message={errorMessage || 'There was an error saving the product. Please check your inputs and try again.'}
                 actions={[{ label: 'OK', onClick: () => setErrorModal(false), variant: 'ghost' }]}
             />
             <form onSubmit={handleSubmit} className="space-y-6 bg-white p-6 rounded-lg shadow">
@@ -134,7 +167,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                             value={formData.name}
                             onChange={handleNameChange}
                             className="mt-1 text-gray-700"
+                            maxLength={MAX_NAME_LENGTH}
                         />
+                        <p className={`text-xs mt-1 ${formData.name.length > MAX_NAME_LENGTH * 0.9 ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                            {formData.name.length}/{MAX_NAME_LENGTH} characters
+                        </p>
                     </div>
 
                     <div className="opacity-50 pointer-events-none">
@@ -225,7 +262,11 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                                                     setFormData({ ...formData, colors: newColors });
                                                 }}
                                                 className="bg-white"
+                                                maxLength={MAX_COLOR_NAME_LENGTH}
                                             />
+                                            <p className={`text-xs mt-1 ${color.name.length > MAX_COLOR_NAME_LENGTH * 0.9 ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                                                {color.name.length}/{MAX_COLOR_NAME_LENGTH} characters
+                                            </p>
                                         </div>
                                         <Button
                                             type="button"
@@ -275,6 +316,9 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                         onChange={(val) => setFormData({ ...formData, description: val })}
                         placeholder="Enter product description..."
                     />
+                    <p className={`text-xs mt-1 ${formData.description.length > MAX_DESCRIPTION_LENGTH * 0.9 ? 'text-red-500 font-medium' : 'text-gray-500'}`}>
+                        {formData.description.length}/{MAX_DESCRIPTION_LENGTH} characters
+                    </p>
                 </div>
 
                 <div>

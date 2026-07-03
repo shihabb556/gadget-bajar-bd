@@ -18,7 +18,7 @@ export default function ImageUpload({
     disabled
 }: ImageUploadProps) {
     const [loading, setLoading] = useState(false);
-    const [uploadError, setUploadError] = useState(false);
+    const [uploadError, setUploadError] = useState<string | null>(null);
     const inputId = useId();
 
 
@@ -28,8 +28,15 @@ export default function ImageUpload({
             const files = e.target.files;
             if (!files || files.length === 0) return;
 
-            setLoading(true);
             const file = files[0];
+            const MAX_FILE_SIZE = 800 * 1024; // 800KB
+            
+            if (file.size > MAX_FILE_SIZE) {
+                setUploadError('File size exceeds 800KB limit. Please choose a smaller image.');
+                return;
+            }
+
+            setLoading(true);
             const formData = new FormData();
             formData.append('file', file);
 
@@ -39,14 +46,15 @@ export default function ImageUpload({
             });
 
             if (!res.ok) {
-                throw new Error('Upload failed');
+                const error = await res.json();
+                throw new Error(error.message || 'Upload failed');
             }
 
             const data = await res.json();
             onChange([...value, data.url]);
         } catch (error) {
             console.error('Upload error', error);
-            setUploadError(true);
+            setUploadError(error instanceof Error ? error.message : 'Something went wrong with the upload. Please try again or use a different image.');
         } finally {
             setLoading(false);
         }
@@ -62,12 +70,12 @@ export default function ImageUpload({
     return (
         <>
             <Modal
-                isOpen={uploadError}
-                onClose={() => setUploadError(false)}
+                isOpen={!!uploadError}
+                onClose={() => setUploadError(null)}
                 title="Upload Failed"
                 variant="error"
-                message="Something went wrong with the upload. Please try again or use a different image."
-                actions={[{ label: 'OK', onClick: () => setUploadError(false), variant: 'ghost' }]}
+                message={uploadError || 'Something went wrong with the upload. Please try again or use a different image.'}
+                actions={[{ label: 'OK', onClick: () => setUploadError(null), variant: 'ghost' }]}
             />
             <div>
                 <div className="mb-4 flex items-center gap-4">
