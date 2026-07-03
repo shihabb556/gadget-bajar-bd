@@ -10,16 +10,30 @@ async function isAdmin() {
     return session?.user?.role === 'ADMIN';
 }
 
-export async function GET() {
+export async function GET(req: Request) {
     try {
-        // Ideally protect this, but frontend uses it maybe? But this is /api/admin/*
         if (!await isAdmin()) {
             return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
         }
 
+        const { searchParams } = new URL(req.url);
+        const page = parseInt(searchParams.get('page') || '1');
+        const limit = parseInt(searchParams.get('limit') || '10');
+        const skip = (page - 1) * limit;
+
         await dbConnect();
-        const products = await Product.find({}).sort({ createdAt: -1 });
-        return NextResponse.json(products);
+
+        const [products, total] = await Promise.all([
+            Product.find({}).sort({ createdAt: -1 }).skip(skip).limit(limit),
+            Product.countDocuments({})
+        ]);
+
+        return NextResponse.json({
+            products,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (error) {
         return NextResponse.json({ message: 'Error fetching products' }, { status: 500 });
     }

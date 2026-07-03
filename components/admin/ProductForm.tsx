@@ -29,6 +29,7 @@ export default function ProductForm({ initialData }: ProductFormProps) {
         category: initialData?.category || '',
         subCategory: initialData?.subCategory || '',
         images: initialData?.images || [], // Now array
+        colors: initialData?.colors || [],
         isActive: initialData?.isActive ?? true,
     });
     const [loading, setLoading] = useState(false);
@@ -206,6 +207,64 @@ export default function ProductForm({ initialData }: ProductFormProps) {
                             onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
                             className="mt-1"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Product Colors & Images</label>
+                        <div className="space-y-4">
+                            {formData.colors.map((color: any, index: number) => (
+                                <div key={index} className="flex flex-col p-4 bg-gray-50 rounded-xl border border-gray-200 gap-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex-1">
+                                            <Input
+                                                placeholder="Color Name (e.g. Red, Blue)"
+                                                value={color.name}
+                                                onChange={(e) => {
+                                                    const newColors = [...formData.colors];
+                                                    newColors[index].name = e.target.value;
+                                                    setFormData({ ...formData, colors: newColors });
+                                                }}
+                                                className="bg-white"
+                                            />
+                                        </div>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            onClick={() => {
+                                                const newColors = formData.colors.filter((_: any, i: number) => i !== index);
+                                                setFormData({ ...formData, colors: newColors });
+                                            }}
+                                            className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                                        >
+                                            Remove
+                                        </Button>
+                                    </div>
+                                    <div className="space-y-1">
+                                        <p className="text-xs font-medium text-gray-500">Color-specific Image (This will show up when color is selected)</p>
+                                        <ImageUpload
+                                            value={color.image ? [color.image] : []}
+                                            onChange={(urls) => {
+                                                const newColors = [...formData.colors];
+                                                newColors[index].image = urls[0] || '';
+                                                setFormData({ ...formData, colors: newColors });
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => setFormData({
+                                    ...formData,
+                                    colors: [...formData.colors, { name: '', image: '' }]
+                                })}
+                                className="w-full border-dashed border-2 hover:border-indigo-600 hover:text-indigo-600 transition-all py-6"
+                            >
+                                + Add Color Variation
+                            </Button>
+                            <p className="text-xs text-gray-500">Click to add colors and associate them with a specific image.</p>
+                        </div>
                     </div>
                 </div>
 

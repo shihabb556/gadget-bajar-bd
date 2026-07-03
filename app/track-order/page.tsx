@@ -133,14 +133,14 @@ export default function TrackOrderPage() {
                 {order && (
                     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         <div className="flex justify-center gap-4">
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={downloadSummary}
                                 className="rounded-xl gap-2 font-black   tracking-widest text-[10px]"
                             >
                                 <Download className="h-4 w-4" /> Download PDF
-                            </Button>
+                            </Button> */}
                             <Button
                                 variant="outline"
                                 size="sm"

@@ -34,6 +34,11 @@ const sidebarItems = [
         icon: Users,
     },
     {
+        title: 'Banners (Slider)',
+        href: '/admin/banners',
+        icon: LayoutDashboard,
+    },
+    {
         title: 'Settings',
         href: '/admin/settings',
         icon: ListTree,

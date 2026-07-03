@@ -98,6 +98,10 @@ const ProductSchema = new mongoose.Schema({
     },
     subCategory: String,
     images: [String],
+    colors: [{
+        name: String,
+        image: String
+    }],
     isActive: {
         type: Boolean,
         default: true,
@@ -137,6 +141,7 @@ const OrderSchema = new mongoose.Schema({
         },
         name: String, // Snapshot name
         image: String, // Snapshot image
+        selectedColor: String, // Selected color
     }],
     totalAmount: {
         type: Number,
@@ -189,10 +194,27 @@ const SettingsSchema = new mongoose.Schema({
         type: String,
         enum: ['Paid', 'Unpaid'],
         default: 'Unpaid',
-    }
+    },
 }, { timestamps: true });
 
-export const Settings = mongoose.models.Settings || mongoose.model('Settings', SettingsSchema);
+
+if (mongoose.models.Settings) {
+    delete mongoose.models.Settings;
+}
+export const Settings = mongoose.model('Settings', SettingsSchema);
+
+const LogoSchema = new mongoose.Schema({
+    url: {
+        type: String,
+    },
+}, { timestamps: true });
+
+if (mongoose.models.Logo) {
+    delete mongoose.models.Logo;
+}
+export const Logo =
+    mongoose.models.Logo || mongoose.model('Logo', LogoSchema);
+
 
 const LoginAttemptSchema = new mongoose.Schema({
     ip: { type: String, required: true, index: true },
@@ -202,3 +224,31 @@ const LoginAttemptSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 export const LoginAttempt = mongoose.models.LoginAttempt || mongoose.model('LoginAttempt', LoginAttemptSchema);
+
+const BannerSchema = new mongoose.Schema({
+    image: {
+        type: String,
+        required: true,
+    },
+    title: {
+        type: String,
+        trim: true,
+    },
+    link: {
+        type: String,
+        trim: true,
+    },
+    isActive: {
+        type: Boolean,
+        default: true,
+    },
+    order: {
+        type: Number,
+        default: 0,
+    }
+}, { timestamps: true });
+
+if (mongoose.models.Banner) {
+    delete mongoose.models.Banner;
+}
+export const Banner = mongoose.model('Banner', BannerSchema);

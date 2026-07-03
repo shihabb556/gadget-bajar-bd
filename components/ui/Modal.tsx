@@ -9,6 +9,7 @@ interface ModalAction {
     label: string;
     onClick: () => void;
     variant?: 'primary' | 'danger' | 'ghost';
+    disabled?: boolean;
 }
 
 interface ModalProps {
@@ -172,7 +173,8 @@ export default function Modal({
                             <button
                                 key={idx}
                                 onClick={action.onClick}
-                                className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 ${action.variant === 'danger'
+                                disabled={action.disabled}
+                                className={`px-4 py-2 rounded-lg cursor-pointer text-sm font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${action.variant === 'danger'
                                     ? 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500'
                                     : action.variant === 'ghost'
                                         ? 'bg-white hover:bg-gray-100 text-gray-700 border-2 border-gray-200 focus:ring-gray-300'

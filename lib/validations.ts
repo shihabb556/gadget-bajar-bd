@@ -41,7 +41,13 @@ export const shippingAddressSchema = z.object({
 
 /** Order Schema (used in Checkout API) */
 export const orderSchema = z.object({
-    items: z.array(z.any()).min(1, 'No items in order'),
+    items: z.array(z.object({
+        _id: z.string(),
+        name: z.string(),
+        price: z.number(),
+        quantity: z.number(),
+        selectedColor: z.string().optional(),
+    })).min(1, 'No items in order'),
     shippingAddress: shippingAddressSchema,
     trxId: z.string().optional(),
     deliveryArea: z.enum(['Inside Dhaka', 'Outside Dhaka']),

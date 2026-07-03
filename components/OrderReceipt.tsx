@@ -76,7 +76,7 @@ export default function OrderReceipt({ order, onComplete }: OrderReceiptProps) {
     if (!order) return null;
 
     return (
-        <div className="fixed left-[-9999px] top-0">
+        <div className="absolute left-[-9999px] top-0 pointer-events-none">
             <div
                 ref={summaryRef}
                 className="bg-white p-10 w-[800px] border border-gray-100"
@@ -113,11 +113,9 @@ export default function OrderReceipt({ order, onComplete }: OrderReceiptProps) {
                     <div className="space-y-4">
                         {order.items.map((item: any, idx: number) => (
                             <div key={idx} className="flex justify-between items-center">
-                                <div className="flex items-center gap-4">
-                                    <div>
-                                        <p className="text-xs font-black text-gray-700">{item.name?.slice(0, 50)}...</p>
-                                        <p className="text-[10px] text-gray-500 font-bold mt-4">Qty: {item.quantity} × ৳{item.price}</p>
-                                    </div>
+                                <div>
+                                    <p className="text-xs font-black text-gray-700">{item.name?.slice(0, 50)}...</p>
+                                    <p className="text-[10px] text-gray-500 font-bold mt-1">Qty: {item.quantity} × ৳{item.price}</p>
                                 </div>
                                 <p className="text-sm font-black text-gray-700">৳{item.price * item.quantity}</p>
                             </div>

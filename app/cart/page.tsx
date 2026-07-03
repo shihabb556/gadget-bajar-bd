@@ -66,6 +66,9 @@ export default function CartPage() {
                                                     </h3>
                                                     <p className="ml-4">৳{item.price * item.quantity}</p>
                                                 </div>
+                                                {item.selectedColor && (
+                                                    <p className="mt-1 text-xs text-blue-600 font-bold tracking-widest uppercase">Color: {item.selectedColor}</p>
+                                                )}
                                                 <p className="mt-1 text-sm text-gray-500">Unit Price: ৳{item.price}</p>
                                             </div>
                                             <div className="flex-1 flex items-end justify-between text-sm">
@@ -74,7 +77,7 @@ export default function CartPage() {
                                                         variant="outline"
                                                         size="icon"
                                                         className="h-8 w-8 rounded-md"
-                                                        onClick={() => updateQuantity(item._id, item.quantity - 1)}
+                                                        onClick={() => updateQuantity(item._id, item.quantity - 1, item.selectedColor)}
                                                     >
                                                         <Minus className="w-4 h-4" />
                                                     </Button>
@@ -83,16 +86,15 @@ export default function CartPage() {
                                                         variant="outline"
                                                         size="icon"
                                                         className="h-8 w-8 rounded-md"
-                                                        onClick={() => updateQuantity(item._id, item.quantity + 1)}
+                                                        onClick={() => updateQuantity(item._id, item.quantity + 1, item.selectedColor)}
                                                     >
                                                         <Plus className="w-4 h-4" />
                                                     </Button>
                                                 </div>
-
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => removeFromCart(item._id)}
+                                                    onClick={() => removeFromCart(item._id, item.selectedColor)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50 font-bold"
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-1" /> Remove

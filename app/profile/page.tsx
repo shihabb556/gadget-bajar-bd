@@ -1,6 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navbar';
+import Link from 'next/link';
 import { useEffect, useState, Suspense, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { useSearchParams } from 'next/navigation';
@@ -279,9 +280,12 @@ function ProfileContent() {
                                         <div className="px-6 py-5 bg-gray-50 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4">
                                             <div>
                                                 <div className="flex items-center gap-3">
-                                                    <h3 className="text-lg font-bold text-gray-700  ">
+                                                    <Link
+                                                        href={`/orders/${order._id}`}
+                                                        className="text-lg font-bold text-gray-700 hover:text-blue-600 transition-colors underline decoration-blue-200 decoration-2 underline-offset-4"
+                                                    >
                                                         Order #{order._id.slice(-6)}
-                                                    </h3>
+                                                    </Link>
                                                     <span className={`px-3 py-1 text-xs font-bold rounded-full tracking-wide ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
                                                         order.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
                                                             'bg-yellow-100 text-yellow-700'

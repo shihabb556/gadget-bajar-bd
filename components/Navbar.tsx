@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSession, signOut } from 'next-auth/react';
 import { ShoppingBag, Heart, User, Search, Flag, Menu, X, LogOut, Settings, Package } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
@@ -16,12 +17,34 @@ export default function Navbar() {
     const [searchQuery, setSearchQuery] = useState('');
     const cartItems = useCartStore((state) => state.items);
     const [mounted, setMounted] = useState(false);
+    const [logo, setLogo] = useState('/logo/logo-dark.png');
     const profileRef = useRef<HTMLDivElement>(null);
 
     const searchParams = useSearchParams();
 
     useEffect(() => {
         setMounted(true);
+
+        const fetchLogo = async () => {
+            try {
+                const res = await fetch('/api/logo', { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.url) {
+                        setLogo(data.url);
+                    } else {
+                        setLogo('');
+                    }
+
+                }
+            } catch (error) {
+                console.error('Failed to fetch logo');
+            }
+        };
+
+        // fetchLogo();
+
+
         const query = searchParams.get('search');
         if (query) setSearchQuery(query);
         else setSearchQuery('');
@@ -64,22 +87,35 @@ export default function Navbar() {
     };
 
     return (
-        <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <nav className="bg-gray-800 border-b border-gray-100 sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-20">
                     {/* Logo & Desktop Nav */}
                     <div className="flex items-center gap-8">
                         <Link href="/" className="flex items-center gap-2 group transition-transform hover:scale-[1.02]">
-                            <div className="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-100">
-                                <Flag className="h-6 w-6" fill="currentColor" />
-                            </div>
-                            <div className="hidden md:block">
-                                <span className="text-xl font-black text-gray-700 tracking-tighter   italic">Gadget Bazar BD</span>
+
+                            <div className="">
+                                {
+                                  logo.length != 0 && (
+                                       <Image
+                                        src={logo}
+                                        alt="Logo"
+                                        width={50}
+                                        height={50}
+                                        className="h-20 w-30 object-contain object-fit"
+                                        priority
+                                    />
+                                      )
+                                }
+
+                            
+
+                                {/*  <p className="text-[10px] font-bold !text-blue-400">Gadget<span className="text-yellow-400">Bazar<sup className='text-gray-200 text-[8px]'>BD</sup></span></p> */} 
                             </div>
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6">
-                            <Link href="/track-order" className="text-sm font-black text-gray-500 hover:text-blue-600 transition-colors   tracking-widest">
+                            <Link href="/track-order" className="text-sm font-black text-gray-300 hover:text-blue-600 transition-colors   tracking-widest">
                                 Track Order
                             </Link>
                         </div>
@@ -89,7 +125,7 @@ export default function Navbar() {
                     {/* Search Bar - Desktop */}
                     <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-sm mx-8 relative">
                         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                            <Search className="h-4 w-4 text-gray-400" />
+                            <Search className="h-4 w-4 text-gray-300" />
                         </div>
                         <Input
                             type="search"
@@ -114,12 +150,12 @@ export default function Navbar() {
                         {/* <Button
                             variant="ghost"
                             size="icon"
-                            className="text-gray-600 hover:bg-gray-50 rounded-full transition-colors hidden sm:flex"
+                            className="text-gray-300 hover:bg-gray-50 rounded-full transition-colors hidden sm:flex"
                         >
                             <Heart className="h-6 w-6" />
                         </Button> */}
 
-                        <Link href="/cart" className="p-2.5 text-gray-600 hover:bg-gray-50 rounded-full transition-colors relative">
+                        <Link href="/cart" className="p-2.5 text-gray-300 hover:bg-gray-50 hover:text-gray-500 rounded-full transition-colors relative">
                             <ShoppingBag className="h-6 w-6" />
                             {mounted && totalItems > 0 && (
                                 <span className="absolute top-1.5 right-1.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-black leading-none text-white bg-blue-600 rounded-full border-2 border-white">
@@ -133,7 +169,7 @@ export default function Navbar() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                                className="text-gray-600 hover:bg-gray-50 rounded-full transition-colors"
+                                className="text-gray-300 hover:bg-gray-50 rounded-full transition-colors hover:text-gray-500"
                             >
                                 <User className="h-6 w-6" />
                             </Button>
@@ -172,7 +208,7 @@ export default function Navbar() {
                                         </>
                                     ) : (
                                         <div className="p-4 space-y-3">
-                                            <p className="text-sm text-gray-500 font-medium mb-2">Welcome to ElectroMart</p>
+                                            <p className="text-sm text-gray-500 font-medium mb-2">Welcome to Gadget Bazar BD</p>
                                             <Link href="/auth/login" className="block">
                                                 <Button className="w-full rounded-xl bg-blue-600 hover:bg-blue-700 py-5 font-black   text-xs tracking-widest">Login</Button>
                                             </Link>
