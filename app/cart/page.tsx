@@ -8,6 +8,9 @@ import Image from 'next/image';
 import { Trash2, Plus, Minus, Search, ShoppingBag } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+const colorName = (color: any): string =>
+    typeof color === 'object' ? color?.name || '' : color || '';
+
 export default function CartPage() {
     const { items, removeFromCart, updateQuantity, total } = useCartStore();
     const [mounted, setMounted] = useState(false);
@@ -66,8 +69,8 @@ export default function CartPage() {
                                                     </h3>
                                                     <p className="ml-4">৳{item.price * item.quantity}</p>
                                                 </div>
-                                                {item.selectedColor && (
-                                                    <p className="mt-1 text-xs text-blue-600 font-bold tracking-widest uppercase">Color: {item.selectedColor}</p>
+                                                {colorName(item.selectedColor) && (
+                                                    <p className="mt-1 text-xs text-blue-600 font-bold tracking-widest uppercase">Color: {colorName(item.selectedColor)}</p>
                                                 )}
                                                 <p className="mt-1 text-sm text-gray-500">Unit Price: ৳{item.price}</p>
                                             </div>
