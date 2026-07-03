@@ -13,7 +13,7 @@ interface CartItem {
 
 interface CartStore {
     items: CartItem[];
-    addToCart: (product: any, selectedColor?: string, colorImage?: string) => void;
+    addToCart: (product: any, selectedColor?: string | { name: string }, colorImage?: string) => void;
     removeFromCart: (productId: string, selectedColor?: string) => void;
     updateQuantity: (productId: string, quantity: number, selectedColor?: string) => void;
     clearCart: () => void;
@@ -79,16 +79,6 @@ export const useCartStore = create<CartStore>()(
         }),
         {
             name: 'shopping-cart',
-            merge: (persisted, current) => {
-                const data = { ...current, ...(persisted as Partial<CartStore>) };
-                if (data.items) {
-                    data.items = data.items.map((item: CartItem) => ({
-                        ...item,
-                        selectedColor: typeof item.selectedColor === 'object' ? '' : item.selectedColor
-                    }));
-                }
-                return data;
-            }
         }
     )
 );

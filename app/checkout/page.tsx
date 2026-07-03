@@ -11,6 +11,9 @@ import { toast } from 'react-hot-toast';
 import { pixelInitiateCheckout, pixelPurchase } from '@/lib/pixel';
 import { orderSchema, ShippingAddressInput } from '@/lib/validations';
 
+const colorName = (color: any): string =>
+    typeof color === 'object' ? color?.name || '' : color || '';
+
 export default function CheckoutPage() {
     const { items, total, clearCart } = useCartStore();
     const { data: session } = useSession();
@@ -458,8 +461,8 @@ export default function CheckoutPage() {
                                                 </div>
                                                 <div className="space-y-0.5">
                                                     <h3 className="text-sm font-bold text-gray-700   group-hover:text-indigo-600 transition-colors">{item.name}</h3>
-                                                    {item.selectedColor && (
-                                                        <p className="text-[10px] text-blue-600 font-black tracking-widest uppercase">Color: {item.selectedColor}</p>
+                                                    {colorName(item.selectedColor) && (
+                                                        <p className="text-[10px] text-blue-600 font-black tracking-widest uppercase">Color: {colorName(item.selectedColor)}</p>
                                                     )}
                                                     <p className="text-xs text-gray-500 font-medium">Quantity: {item.quantity}</p>
                                                 </div>

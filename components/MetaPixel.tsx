@@ -10,6 +10,13 @@ function PixelPageTracker() {
     const searchParams = useSearchParams();
 
     useEffect(() => {
+        console.log('Pixel ID:', PIXEL_ID);
+        console.log('fbq:', window.fbq);
+
+        pixelPageView();
+    }, []);
+
+    useEffect(() => {
         // Fire PageView on every route change
         pixelPageView();
     }, [pathname, searchParams]);
