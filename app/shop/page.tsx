@@ -118,7 +118,7 @@ export default async function ShopPage({ searchParams }: {
     <div className="min-h-screen bg-[#fafafa]">
       <Navbar />
 
-      <BannerSlider />
+      {!params.category && !params.search && <BannerSlider />}
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <MobileFilterDrawer categories={JSON.parse(JSON.stringify(categories))} />
