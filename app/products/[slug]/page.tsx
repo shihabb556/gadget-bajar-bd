@@ -96,7 +96,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 <nav className="flex items-center gap-2 text-[10px] font-black   tracking-[0.2em] text-gray-400 mb-8 overflow-x-auto whitespace-nowrap pb-2">
                     <Link href="/" className="hover:text-blue-600 transition-colors">Home</Link>
                     <ChevronRight className="h-3 w-3" />
-                    <Link href={`/?category=${product.category}`} className="hover:text-blue-600 transition-colors">{product.category}</Link>
+                    <Link href={`/shop?category=${product.category}`} className="hover:text-blue-600 transition-colors">{product.category}</Link>
                     <ChevronRight className="h-3 w-3" />
                     <span className="text-gray-700 truncate max-w-[200px]">{product.name}</span>
                 </nav>
@@ -131,7 +131,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                                 <div className="h-8 w-1.5 bg-blue-600 rounded-full" />
                                 Related Products
                             </h2>
-                            <Link href={`/?category=${product.category}`} className="text-xs font-black text-blue-600   tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
+                            <Link href={`/shop?category=${product.category}`} className="text-xs font-black text-blue-600   tracking-widest hover:translate-x-1 transition-transform flex items-center gap-1">
                                 View All <ChevronRight className="h-4 w-4" />
                             </Link>
                         </div>

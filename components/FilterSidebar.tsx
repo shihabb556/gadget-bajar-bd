@@ -32,7 +32,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                 params.set(key, value);
             }
         });
-        router.push(`/?${params.toString()}`);
+        router.push(`/shop?${params.toString()}`);
     };
 
     const handleCategoryToggle = (slug: string) => {
@@ -116,7 +116,7 @@ export default function FilterSidebar({ categories, onFilterApplied }: FilterSid
                         onClick={() => {
                             setSelectedCategory(null);
                             setPriceRange({ min: 0, max: 150000 });
-                            router.push('/');
+                            router.push('/shop');
                             onFilterApplied?.();
                         }}
                         className="text-[10px] font-black text-red-500 uppercase tracking-widest hover:text-red-600 transition-colors"

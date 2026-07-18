@@ -83,7 +83,7 @@ export default function ShopByCategory({ categories }: { categories: Category[] 
             return (
               <Link
                 key={cat._id}
-                href={`/?category=${cat.slug}`}
+                href={`/shop?category=${cat.slug}`}
                 className="group relative bg-white border border-gray-100 rounded-2xl p-4 text-center hover:shadow-xl hover:shadow-blue-100/50 hover:-translate-y-1 transition-all duration-300"
               >
                 {cat.image ? (

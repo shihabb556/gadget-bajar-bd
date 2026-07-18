@@ -48,7 +48,7 @@ export default function HeroBanner() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/?category=flash-sale"
+                href="/shop?category=flash-sale"
                 className="inline-flex items-center gap-2 bg-white text-gray-700 px-8 py-4 rounded-2xl font-bold text-sm tracking-wide shadow-lg shadow-gray-100 hover:shadow-xl hover:-translate-y-0.5 border border-gray-100 transition-all duration-300"
               >
                 <Zap className="w-4 h-4 text-orange-500" />

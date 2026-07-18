@@ -59,7 +59,7 @@ export default function FlashSale() {
 
           {/* Right: CTA */}
           <Link
-            href="/?category=flash-sale"
+            href="/shop?category=flash-sale"
             className="group inline-flex items-center gap-2 bg-white text-orange-600 px-8 py-4 rounded-2xl font-bold text-sm tracking-wide shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
           >
             Shop Now

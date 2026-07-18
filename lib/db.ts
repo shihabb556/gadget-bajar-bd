@@ -1,7 +1,4 @@
 import mongoose from 'mongoose';
-import dns from 'dns';
-
-dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
@@ -11,11 +8,6 @@ if (!MONGODB_URI) {
   );
 }
 
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -60,4 +52,3 @@ async function dbConnect() {
 }
 
 export default dbConnect;
- 
