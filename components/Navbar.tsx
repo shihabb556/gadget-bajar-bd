@@ -115,6 +115,12 @@ export default function Navbar() {
                         </Link>
 
                         <div className="hidden md:flex items-center gap-6">
+                            <Link href="/" className="text-sm font-black text-gray-300 hover:text-blue-600 transition-colors   tracking-widest">
+                                Home
+                            </Link>
+                            <Link href="/shop" className="text-sm font-black text-gray-300 hover:text-blue-600 transition-colors   tracking-widest">
+                                Shop
+                            </Link>
                             <Link href="/track-order" className="text-sm font-black text-gray-300 hover:text-blue-600 transition-colors   tracking-widest">
                                 Track Order
                             </Link>
@@ -271,6 +277,9 @@ export default function Navbar() {
                     <div className="px-4 pt-4 pb-6 space-y-1">
                         <Link href="/" className="block px-4 py-3 text-base font-black text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
                             Home
+                        </Link>
+                        <Link href="/shop" className="block px-4 py-3 text-base font-black text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
+                            Shop
                         </Link>
                         <Link href="/track-order" className="block px-4 py-3 text-base font-black text-gray-700 hover:bg-gray-50 rounded-xl transition-colors">
                             Track Order
